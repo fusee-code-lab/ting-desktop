@@ -2,6 +2,7 @@ import {readFile} from "@/lib/file";
 import {SongType, AudiosOpt} from "@/core";
 
 export interface PlayOpt {
+    id: number, //当前歌曲id
     name: string; //歌曲名称
     cover: string; //歌曲图片
     singer: string; //歌手
@@ -86,7 +87,7 @@ class Audios {
 
             this.currentAudio.ondurationchange = (ev) => { //可获得歌曲时长
                 AudiosOpt.allTime = this.currentAudio.duration;
-                console.log( AudiosOpt.allTime)
+                console.log(AudiosOpt.allTime)
             }
 
             this.currentAudio.onplay = (ev) => {//开始播放
