@@ -1,0 +1,186 @@
+import MusicApi from './musicapi';
+import Log from "../lib/log";
+import instance from './musicapi/util/flyio.node'
+
+const muApi = MusicApi(instance);
+
+/**
+ * 获取歌曲详情
+ */
+export async function getSongDetail(vendor: string, id: number | string) {
+    try {
+        let req = await muApi.getSongDetail(vendor, id);
+        if (req.status && req.data) return req.data;
+        return null;
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+/**
+ * 获取歌曲播放链接
+ */
+export async function getSongUrl(vendor: string, id: number | string) {
+    try {
+        let req = await muApi.getSongUrl(vendor, id);
+        if (req.status && req.data.url) return req.data;
+        return null;
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+/**
+ * 获取歌曲歌词
+ */
+export async function getLyric(vendor: string, id: number | string) {
+    try {
+        let req = await muApi.getLyric(vendor, id);
+        if (req.status && req.data) return req.data;
+        return null;
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+/**
+ * 搜索
+ * @param keyword 关键字
+ * @param limit 条数
+ * @param offset 页码
+ */
+export async function searchSong(keyword: string, limit: number = 5, offset: number = 0) {
+    try {
+        let gets = [
+            muApi.netease.searchSong({keyword, limit, offset, type: 1}),
+            muApi.qq.searchSong({keyword, limit, offset})
+        ];
+        let req = await Promise.all(gets);
+        let status = false;
+        let total = 0;
+        let songs = [];
+        for (let i of req) {
+            if (i.status) {
+                status = true;
+                total += i.data.total;
+                songs.push(...i.data.songs);
+            }
+        }
+        return {
+            status,
+            data: {
+                songs,
+                total
+            }
+        }
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+
+/**
+ * 搜索歌单
+ */
+export async function searchSheet(keyword: string, limit: number = 5, offset: number = 0) {
+    try {
+        let gets = [
+            muApi.netease.searchSong({keyword, limit, offset, type: 1000}),
+            muApi.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.playlist"})
+        ];
+        let req = await Promise.all(gets);
+        console.log(req)
+        let status = false;
+        let neteaseTotal = 0, qqTotal = 0;
+        let sheets = [];
+        if (req[0].status) {
+            status = true;
+            neteaseTotal = req[0].data.total;
+            sheets.push(...req[0].data.sheets);
+        }
+        if (req[1].status) {
+            status = true;
+            qqTotal = req[1].data.total;
+            sheets.push(...req[1].data.sheets);
+        }
+        return {
+            status,
+            data: {
+                sheets,
+                neteaseTotal,
+                qqTotal
+            }
+        };
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+
+/**
+ * 搜索专辑
+ */
+export async function searchAlbum(keyword: string, limit: number = 5, offset: number = 0) {
+    try {
+
+        let gets = [
+            muApi.netease.searchSong({keyword, limit, offset, type: 10}),
+            muApi.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.album"})
+        ];
+        let req = await Promise.all(gets);
+        let status = false;
+        let neteaseTotal = 0, qqTotal = 0;
+        let albums = [];
+        if (req[0].status) {
+            status = true;
+            neteaseTotal = req[0].data.total;
+            albums.push(...req[0].data.albums);
+        }
+        if (req[1].status) {
+            status = true;
+            qqTotal = req[1].data.total;
+            albums.push(...req[1].data.songs);
+        }
+        return {
+            status,
+            data: {
+                albums,
+                neteaseTotal,
+                qqTotal
+            }
+        };
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+/**
+ * 获取歌单详情
+ */
+export async function getPlaylistDetail(vendor: string, id: number | string, offset: number = 0, limit: number = 65535) {
+    try {
+        return await muApi.getPlaylistDetail(vendor, id, offset, limit);
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+
+/**
+ * 获取专辑详情
+ */
+export async function getAlbumDetail(vendor: string, id: number | string) {
+    try {
+        return await muApi.getAlbumDetail(vendor, id);
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}

@@ -1,0 +1,8 @@
+/package-lock.json
+/node_modules/
+/out/
+/dist/
+/logs/
+/.idea/
+/yarn.lock
+/data/

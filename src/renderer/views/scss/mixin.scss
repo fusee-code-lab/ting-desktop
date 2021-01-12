@@ -1,0 +1,17 @@
+@mixin device-pixel($url) {
+  background-image: url($url + ".png");
+  @media (-webkit-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+    background-image: url($url + "@2x.png");
+  }
+  //@media (-webkit-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+  //  background-image: url($url + "@3x.png");
+  //}
+}
+
+//文字超出隐藏
+@mixin text-overflow($line) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+  overflow: hidden;
+}
