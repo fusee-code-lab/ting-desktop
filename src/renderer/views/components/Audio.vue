@@ -28,8 +28,8 @@
         <div v-if="co.paused===1" class="pause" @click="pause()"></div>
         <div class="next" @click="audio.next()"></div>
         <div class="rules">
-          <div class="random"></div>
-          <div @click="audio.loop(true)" class="single"></div>
+          <div class="random" @click="rules(PlayTypeOpt.random)"></div>
+          <div class="single" @click="rules(PlayTypeOpt.single)"></div>
         </div>
         <div class="volume">
           <div class="volume-icon"></div>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {audioData} from "@/core";
+import {audioData, PlayTypeOpt} from "@/core";
 import {audio} from "@/core/audio";
 
 export default defineComponent({
@@ -72,14 +72,20 @@ export default defineComponent({
       }, 100)
     }
 
+    function rules(type: PlayTypeOpt) {
+      audioData.playType = type;
+    }
+
     return {
       co: audioData,
       audio,
       isProgress,
       speedProgress,
+      PlayTypeOpt,
       play,
       pause,
-      oProgress
+      oProgress,
+      rules
     }
   }
 });

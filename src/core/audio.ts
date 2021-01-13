@@ -1,6 +1,7 @@
 import {readFile} from "@/lib/file";
-import {SongType, audioPlayListData, audioData, SongOpt} from "@/core";
-import {isNull} from "@/lib";
+import {SongType, audioPlayListData, audioData, SongOpt, PlayTypeOpt} from "@/core";
+import {getSongUrl} from "@/core/musicapi";
+import {isNull, random} from "@/lib";
 
 async function pathToSrc(path: string) {
     try {
@@ -72,11 +73,12 @@ class Audios {
             audioData.paused = 0;
         }
 
-        this.currentAudio.onended = () => {//播放完毕
+        this.currentAudio.onended = async () => {//播放完毕
             audioData.paused = 0;
             audioData.cachedType = 0;
             audioData.cachedTime = 0;
             audioData.ingTime = 0;
+            await this.next();
         }
     }
 
@@ -91,20 +93,28 @@ class Audios {
     async play(song?: SongOpt) {
         if (song) {
             if (song.path) song.path = await pathToSrc(song.path);
+            else {
+                let req = await getSongUrl(song.vendor, song.id) as any;
+                if (req) song.path = req.url;
+                else await this.next();
+            }
             if (song.id === audioData.songInfo.id
                 && this.currentAudio.src) {
-                if (audioData.paused === 0) this.currentAudio.play();
+                if (audioData.paused === 0) this.currentAudio.play().catch(console.log);
                 return;
             }
             this.clear();
             audioData.songInfo = song;
             this.currentAudio.src = song.path;
             this.currentAudio.load();
-            if (isNull(audioPlayListData[`${song.vendor}|${song.id}`])) audioPlayListData[`${song.vendor}|${song.id}`] = song;
+            if (isNull(audioPlayListData.value[`${song.vendor}|${song.id}`])) audioPlayListData.value[`${song.vendor}|${song.id}`] = song;
         } else if (this.currentAudio.src && audioData.paused === 0) {
             this.currentAudio.play();
         } else if (!this.currentAudio.src && audioData.songInfo) {
             this.clear();
+            let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id) as any;
+            if (req) audioData.songInfo.path = req.url;
+            else await this.next();
             this.currentAudio.src = audioData.songInfo.path;
             this.currentAudio.load();
         }
@@ -120,29 +130,54 @@ class Audios {
         })
     }
 
+    async load() {
+        let SongList = Object.keys(audioPlayListData.value);
+        await this.play(audioPlayListData.value[SongList[0]]);
+    }
+
     async pre() {
         let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
-        let SongList = Object.keys(audioPlayListData);
+        let SongList = Object.keys(audioPlayListData.value);
         let num = SongList.indexOf(SongIng) - 1;
-        if (SongList.length === 1) {
-            this.currentAudio.load();
-        } else if (num < 0) {
-            await this.play(audioPlayListData[SongList[SongList.length - 1]]);
-        } else {
-            await this.play(audioPlayListData[SongList[num]]);
+        switch (audioData.playType) {
+            case PlayTypeOpt.single: //单曲循环
+                this.currentAudio.load();
+                break;
+            case PlayTypeOpt.list: //列表循环
+                if (SongList.length === 1) {
+                    this.currentAudio.load();
+                } else if (num < 0) {
+                    await this.play(audioPlayListData.value[SongList[SongList.length - 1]]);
+                } else {
+                    await this.play(audioPlayListData.value[SongList[num]]);
+                }
+                break;
+            case PlayTypeOpt.random: //随机播放
+                await this.play(audioPlayListData.value[SongList[random(0, SongList.length - 1)]]);
+                break;
         }
     }
 
     async next() {
         let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
-        let SongList = Object.keys(audioPlayListData);
+        let SongList = Object.keys(audioPlayListData.value);
         let num = SongList.indexOf(SongIng) + 1;
-        if (SongList.length === 1) {
-            this.currentAudio.load();
-        } else if (num > SongList.length - 1) {
-            await this.play(audioPlayListData[SongList[0]]);
-        } else {
-            await this.play(audioPlayListData[SongList[num]]);
+        switch (audioData.playType) {
+            case PlayTypeOpt.single: //单曲循环
+                this.currentAudio.load();
+                break;
+            case PlayTypeOpt.list: //列表循环
+                if (SongList.length === 1) {
+                    this.currentAudio.load();
+                } else if (num > SongList.length - 1) {
+                    await this.play(audioPlayListData.value[SongList[0]]);
+                } else {
+                    await this.play(audioPlayListData.value[SongList[num]]);
+                }
+                break;
+            case PlayTypeOpt.random: //随机播放
+                await this.play(audioPlayListData.value[SongList[random(0, SongList.length - 1)]]);
+                break;
         }
     }
 

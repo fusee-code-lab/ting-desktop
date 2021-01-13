@@ -1,8 +1,14 @@
-import {reactive, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import Log from "@/lib/log";
 import {getGlobal, debounce, getExternPath} from "@/lib";
 import {Vendors} from "@/core/musicapi/api";
 import {writeFile} from "@/lib/file";
+
+export enum PlayTypeOpt { //播放类型
+    list,
+    single,
+    random
+}
 
 export interface SongOpt {
     id: number, //当前歌曲id
@@ -14,6 +20,7 @@ export interface SongOpt {
 }
 
 export interface TingAudioOpt {
+    playType: PlayTypeOpt; //播放模式
     volume: number; //音量
     volumeGradualTime: number;//音量渐进时间(秒)
     paused: number;//音频是否暂停  0暂停 1未暂停
@@ -50,6 +57,7 @@ let cfg: TingCfgOpt = {
 }
 
 let audio: TingAudioOpt = {
+    playType: PlayTypeOpt.list,//播放模式
     volume: 1, //音量
     volumeGradualTime: 0.7,//音量渐进时间(秒)
     paused: 0, //音频是否暂停  0暂停 1未暂停
@@ -89,7 +97,7 @@ export const audioData = reactive({
 /**
  * 当前播放歌单
  */
-export const audioPlayListData = reactive(audioPlayList);
+export const audioPlayListData = ref(audioPlayList);
 
 /**
  * 搜索数据结构
@@ -115,12 +123,12 @@ export function getSheetPath(path: string) {
     return `${tingCfgData.sheet}/${path}${sheetSuffix}`;
 }
 
-
 /**
- * 监听 音量变化
+ * 监听 音量、播放类型 变化
  */
 function watchTingOpt() {
     const audio = {
+        playType: audioData.playType,
         volume: audioData.volume,
         volumeGradualTime: audioData.volumeGradualTime,
         songInfo: audioData.songInfo
@@ -128,4 +136,4 @@ function watchTingOpt() {
     writeFile(getExternPath("audio.json"), JSON.stringify(audio)).then();
 }
 
-watch(() => [audioData.volume], debounce(watchTingOpt, 3000));
+watch(() => [audioData.volume, audioData.playType], debounce(watchTingOpt, 3000));

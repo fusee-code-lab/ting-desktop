@@ -6,7 +6,9 @@ import Log from "../../lib/log";
  */
 export async function getSongDetail(vendor: Api.Vendors, id: number | string) {
     try {
-        let req = await Api.getSongDetail(vendor, id);
+        let req = await Api.getSongDetail(vendor, id).catch(() => {
+            return null;
+        });
         if (req.status && req.data) return req.data;
         return null;
     } catch (e) {
@@ -20,7 +22,9 @@ export async function getSongDetail(vendor: Api.Vendors, id: number | string) {
  */
 export async function getSongUrl(vendor: Api.Vendors, id: number | string) {
     try {
-        let req = await Api.getSongUrl(vendor, id);
+        let req = await Api.getSongUrl(vendor, id).catch(() => {
+            return null;
+        });
         if (req.status && req.data.url) return req.data;
         return null;
     } catch (e) {
@@ -34,7 +38,9 @@ export async function getSongUrl(vendor: Api.Vendors, id: number | string) {
  */
 export async function getLyric(vendor: Api.Vendors, id: number | string) {
     try {
-        let req = await Api.getLyric(vendor, id);
+        let req = await Api.getLyric(vendor, id).catch(() => {
+            return null;
+        });
         if (req.status && req.data) return req.data;
         return null;
     } catch (e) {

@@ -255,7 +255,7 @@
             <div class="nickname">@{{ data.info.detail.creat_name }}</div>
           </div>
           <div class="buts">
-            <button class="all-play">播放全部</button>
+            <button class="all-play" @click="playAll()">播放全部</button>
             <button class="add-sheet">添加</button>
           </div>
         </div>
@@ -298,6 +298,7 @@ import {Vendors} from "@/core/musicapi/api";
 import {getPlaylistDetail, getSongUrl} from "@/core/musicapi";
 import Log from "@/lib/log";
 import {audio} from "@/core/audio";
+import {SongOpt, audioPlayListData} from "@/core";
 
 export default defineComponent({
   name: "Sheet",
@@ -306,7 +307,7 @@ export default defineComponent({
       info: null,
       isShow: false,
       songTime: "-",
-      vendor: "netease"
+      vendor: "qq"
     });
 
     //"netease", 5382136003  "qq", 6970813620
@@ -342,10 +343,24 @@ export default defineComponent({
       });
     }
 
+    async function playAll() {
+      let songs: { [key: string]: SongOpt } = {};
+      data.info.songs.forEach((e: any) => songs[`${e.vendor}|${e.id}`] = {
+        id: e.id,
+        vendor: e.vendor,
+        name: e.name,
+        cover: e.album.cover,
+        singer: e.artists.map((e: any) => e.name).toString()
+      });
+      audioPlayListData.value = songs;
+      await audio.load();
+    }
+
     return {
       data,
       showHide,
-      play
+      play,
+      playAll
     }
   }
 });
