@@ -294,7 +294,8 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive} from "vue";
-import {getPlaylistDetail, getSongUrl} from "@/core/music";
+import {Vendors} from "@/core/musicapi/api";
+import {getPlaylistDetail, getSongUrl} from "@/core/musicapi";
 import Log from "@/lib/log";
 import {audio} from "@/core/audio";
 
@@ -310,7 +311,7 @@ export default defineComponent({
 
     //"netease", 5382136003  "qq", 6970813620
     onMounted(async () => {
-      let req = await getPlaylistDetail("netease", 5382136003);
+      let req = await getPlaylistDetail(Vendors.netease, 5382136003);
       console.log(req);
       if (req.status) {
         data.info = req.data;

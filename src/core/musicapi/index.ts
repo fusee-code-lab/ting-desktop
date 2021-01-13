@@ -1,15 +1,12 @@
-import MusicApi from './musicapi';
-import Log from "../lib/log";
-import instance from './musicapi/util/flyio.node'
-
-const muApi = MusicApi(instance);
+import *as Api from "./api";
+import Log from "../../lib/log";
 
 /**
  * 获取歌曲详情
  */
-export async function getSongDetail(vendor: string, id: number | string) {
+export async function getSongDetail(vendor: Api.Vendors, id: number | string) {
     try {
-        let req = await muApi.getSongDetail(vendor, id);
+        let req = await Api.getSongDetail(vendor, id);
         if (req.status && req.data) return req.data;
         return null;
     } catch (e) {
@@ -21,9 +18,9 @@ export async function getSongDetail(vendor: string, id: number | string) {
 /**
  * 获取歌曲播放链接
  */
-export async function getSongUrl(vendor: string, id: number | string) {
+export async function getSongUrl(vendor: Api.Vendors, id: number | string) {
     try {
-        let req = await muApi.getSongUrl(vendor, id);
+        let req = await Api.getSongUrl(vendor, id);
         if (req.status && req.data.url) return req.data;
         return null;
     } catch (e) {
@@ -35,9 +32,9 @@ export async function getSongUrl(vendor: string, id: number | string) {
 /**
  * 获取歌曲歌词
  */
-export async function getLyric(vendor: string, id: number | string) {
+export async function getLyric(vendor: Api.Vendors, id: number | string) {
     try {
-        let req = await muApi.getLyric(vendor, id);
+        let req = await Api.getLyric(vendor, id);
         if (req.status && req.data) return req.data;
         return null;
     } catch (e) {
@@ -55,8 +52,8 @@ export async function getLyric(vendor: string, id: number | string) {
 export async function searchSong(keyword: string, limit: number = 5, offset: number = 0) {
     try {
         let gets = [
-            muApi.netease.searchSong({keyword, limit, offset, type: 1}),
-            muApi.qq.searchSong({keyword, limit, offset})
+            Api.provider.netease.searchSong({keyword, limit, offset, type: 1}),
+            Api.provider.qq.searchSong({keyword, limit, offset})
         ];
         let req = await Promise.all(gets);
         let status = false;
@@ -89,8 +86,8 @@ export async function searchSong(keyword: string, limit: number = 5, offset: num
 export async function searchSheet(keyword: string, limit: number = 5, offset: number = 0) {
     try {
         let gets = [
-            muApi.netease.searchSong({keyword, limit, offset, type: 1000}),
-            muApi.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.playlist"})
+            Api.provider.netease.searchSong({keyword, limit, offset, type: 1000}),
+            Api.provider.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.playlist"})
         ];
         let req = await Promise.all(gets);
         console.log(req)
@@ -129,8 +126,8 @@ export async function searchAlbum(keyword: string, limit: number = 5, offset: nu
     try {
 
         let gets = [
-            muApi.netease.searchSong({keyword, limit, offset, type: 10}),
-            muApi.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.album"})
+            Api.provider.netease.searchSong({keyword, limit, offset, type: 10}),
+            Api.provider.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.album"})
         ];
         let req = await Promise.all(gets);
         let status = false;
@@ -163,9 +160,9 @@ export async function searchAlbum(keyword: string, limit: number = 5, offset: nu
 /**
  * 获取歌单详情
  */
-export async function getPlaylistDetail(vendor: string, id: number | string, offset: number = 0, limit: number = 65535) {
+export async function getPlaylistDetail(vendor: Api.Vendors, id: number | string, offset: number = 0, limit: number = 65535) {
     try {
-        return await muApi.getPlaylistDetail(vendor, id, offset, limit);
+        return await Api.getPlaylistDetail(vendor, id, offset, limit);
     } catch (e) {
         Log.error(e.toString());
         return null;
@@ -176,9 +173,9 @@ export async function getPlaylistDetail(vendor: string, id: number | string, off
 /**
  * 获取专辑详情
  */
-export async function getAlbumDetail(vendor: string, id: number | string) {
+export async function getAlbumDetail(vendor: Api.Vendors, id: number | string) {
     try {
-        return await muApi.getAlbumDetail(vendor, id);
+        return await Api.getAlbumDetail(vendor, id);
     } catch (e) {
         Log.error(e.toString());
         return null;

@@ -1,6 +1,6 @@
 import {EOL} from "os";
 import {reactive} from "vue";
-import {TingPath, getSheetPath, sheetSuffix} from "@/core"
+import {TingCfg, getSheetPath, sheetSuffix} from "@/core"
 import {readLine, writeFile, appendFile, findFileBySuffix} from "@/lib/file";
 import Log from "@/lib/log";
 
@@ -30,7 +30,7 @@ export interface SongData {
  * 当前歌单列表
  */
 export function list() {
-    let req = findFileBySuffix(TingPath.sheet, sheetSuffix);
+    let req = findFileBySuffix(TingCfg.path.sheet, sheetSuffix);
     for (let i of req) {
         readLine(i, -1).then((e: string) => {
             try {

@@ -31,7 +31,7 @@
 import {defineComponent} from "vue";
 import {isNull} from "@/lib";
 import {searchData} from "@/core";
-import {searchSong, searchSheet} from "@/core/music";
+import {searchSong, searchSheet} from "@/core/musicapi";
 
 export default defineComponent({
   name: "Menu",
