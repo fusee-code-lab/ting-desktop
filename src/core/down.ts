@@ -1,5 +1,5 @@
 import {writeFile} from "@/lib/file";
-import {TingCfg, SongType} from "@/core";
+import {tingCfgData, SongType} from "@/core";
 import {net, NET_RESPONSE_TYPE} from "@/lib/net";
 
 /**
@@ -21,7 +21,7 @@ export async function save(path: string, name: string) {
         })
     if (req) {
         return await writeFile(
-            `${TingCfg.path.down}/${name}.${suffix}`,
+            `${tingCfgData.down}/${name}.${suffix}`,
             Buffer.from(req).toString("binary"),
             {encoding: "binary"});
     } else return 0;

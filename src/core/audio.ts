@@ -1,5 +1,6 @@
 import {readFile} from "@/lib/file";
-import {SongType, TingCfg, SongOpt} from "@/core";
+import {SongType, audioPlayListData, audioData, SongOpt} from "@/core";
+import {isNull} from "@/lib";
 
 async function pathToSrc(path: string) {
     try {
@@ -52,75 +53,102 @@ class Audios {
         }
 
         this.currentAudio.ondurationchange = () => { //可获得歌曲时长
-            TingCfg.audio.allTime = this.currentAudio.duration;
+            audioData.allTime = this.currentAudio.duration;
         }
 
         this.currentAudio.onplay = () => {//开始播放
             this.gainNode.gain.value = 0;//设置音量为0
-            this.currentTime(TingCfg.audio.ingTime);//设置当前播放位置
-            this.gainNode.gain.linearRampToValueAtTime(TingCfg.audio.volume, this.AudioContext.currentTime + TingCfg.audio.volumeGradualTime); //音量淡入
-            TingCfg.audio.paused = 1;
+            this.currentTime(audioData.ingTime);//设置当前播放位置
+            this.gainNode.gain.linearRampToValueAtTime(audioData.volume, this.AudioContext.currentTime + audioData.volumeGradualTime); //音量淡入
+            audioData.paused = 1;
         }
 
         this.currentAudio.ontimeupdate = () => {//更新播放位置
-            TingCfg.audio.ingTime = this.currentAudio.currentTime;
-            if (TingCfg.audio.cachedType !== 1) this.cached();
+            audioData.ingTime = this.currentAudio.currentTime;
+            if (audioData.cachedType !== 1) this.cached();
         }
 
         this.currentAudio.onpause = () => {//播放暂停
-            TingCfg.audio.paused = 0;
+            audioData.paused = 0;
         }
 
         this.currentAudio.onended = () => {//播放完毕
-            TingCfg.audio.paused = 0;
-            TingCfg.audio.cachedType = 0;
-            TingCfg.audio.cachedTime = 0;
-            TingCfg.audio.ingTime = 0;
+            audioData.paused = 0;
+            audioData.cachedType = 0;
+            audioData.cachedTime = 0;
+            audioData.ingTime = 0;
         }
     }
 
     clear() {
-        TingCfg.audio.paused = 0;
-        TingCfg.audio.cachedType = 0;
-        TingCfg.audio.cachedTime = 0;
-        TingCfg.audio.ingTime = 0;
-        TingCfg.audio.allTime = 0;
+        audioData.paused = 0;
+        audioData.cachedType = 0;
+        audioData.cachedTime = 0;
+        audioData.ingTime = 0;
+        audioData.allTime = 0;
     }
 
-    play(song?: SongOpt) {
-        return new Promise(async (resolve) => {
-            if (song) {
-                if (song.path) song.path = await pathToSrc(song.path);
-                if (song.path === this.currentAudio.src) {
-                    if (this.currentAudio.src && TingCfg.audio.paused === 0) await this.currentAudio.play();//播放
-                    resolve(1);
-                    return;
-                }
-                this.clear();
-                TingCfg.audio.songInfo = song;
-                this.currentAudio.src = song.path;
-                this.currentAudio.load();
-            } else if (TingCfg.audio.songInfo) {
-                this.clear();
-                this.currentAudio.src = TingCfg.audio.songInfo.path;
-                this.currentAudio.load();
+    async play(song?: SongOpt) {
+        if (song) {
+            if (song.path) song.path = await pathToSrc(song.path);
+            if (song.id === audioData.songInfo.id
+                && this.currentAudio.src) {
+                if (audioData.paused === 0) this.currentAudio.play();
+                return;
             }
-        })
+            this.clear();
+            audioData.songInfo = song;
+            this.currentAudio.src = song.path;
+            this.currentAudio.load();
+            if (isNull(audioPlayListData[`${song.vendor}|${song.id}`])) audioPlayListData[`${song.vendor}|${song.id}`] = song;
+        } else if (this.currentAudio.src && audioData.paused === 0) {
+            this.currentAudio.play();
+        } else if (!this.currentAudio.src && audioData.songInfo) {
+            this.clear();
+            this.currentAudio.src = audioData.songInfo.path;
+            this.currentAudio.load();
+        }
     }
 
     async pause() {
         return new Promise((resolve) => {
-            this.gainNode.gain.linearRampToValueAtTime(0, this.AudioContext.currentTime + TingCfg.audio.volumeGradualTime); //音量淡出
+            this.gainNode.gain.linearRampToValueAtTime(0, this.AudioContext.currentTime + audioData.volumeGradualTime); //音量淡出
             setTimeout(() => {
                 this.currentAudio.pause();
                 resolve(0);
-            }, TingCfg.audio.volumeGradualTime * 1000);
+            }, audioData.volumeGradualTime * 1000);
         })
+    }
+
+    async pre() {
+        let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
+        let SongList = Object.keys(audioPlayListData);
+        let num = SongList.indexOf(SongIng) - 1;
+        if (SongList.length === 1) {
+            this.currentAudio.load();
+        } else if (num < 0) {
+            await this.play(audioPlayListData[SongList[SongList.length - 1]]);
+        } else {
+            await this.play(audioPlayListData[SongList[num]]);
+        }
+    }
+
+    async next() {
+        let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
+        let SongList = Object.keys(audioPlayListData);
+        let num = SongList.indexOf(SongIng) + 1;
+        if (SongList.length === 1) {
+            this.currentAudio.load();
+        } else if (num > SongList.length - 1) {
+            await this.play(audioPlayListData[SongList[0]]);
+        } else {
+            await this.play(audioPlayListData[SongList[num]]);
+        }
     }
 
     //设置播放位置(暂停情况下)
     currentIngTime(e: number) {
-        if (this.currentAudio) TingCfg.audio.ingTime = e;
+        if (this.currentAudio) audioData.ingTime = e;
     }
 
     //设置播放位置(播放情况下)
@@ -128,15 +156,15 @@ class Audios {
         if (this.currentAudio) {
             this.gainNode.gain.value = 0;//设置音量为0
             this.currentAudio.currentTime = e;
-            this.gainNode.gain.linearRampToValueAtTime(TingCfg.audio.volume, this.AudioContext.currentTime + TingCfg.audio.volumeGradualTime); //音量淡入
+            this.gainNode.gain.linearRampToValueAtTime(audioData.volume, this.AudioContext.currentTime + audioData.volumeGradualTime); //音量淡入
         }
     }
 
     //设置音量 1-100
     setVolume(e: number) {
         let s = (e / 100).toFixed(2);
-        if (this.currentAudio && this.gainNode) this.gainNode.gain.value = TingCfg.audio.volume = Number(s);
-        else TingCfg.audio.volume = Number(s);
+        if (this.currentAudio && this.gainNode) this.gainNode.gain.value = audioData.volume = Number(s);
+        else audioData.volume = Number(s);
     }
 
     //是否单曲循环
@@ -147,8 +175,8 @@ class Audios {
     //缓存
     cached() {
         if (this.currentAudio && this.currentAudio.buffered.length > 0) {
-            TingCfg.audio.cachedTime = this.currentAudio.buffered.end(this.currentAudio.buffered.length - 1); //已缓存时长
-            TingCfg.audio.cachedType = this.currentAudio.buffered.end(this.currentAudio.buffered.length - 1) / this.currentAudio.duration; //缓存进度  0-1
+            audioData.cachedTime = this.currentAudio.buffered.end(this.currentAudio.buffered.length - 1); //已缓存时长
+            audioData.cachedType = this.currentAudio.buffered.end(this.currentAudio.buffered.length - 1) / this.currentAudio.duration; //缓存进度  0-1
         }
     }
 

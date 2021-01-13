@@ -23,10 +23,10 @@
         </div>
       </div>
       <div class="audio-info-buts">
-        <div class="pre"></div>
+        <div class="pre" @click="audio.pre()"></div>
         <div v-if="co.paused===0" class="play" @click="play()"></div>
         <div v-if="co.paused===1" class="pause" @click="pause()"></div>
-        <div class="next"></div>
+        <div class="next" @click="audio.next()"></div>
         <div class="rules">
           <div class="random"></div>
           <div @click="audio.loop(true)" class="single"></div>
@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {TingCfg} from "@/core";
+import {audioData} from "@/core";
 import {audio} from "@/core/audio";
 
 export default defineComponent({
@@ -73,7 +73,7 @@ export default defineComponent({
     }
 
     return {
-      co: TingCfg.audio,
+      co: audioData,
       audio,
       isProgress,
       speedProgress,
