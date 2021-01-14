@@ -14,8 +14,8 @@
 
 <script lang="ts">
   import { defineComponent, ref, reactive, watch } from "vue";
-  import { AudiosOpt } from "@/core"
-  import { getLyric } from "@/core/music"
+  import { audioData } from "@/core"
+  import { getLyric } from "@/core/musicapi/api"
   import { audio } from "@/core/audio";
   import { debounce } from "@/lib";
 
@@ -42,7 +42,7 @@
       // 使用歌词索引跳转播放时间
       function seekAudioTimeWithLyricIdx(index: number) {
         const ms = lyrics.original[index].ms;
-        if (AudiosOpt.paused === 0) {
+        if (audioData.paused === 0) {
           audio.currentIngTime(ms / 1000);
         } else {
           audio.currentTime(ms / 1000);
@@ -71,10 +71,10 @@
       }
 
       // 更新歌词数据
-      async function updateLyricsData(info: typeof AudiosOpt.songInfo) {
+      async function updateLyricsData(info: typeof audioData.songInfo) {
         if (!!info) {
           const lyricsData = await getLyric(info.vendor, info.id);
-          lyrics.original = lyricsData.lyric.map((item: [string, string]) => ({
+          lyrics.original = lyricsData.data.lyric.map((item: [string, string]) => ({
             content: item[1],
             time: item[0],
             ms: (() => {
@@ -89,10 +89,10 @@
       }
 
       // 观察正在播放的音乐数据
-      watch(() => AudiosOpt.songInfo, updateLyricsData)
+      watch(() => audioData.songInfo, updateLyricsData)
 
       // 观察播放进度
-      watch(() => AudiosOpt.ingTime, (time) => {
+      watch(() => audioData.ingTime, (time) => {
         const ms = time * 1000;
         const lyricIdx = lyrics.original.findIndex((item, idx) =>
           item.ms <= ms && ms <= (lyrics.original[idx + 1]?.ms ?? Infinity)

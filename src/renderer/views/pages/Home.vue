@@ -46,7 +46,7 @@ import {messageData} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
 import Menu from "../components/Menu.vue";
-import SearchDetails from "../components/search/SearchDetails.vue";
+import SearchDetails from "../components/SearchDetails.vue";
 import Sheet from "@/renderer/views/components/Sheet.vue";
 import SidePopup from "@/renderer/views/components/SidePopup.vue";
 import SongStatus from "@/renderer/views/pages/SongStatus.vue";
