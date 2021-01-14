@@ -1,6 +1,8 @@
 import {lyric_decode, noSongsDetailMsg} from "../util";
+import {isNull} from "@/lib";
+import neteaseBase from './instance/base';
 
-export default function (instance) {
+export function Api(instance) {
     // getRestrictLevel方法 来源于网易云音乐web端代码
     const getRestrictLevel = function (bm5r, fC7v) {
         if (!bm5r)
@@ -248,14 +250,28 @@ export default function (instance) {
             };
             try {
                 let {data} = await instance.post("/weapi/song/enhance/player/url", params);
-                return {
-                    status: true,
-                    data: {
-                        url: data[0].url,
-                        br: data[0].br,
-                        size: data[0].size
+                try {
+                    if (isNull(data[0]).url) {
+                        return {
+                            status: false,
+                            msg: "获取失败"
+                        };
+                    } else {
+                        return {
+                            status: true,
+                            data: {
+                                url: data[0].url,
+                                br: data[0].br,
+                                size: data[0].size
+                            }
+                        };
                     }
-                };
+                } catch (e) {
+                    return {
+                        status: false,
+                        msg: "获取失败"
+                    };
+                }
             } catch (e) {
                 return {
                     status: false,
@@ -649,3 +665,5 @@ export default function (instance) {
         }
     };
 }
+
+export const NeteaseApi = Api(neteaseBase());

@@ -1,6 +1,8 @@
-import {lyric_decode, noSongsDetailMsg} from '../util'
+import {lyric_decode, noSongsDetailMsg} from '../util';
+import {random, isNull} from "@/lib";
+import qqBase from "./instance/base";
 
-export default function (instance) {
+export function Api(instance) {
     const getMusicInfo = (info) => {
         const file = info.file
         return {
@@ -189,11 +191,25 @@ export default function (instance) {
                 }, {
                     newApi: true
                 })
-                const host = freeflowsip[0]
-                data = {
-                    status: true,
-                    data: {
-                        url: host + midurlinfo[0].purl
+                try {
+                    const host = freeflowsip[random(0, freeflowsip.length - 1)];
+                    if (isNull(midurlinfo[0].purl)) {
+                        data = {
+                            status: false,
+                            msg: e.message || '请求失败'
+                        }
+                    } else {
+                        data = {
+                            status: true,
+                            data: {
+                                url: host + midurlinfo[0].purl
+                            }
+                        }
+                    }
+                } catch (e) {
+                    data = {
+                        status: false,
+                        msg: e.message || '请求失败'
                     }
                 }
             } catch (e) {
@@ -488,3 +504,5 @@ export default function (instance) {
         }
     }
 }
+
+export const QQApi = Api(qqBase());

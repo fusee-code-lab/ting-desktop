@@ -1,3 +1,8 @@
+export function instance() {
+    const Fly = require("flyio/src/node")
+    return new Fly
+}
+
 export function randomUserAgent() {
     const userAgentList = [
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36',
@@ -103,4 +108,4 @@ export function completeCookie(cookie) {
     return extra.map(x => x[0]).join('; ')
 }
 
-export const isBrowser = typeof(window) !== 'undefined' && window.localStorage
+export const isBrowser = typeof (window) !== 'undefined' && window.localStorage

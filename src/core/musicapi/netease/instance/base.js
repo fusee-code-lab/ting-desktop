@@ -1,9 +1,9 @@
-import {randomUserAgent, completeCookie, isBrowser} from '../../util'
+import {instance, randomUserAgent, completeCookie, isBrowser} from '../../util'
 import Encrypt from '../crypto'
 import querystring from 'querystring'
 
-export default function (createInstance) {
-    const fly = createInstance()
+export default function () {
+    const fly = instance()
     // fly.config.proxy = 'http://localhost:8888'
     fly.config.baseURL = 'https://music.163.com'
     fly.config.timeout = 5000
@@ -23,14 +23,14 @@ export default function (createInstance) {
     fly.interceptors.request.use(config => {
         if (config.pureFly) return config
         // 浏览器且本地有cookie信息 接口就都带上cookie
-        if(isBrowser) {
+        if (isBrowser) {
             const loginCookies = window.localStorage.getItem('@suen/music-api-netease-login-cookie')
-            if(loginCookies) {
+            if (loginCookies) {
                 config.headers.Cookie = loginCookies
             }
         }
         let data
-        if(config.crypto === 'linuxapi') {
+        if (config.crypto === 'linuxapi') {
             data = Encrypt.linuxapi({
                 method: config.method,
                 url: config.baseURL + config.url.replace(/\w*api/, 'api'),

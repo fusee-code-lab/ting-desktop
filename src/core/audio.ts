@@ -94,7 +94,7 @@ class Audios {
         if (song) {
             if (song.path) song.path = await pathToSrc(song.path);
             else {
-                let req = await getSongUrl(song.vendor, song.id) as any;
+                let req = await getSongUrl(song.vendor, song.id);
                 if (req) song.path = req.url;
                 else await this.next();
             }
@@ -112,7 +112,7 @@ class Audios {
             this.currentAudio.play();
         } else if (!this.currentAudio.src && audioData.songInfo) {
             this.clear();
-            let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id) as any;
+            let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id);
             if (req) audioData.songInfo.path = req.url;
             else await this.next();
             this.currentAudio.src = audioData.songInfo.path;

@@ -1,8 +1,5 @@
-import instance from "./util/flyio.node";
-import neteaseBase from './netease/instance/base';
-import qqBase from './qq/instance/base';
-import Netease from './netease';
-import QQ from './qq';
+import {NeteaseApi} from './netease';
+import {QQApi} from './qq';
 
 export enum Vendors {
     netease = "netease",
@@ -10,8 +7,8 @@ export enum Vendors {
 }
 
 export const provider = {
-    netease: Netease(neteaseBase(instance)),
-    qq: QQ(qqBase(instance))
+    netease: NeteaseApi,
+    qq: QQApi
 };
 
 // 获取歌曲详情
