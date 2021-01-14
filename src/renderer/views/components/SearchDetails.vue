@@ -114,7 +114,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {searchData} from "@/core";
-import {getSongUrl} from "@/core/music";
+import {getSongUrl} from "@/core/musicapi";
 import {audio} from "@/core/audio";
 
 export default defineComponent({

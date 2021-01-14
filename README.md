@@ -12,6 +12,6 @@ npm/yarn run build
 ```
 
 ## 致谢
-#### 采用的开源模块
+#### 参考的开源模块
 - **musicApi**： [https://github.com/sunzongzheng/musicApi](https://github.com/sunzongzheng/musicApi)
 

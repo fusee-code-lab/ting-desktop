@@ -245,8 +245,11 @@ class Init {
  * */
 (async () => {
     try {
-        const setting = await readFile(getExternPath("setting.json"));
-        global.sharedObject["setting"] = JSON.parse(setting as string);
+        let req = await Promise.all([readFile(getExternPath("cfg.json")), readFile(getExternPath("audio.json"))]);
+        global.sharedObject["setting"] = {
+            cfg: JSON.parse(req[0] as string),
+            audio: JSON.parse(req[1] as string)
+        }
     } catch (e) {
         Log.error("[setting]", e);
         global.sharedObject["setting"] = {};

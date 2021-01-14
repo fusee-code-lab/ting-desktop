@@ -1,5 +1,6 @@
 import {writeFile} from "@/lib/file";
-import {TingPath, SongType} from "@/core";
+import {tingCfgData, SongType} from "@/core";
+import {net, NET_RESPONSE_TYPE} from "@/lib/net";
 
 /**
  * 保存歌曲
@@ -14,14 +15,13 @@ export async function save(path: string, name: string) {
             break;
         }
     }
-    let req = await fetch(path)
-        .then(e => e.arrayBuffer())
+    let req = await net(path, {type: NET_RESPONSE_TYPE.BUFFER})
         .catch(() => {
             return null;
         })
     if (req) {
         return await writeFile(
-            `${TingPath.down}/${name}.${suffix}`,
+            `${tingCfgData.down}/${name}.${suffix}`,
             Buffer.from(req).toString("binary"),
             {encoding: "binary"});
     } else return 0;
