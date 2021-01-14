@@ -1,6 +1,7 @@
 @import "~@/renderer/views/scss/mixin.scss";
 
 .audio-info {
+  z-index: 800; // TODO using global constant
   position: absolute;
   height: 50px;
   left: 0;

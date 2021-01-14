@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="audio-info-menu">
-        <div class="sheet"></div>
+        <div class="sheet" @click="onLyricsButtonClick"></div>
       </div>
     </div>
 
@@ -53,7 +53,8 @@ import {audio} from "@/core/audio";
 
 export default defineComponent({
   name: "Audio",
-  setup() {
+  emits: ["show-lyrics"],
+  setup(_, context) {
 
     const isProgress = ref(0); //是否正在拖动进度
     const speedProgress = ref(0); //拖动进度结果
@@ -72,6 +73,10 @@ export default defineComponent({
       }, 100)
     }
 
+    function onLyricsButtonClick() {
+      context.emit("show-lyrics")
+    }
+
     function rules(type: PlayTypeOpt) {
       audioData.playType = type;
     }
@@ -85,6 +90,7 @@ export default defineComponent({
       play,
       pause,
       oProgress,
+      onLyricsButtonClick,
       rules
     }
   }
