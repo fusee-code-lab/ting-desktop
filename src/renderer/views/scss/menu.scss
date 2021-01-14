@@ -4,7 +4,6 @@
   width: 100%;
   height: 100%;
   background-color: #E3E3E8;
-  color: var(--black);
   padding: 40px 10px 0;
 }
 
@@ -21,7 +20,11 @@
     width: calc(100% - 32px);
     margin: 0;
     font: normal 12px/12px ping-fang;
-    color: var(--tertiary-label);
+    color: var(--label);
+
+    &::-webkit-input-placeholder {
+      color: var(--secondary-label);
+    }
   }
 
   > button {

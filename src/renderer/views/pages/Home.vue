@@ -16,7 +16,6 @@
   > .right {
     position: relative;
     width: 100%;
-    padding: 32px 0 0;
   }
 }
 </style>
@@ -32,8 +31,8 @@
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus/>
         </SidePopup>
-        <SearchDetails/>
-        <!--        <Sheet/>-->
+                <SearchDetails/>
+<!--        <Sheet/>-->
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>

@@ -2,9 +2,9 @@
 @import "~@/renderer/views/scss/mixin.scss";
 
 .Search-details-info {
-  padding: 0 20px;
+  padding: 40px 20px 10px;
   width: 100%;
-  height: calc(100% - 60px);
+  height: calc(100% - 50px);
   overflow: hidden;
   overflow-y: overlay;
 

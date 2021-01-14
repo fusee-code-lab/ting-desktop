@@ -11,7 +11,7 @@ import {readFile} from "@/lib/file";
 declare global {
     namespace NodeJS {
         interface Global {
-            sharedObject: { [key: string]: unknown }
+            sharedObject: { [key: string]: any }
         }
     }
 }
@@ -21,10 +21,11 @@ global.sharedObject = {
     platform: process.platform, //当前运行平台
     appInfo: { //应用信息
         name: app.name,
-        version: app.getVersion(),
-        accentColor: systemPreferences.getAccentColor()
+        version: app.getVersion()
     }
 };
+
+if (process.platform === "win32") global.sharedObject["appInfo"]["accentColor"] = systemPreferences.getAccentColor();
 
 class Init {
 
@@ -52,7 +53,7 @@ class Init {
             })
         }
         app.whenReady().then(() => {
-            this.window.createWindow({isMainWin: true});
+            this.window.createWindow({isMainWin: true, resizable: false});
             this.window.createTray();
         });
         app.on("window-all-closed", () => {
@@ -62,7 +63,7 @@ class Init {
         })
         app.on("activate", () => {
             if (this.window.getAllWindows().length === 0) {
-                this.window.createWindow({isMainWin: true});
+                this.window.createWindow({isMainWin: true, resizable: false});
             }
         })
         //获得焦点时发出

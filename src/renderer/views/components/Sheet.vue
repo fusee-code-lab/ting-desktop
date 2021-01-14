@@ -2,7 +2,7 @@
 @import "~@/renderer/views/scss/mixin.scss";
 
 .sheet-info {
-  padding: 8px 50px 10px;
+  padding: 40px 50px 10px;
   height: calc(100% - 50px);
   overflow: hidden;
   overflow-y: overlay;
@@ -41,7 +41,7 @@
           height: 14px;
           width: 100%;
           font: normal 12px/14px ping-fing;
-          color: var(--tertiary-label);
+          color: var(--secondary-label);
 
           > span {
             margin-left: 14px;
@@ -58,7 +58,7 @@
 
           > .text {
             font: normal 13px/16px ping-fang;
-            color: var(--tertiary-label);
+            color: var(--secondary-label);
             resize: none;
             outline: none;
             border: none;
@@ -150,7 +150,7 @@
       align-items: center;
 
       > div {
-        color: var(--tertiary-label);
+        color: var(--secondary-label);
         font: 400 14px/20px ping-fang;
 
         &:nth-child(1) {
@@ -206,6 +206,7 @@
             > .name {
               @include text-overflow(1);
               width: calc(100% - 38px);
+              color: var(--label);
             }
 
           }

@@ -1,7 +1,7 @@
 <template>
   <div class="menu-info">
     <div class="menu-search">
-      <input v-model.trim="searchData.keyword" @keydown.enter="search"/>
+      <input placeholder="搜索" v-model.trim="searchData.keyword" @keydown.enter="search"/>
       <button @click="search"></button>
     </div>
     <div class="menu-sheet">
