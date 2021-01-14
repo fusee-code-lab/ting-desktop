@@ -29,22 +29,27 @@
         <Menu/>
       </div>
       <div class="right">
-        <!--        <SearchDetails/>-->
-        <Sheet/>
-        <Audio/>
+        <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
+          <SongStatus/>
+        </SidePopup>
+        <SearchDetails/>
+<!--        <Sheet/>-->
+        <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, ref} from "vue";
 import {messageData} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
 import Menu from "../components/Menu.vue";
 import SearchDetails from "../components/search/SearchDetails.vue";
 import Sheet from "@/renderer/views/components/Sheet.vue";
+import SidePopup from "@/renderer/views/components/SidePopup.vue";
+import SongStatus from "@/renderer/views/pages/SongStatus.vue";
 
 export default defineComponent({
   components: {
@@ -52,12 +57,22 @@ export default defineComponent({
     SearchDetails,
     Menu,
     Head,
-    Audio
+    Audio,
+    SidePopup,
+    SongStatus,
   },
   name: "Home",
   setup() {
+    const shownLyricsSidePopup = ref(false);
+    function showLyricsSidePopup() {
+      shownLyricsSidePopup.value = !shownLyricsSidePopup.value;
+      console.log("show lyrics", shownLyricsSidePopup.value)
+    }
+
     return {
-      messageData
+      messageData,
+      shownLyricsSidePopup,
+      showLyricsSidePopup
     }
   }
 });
