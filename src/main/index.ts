@@ -52,7 +52,7 @@ class Init {
             })
         }
         app.whenReady().then(() => {
-            this.window.createWindow({isMainWin: true, resizable: false});
+            this.window.createWindow({isMainWin: true});
             this.window.createTray();
         });
         app.on("window-all-closed", () => {
@@ -62,7 +62,7 @@ class Init {
         })
         app.on("activate", () => {
             if (this.window.getAllWindows().length === 0) {
-                this.window.createWindow({isMainWin: true, resizable: false});
+                this.window.createWindow({isMainWin: true});
             }
         })
         //获得焦点时发出
