@@ -42,7 +42,7 @@
       // 使用歌词索引跳转播放时间
       function seekAudioTimeWithLyricIdx(index: number) {
         const ms = lyrics.original[index].ms;
-        if (audioData.paused === 0) {
+        if (audioData.paused) {
           audio.currentIngTime(ms / 1000);
         } else {
           audio.currentTime(ms / 1000);
