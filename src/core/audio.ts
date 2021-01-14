@@ -61,7 +61,7 @@ class Audios {
             this.gainNode.gain.value = 0;//设置音量为0
             this.currentTime(audioData.ingTime);//设置当前播放位置
             this.gainNode.gain.linearRampToValueAtTime(audioData.volume, this.AudioContext.currentTime + audioData.volumeGradualTime); //音量淡入
-            audioData.paused = 1;
+            audioData.paused = 0;
         }
 
         this.currentAudio.ontimeupdate = () => {//更新播放位置
@@ -70,11 +70,11 @@ class Audios {
         }
 
         this.currentAudio.onpause = () => {//播放暂停
-            audioData.paused = 0;
+            audioData.paused = 1;
         }
 
         this.currentAudio.onended = async () => {//播放完毕
-            audioData.paused = 0;
+            audioData.paused = 1;
             audioData.cachedType = 0;
             audioData.cachedTime = 0;
             audioData.ingTime = 0;
@@ -83,7 +83,7 @@ class Audios {
     }
 
     clear() {
-        audioData.paused = 0;
+        audioData.paused = 1;
         audioData.cachedType = 0;
         audioData.cachedTime = 0;
         audioData.ingTime = 0;
@@ -100,7 +100,7 @@ class Audios {
             }
             if (song.id === audioData.songInfo.id
                 && this.currentAudio.src) {
-                if (audioData.paused === 0) this.currentAudio.play().catch(console.log);
+                if (audioData.paused === 1) this.currentAudio.play().catch(console.log);
                 return;
             }
             this.clear();
@@ -108,7 +108,7 @@ class Audios {
             this.currentAudio.src = song.path;
             this.currentAudio.load();
             if (isNull(audioPlayListData.value[`${song.vendor}|${song.id}`])) audioPlayListData.value[`${song.vendor}|${song.id}`] = song;
-        } else if (this.currentAudio.src && audioData.paused === 0) {
+        } else if (this.currentAudio.src && audioData.paused === 1) {
             this.currentAudio.play();
         } else if (!this.currentAudio.src && audioData.songInfo) {
             this.clear();

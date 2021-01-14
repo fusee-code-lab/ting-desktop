@@ -8,7 +8,7 @@
              step="any"
              @input="speedProgress=$event.target.value"
              @mousedown="isProgress=1"
-             @mouseup="co.paused===0?audio.currentIngTime(speedProgress):audio.currentTime(speedProgress);oProgress()"
+             @mouseup="co.paused===1?audio.currentIngTime(speedProgress):audio.currentTime(speedProgress);oProgress()"
              :value="isProgress===1?speedProgress:co.ingTime"/>
     </div>
     <div class="audio-info-content">
@@ -24,8 +24,8 @@
       </div>
       <div class="audio-info-buts">
         <div class="pre" @click="audio.pre()"></div>
-        <div v-if="co.paused===0" class="play" @click="play()"></div>
-        <div v-if="co.paused===1" class="pause" @click="pause()"></div>
+        <div v-if="co.paused===1" class="play" @click="play()"></div>
+        <div v-if="co.paused===0" class="pause" @click="pause()"></div>
         <div class="next" @click="audio.next()"></div>
         <div class="rules">
           <div class="random" @click="rules(PlayTypeOpt.random)"></div>

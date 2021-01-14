@@ -60,7 +60,7 @@ let audio: TingAudioOpt = {
     playType: PlayTypeOpt.list,//播放模式
     volume: 1, //音量
     volumeGradualTime: 0.7,//音量渐进时间(秒)
-    paused: 0, //音频是否暂停  0暂停 1未暂停
+    paused: 1, //音频是否暂停  0未暂停 1暂停
     cachedType: 0, //缓存进度 0-1  1为完成
     cachedTime: 0, //已缓存时长
     ingTime: 0, //当前播放时长
@@ -87,7 +87,7 @@ export const tingCfgData = reactive(cfg);
  */
 export const audioData = reactive({
     ...audio,
-    paused: 0,
+    paused: 1,
     cachedType: 0,
     cachedTime: 0,
     ingTime: 0,
