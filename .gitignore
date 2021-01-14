@@ -6,3 +6,5 @@
 /.idea/
 /yarn.lock
 /data/
+/src/lib/extern/audio.json
+/src/lib/extern/path.json
