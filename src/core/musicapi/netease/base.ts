@@ -1,8 +1,8 @@
-import {instance, randomUserAgent, completeCookie, isBrowser} from '../../util'
-import Encrypt from '../crypto'
+import {instance, randomUserAgent, completeCookie, isBrowser} from '../util'
+import Encrypt from './crypto'
 import querystring from 'querystring'
 
-export default function () {
+export function Base() {
     const fly = instance()
     // fly.config.proxy = 'http://localhost:8888'
     fly.config.baseURL = 'https://music.163.com'
@@ -20,7 +20,7 @@ export default function () {
     }
     fly.config.rejectUnauthorized = false
 
-    fly.interceptors.request.use(config => {
+    fly.interceptors.request.use((config: { [key: string]: any }) => {
         if (config.pureFly) return config
         // 浏览器且本地有cookie信息 接口就都带上cookie
         if (isBrowser) {
@@ -47,8 +47,8 @@ export default function () {
         }
         config.body = querystring.stringify(data)
         return config
-    }, e => Promise.reject(e))
-    fly.interceptors.response.use(res => {
+    }, (e: any) => Promise.reject(e))
+    fly.interceptors.response.use((res: any) => {
         if (res.request.pureFly) {
             return res
         }
@@ -67,7 +67,7 @@ export default function () {
             })
         }
         return data
-    }, e => Promise.reject(e))
+    }, (e: any) => Promise.reject(e))
 
     return fly
 }

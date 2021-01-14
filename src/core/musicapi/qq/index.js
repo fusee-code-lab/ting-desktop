@@ -1,6 +1,6 @@
 import {lyric_decode, noSongsDetailMsg} from '../util';
 import {random, isNull} from "@/lib";
-import qqBase from "./instance/base";
+import {Base} from "./base";
 
 export function Api(instance) {
     const getMusicInfo = (info) => {
@@ -505,4 +505,4 @@ export function Api(instance) {
     }
 }
 
-export const QQApi = Api(qqBase());
+export const QQApi = Api(Base());

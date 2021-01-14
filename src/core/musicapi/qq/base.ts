@@ -1,7 +1,7 @@
-import {instance, randomUserAgent, isBrowser} from '../../util'
+import {instance, randomUserAgent, isBrowser} from '../util'
 
-const getACSRFToken = function (cookie) {
-    function e(e) {
+const getACSRFToken = function (cookie: any) {
+    function e(e: any) {
         for (var n = 5381, o = 0, t = e.length; t > o; ++o)
             n += (n << 5) + e.charCodeAt(o);
         return 2147483647 & n
@@ -9,7 +9,8 @@ const getACSRFToken = function (cookie) {
 
     return e(cookie)
 }
-export default function () {
+
+export function Base() {
     const fly = instance()
     // fly.config.proxy = 'http://localhost:8888'
     fly.config.baseURL = 'https://c.y.qq.com'
@@ -21,7 +22,7 @@ export default function () {
     }
     fly.config.rejectUnauthorized = false
 
-    fly.interceptors.request.use(config => {
+    fly.interceptors.request.use((config: { [key: string]: any }) => {
         if (config.newApi) {
             config.baseURL = 'https://u.y.qq.com'
             delete config.newApi
@@ -34,7 +35,7 @@ export default function () {
             if (loginCookies) {
                 try {
                     config.headers.Cookie = loginCookies
-                    const cookiesObject = {}
+                    const cookiesObject: { [key: string]: any } = {}
                     loginCookies.replace(/\s*/g, '').split(';').map(item => item.split('=')).forEach(item => {
                         cookiesObject[item[0]] = item[1]
                     })
@@ -60,8 +61,8 @@ export default function () {
             new_json: 1,
         }, config.body)
         return config
-    }, e => Promise.reject(e))
-    fly.interceptors.response.use(res => {
+    }, (e: any) => Promise.reject(e))
+    fly.interceptors.response.use((res: any) => {
         if (!res.data) {
             return Promise.reject({
                 status: false,
@@ -82,27 +83,22 @@ export default function () {
         if (!hasCallback) {
             return Promise.reject({
                 status: false,
-                msg: '请求结果错误',
-                log: res.data
+                msg: res.data
             })
         }
         // code是否正确
         if (!res.request.nocode && res.data.code !== 0) {
             return Promise.reject({
                 status: false,
-                msg: '请求结果报错',
-                log: res.data
+                msg: res.data
             })
         }
         return res.data
-    }, e => {
-        console.warn(e)
+    }, (e: any) => {
         return Promise.reject({
             status: false,
-            msg: '请求失败',
-            log: e
+            msg: e
         })
     })
-
     return fly
 }

@@ -1,6 +1,6 @@
 import {lyric_decode, noSongsDetailMsg} from "../util";
 import {isNull} from "@/lib";
-import neteaseBase from './instance/base';
+import {Base} from './base';
 
 export function Api(instance) {
     // getRestrictLevel方法 来源于网易云音乐web端代码
@@ -666,4 +666,4 @@ export function Api(instance) {
     };
 }
 
-export const NeteaseApi = Api(neteaseBase());
+export const NeteaseApi = Api(Base());
