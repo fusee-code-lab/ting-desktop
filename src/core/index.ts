@@ -36,6 +36,10 @@ export interface TingCfgOpt {
     down: string; //下载歌曲存储路径
 }
 
+export interface TingPlayListOpt {
+    [key: string]: SongOpt
+}
+
 /**
  * 歌曲类型
  */
@@ -68,7 +72,7 @@ let audio: TingAudioOpt = {
     songInfo: null //当前播放歌曲信息
 };
 
-let audioPlayList: { [key: string]: SongOpt } = {};
+let audioPlayList: TingPlayListOpt = {};
 
 try {
     cfg = getGlobal("setting")["cfg"];
@@ -80,12 +84,12 @@ try {
 /**
  * 播放器设置数据
  */
-export const tingCfgData = reactive(cfg);
+export const tingCfgData = reactive<TingCfgOpt>(cfg);
 
 /**
  * 当前播放器播放状态数据
  */
-export const audioData = reactive({
+export const audioData = reactive<TingAudioOpt>({
     ...audio,
     paused: 1,
     cachedType: 0,
@@ -97,7 +101,7 @@ export const audioData = reactive({
 /**
  * 当前播放歌单
  */
-export const audioPlayListData = ref(audioPlayList);
+export const audioPlayListData = ref<TingPlayListOpt>(audioPlayList);
 
 /**
  * 搜索数据结构
