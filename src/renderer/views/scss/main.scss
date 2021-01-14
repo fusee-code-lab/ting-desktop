@@ -78,7 +78,6 @@ html, body {
   background-color: transparent;
   position: relative;
   user-select: none;
-  -webkit-app-region: drag;
   font-family: ping-fang;
 }
 
@@ -166,12 +165,5 @@ button {
 }
 
 .container.win32 {
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.40);
-  position: absolute !important;
-  left: 5px;
-  right: 5px;
-  top: 5px;
-  bottom: 5px;
-  width: auto;
-  height: auto;
+  border: 1px solid var(--accentColor);
 }

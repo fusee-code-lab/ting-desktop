@@ -233,7 +233,7 @@
 </style>
 
 <template>
-  <div class="sheet-info no-drag">
+  <div class="sheet-info">
 
     <div v-if="data.info" class="head">
       <div class="left">

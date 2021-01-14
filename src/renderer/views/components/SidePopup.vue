@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div
-        class="side-popup no-drag"
+        class="side-popup"
         :class="{ 'left': position === 'left', 'right': position === 'right' }"
         v-if="shown"
     >

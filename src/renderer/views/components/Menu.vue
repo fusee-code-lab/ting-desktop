@@ -1,10 +1,10 @@
 <template>
   <div class="menu-info">
-    <div class="menu-search no-drag">
+    <div class="menu-search">
       <input v-model.trim="searchData.keyword" @keydown.enter="search"/>
       <button @click="search"></button>
     </div>
-    <div class="menu-sheet no-drag">
+    <div class="menu-sheet">
       <div class="title">常听</div>
       <div class="content">
 

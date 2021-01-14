@@ -22,7 +22,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
     <div class="info">
       <div class="left">
@@ -73,6 +73,7 @@ export default defineComponent({
 
     return {
       platform: getGlobal("platform"),
+      accentColor: getGlobal("appInfo")["accentColor"],
       messageData,
       shownLyricsSidePopup,
       showLyricsSidePopup

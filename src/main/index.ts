@@ -1,5 +1,5 @@
 import {resolve} from "path";
-import {app, globalShortcut, ipcMain} from "electron";
+import {app, globalShortcut, ipcMain, systemPreferences} from "electron";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
 import {Window} from "./window";
 import {Updates} from "./update";
@@ -21,7 +21,8 @@ global.sharedObject = {
     platform: process.platform, //当前运行平台
     appInfo: { //应用信息
         name: app.name,
-        version: app.getVersion()
+        version: app.getVersion(),
+        accentColor: systemPreferences.getAccentColor()
     }
 };
 
@@ -51,7 +52,7 @@ class Init {
             })
         }
         app.whenReady().then(() => {
-            this.window.createWindow({isMainWin: true});
+            this.window.createWindow({isMainWin: true, resizable: false});
             this.window.createTray();
         });
         app.on("window-all-closed", () => {
@@ -61,7 +62,7 @@ class Init {
         })
         app.on("activate", () => {
             if (this.window.getAllWindows().length === 0) {
-                this.window.createWindow({isMainWin: true});
+                this.window.createWindow({isMainWin: true, resizable: false});
             }
         })
         //获得焦点时发出

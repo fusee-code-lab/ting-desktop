@@ -72,7 +72,7 @@
 </style>
 
 <template>
-  <div class="Search-details-info no-drag">
+  <div class="Search-details-info">
     <div class="title">
       <div class="song-name">“{{ searchData.keyword }}”</div>
       <div class="suffix">的搜索结果</div>

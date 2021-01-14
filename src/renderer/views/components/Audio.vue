@@ -1,5 +1,5 @@
 <template>
-  <div class="audio-info no-drag">
+  <div class="audio-info">
     <div class="audio-info-progress">
       <input type="range" class="progress-input"
              :style="{'--audio-progres':`linear-gradient(to right, var(--theme-blue) ${isProgress===1?speedProgress/co.allTime.toFixed(0)*100:co.ingTime/co.allTime.toFixed(0)*100}%, #fff 0%)`}"

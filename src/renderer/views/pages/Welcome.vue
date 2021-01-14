@@ -65,7 +65,7 @@
 }
 </style>
 <template>
-  <div class="container bg-img" :class="platform">
+  <div class="container bg-img drag" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
     <div class="main" :class="platform">
       <div class="content">
@@ -105,7 +105,8 @@ export default defineComponent({
 
     return {
       handleJumpHome,
-      platform: getGlobal("platform")
+      platform: getGlobal("platform"),
+      accentColor: getGlobal("appInfo")["accentColor"]
     }
   },
 })
