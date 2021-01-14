@@ -43,7 +43,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, 120px);
       grid-auto-rows: 150px;
-      grid-gap: 25px 25px;
+      grid-gap: 22px 22px;
       width: 100%;
       height: 100%;
       padding: 20px 0 10px;

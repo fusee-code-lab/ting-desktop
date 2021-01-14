@@ -164,3 +164,14 @@ button {
   background-color: var(--white);
   color: var(--black);
 }
+
+.container.win32 {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.40);
+  position: absolute !important;
+  left: 5px;
+  right: 5px;
+  top: 5px;
+  bottom: 5px;
+  width: auto;
+  height: auto;
+}

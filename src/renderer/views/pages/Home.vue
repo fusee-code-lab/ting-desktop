@@ -22,7 +22,7 @@
 </style>
 
 <template>
-  <div class="container">
+  <div class="container" :class="platform">
     <Head/>
     <div class="info">
       <div class="left">
@@ -33,7 +33,7 @@
           <SongStatus/>
         </SidePopup>
         <SearchDetails/>
-<!--        <Sheet/>-->
+        <!--        <Sheet/>-->
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
@@ -50,6 +50,7 @@ import SearchDetails from "../components/SearchDetails.vue";
 import Sheet from "@/renderer/views/components/Sheet.vue";
 import SidePopup from "@/renderer/views/components/SidePopup.vue";
 import SongStatus from "@/renderer/views/pages/SongStatus.vue";
+import {getGlobal} from "@/lib";
 
 export default defineComponent({
   components: {
@@ -64,12 +65,14 @@ export default defineComponent({
   name: "Home",
   setup() {
     const shownLyricsSidePopup = ref(false);
+
     function showLyricsSidePopup() {
       shownLyricsSidePopup.value = !shownLyricsSidePopup.value;
       console.log("show lyrics", shownLyricsSidePopup.value)
     }
 
     return {
+      platform: getGlobal("platform"),
       messageData,
       shownLyricsSidePopup,
       showLyricsSidePopup

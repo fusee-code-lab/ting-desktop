@@ -65,7 +65,7 @@
 }
 </style>
 <template>
-  <div class="container bg-img">
+  <div class="container bg-img" :class="platform">
     <Head/>
     <div class="main" :class="platform">
       <div class="content">
