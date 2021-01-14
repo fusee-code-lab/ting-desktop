@@ -3,7 +3,7 @@
     <div
         class="side-popup no-drag"
         :class="{ 'left': position === 'left', 'right': position === 'right' }"
-        v-if="shown"
+        v-show="shown"
     >
       <slot></slot>
     </div>
