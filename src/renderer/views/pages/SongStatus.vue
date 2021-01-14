@@ -1,5 +1,5 @@
 <template>
-  <ul class="lyrics-list" ref="lyricsList">
+  <ul class="lyrics-list" :ref="lyricsListDom">
     <li
         v-for="(item, idx) in lyrics.original"
         class="lyrics-item" :class="{ 'current': curLyricIdx === idx }"
@@ -13,11 +13,12 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, reactive, watch } from "vue";
+  import { defineComponent, ref, reactive, watch, onMounted , onBeforeUnmount} from "vue";
   import { audioData } from "@/core"
   import { getLyric } from "@/core/musicapi/api"
   import { audio } from "@/core/audio";
   import { debounce } from "@/lib";
+  import {WatchStopHandle} from "@vue/runtime-core";
 
   interface SongLyrics {
     original: {
@@ -38,6 +39,11 @@
       const curLyricIdx = ref(0);
       // 歌词列表的 dom 元素
       const lyricsList = ref<HTMLElement | null>(null);
+
+      // 获取DMO
+      function lyricsListDom(el:HTMLElement){
+        lyricsList.value = el;
+      }
 
       // 使用歌词索引跳转播放时间
       function seekAudioTimeWithLyricIdx(index: number) {
@@ -88,18 +94,6 @@
         }
       }
 
-      // 观察正在播放的音乐数据
-      watch(() => audioData.songInfo, updateLyricsData)
-
-      // 观察播放进度
-      watch(() => audioData.ingTime, (time) => {
-        const ms = time * 1000;
-        const lyricIdx = lyrics.original.findIndex((item, idx) =>
-          item.ms <= ms && ms <= (lyrics.original[idx + 1]?.ms ?? Infinity)
-        )
-        seekToLyricWithIdx(lyricIdx);
-      })
-
       // 当正在滚动时，锁定自动歌词滚动
       const debouncedOnWheelFunc = debounce(() => {
         lockScroll.value = false;
@@ -109,6 +103,31 @@
         debouncedOnWheelFunc();
       }
 
+      let disposeLyricsWatch:WatchStopHandle = null;
+      let disposeIngTimeWatch:WatchStopHandle = null;
+
+      onMounted(()=>{
+        // 观察正在播放的音乐数据
+        disposeLyricsWatch = watch(() => audioData.songInfo, updateLyricsData)
+
+        // 观察播放进度
+        disposeIngTimeWatch = watch(() => audioData.ingTime, (time) => {
+          const ms = time * 1000;
+          const lyricIdx = lyrics.original.findIndex((item, idx) =>
+              item.ms <= ms && ms <= (lyrics.original[idx + 1]?.ms ?? Infinity)
+          )
+          seekToLyricWithIdx(lyricIdx);
+        })
+
+        // 歌词加载
+        if(lyrics.original.length === 0) updateLyricsData(audioData.songInfo);
+      })
+
+      onBeforeUnmount(()=>{
+        if (disposeLyricsWatch) disposeLyricsWatch();
+        if (disposeIngTimeWatch) disposeIngTimeWatch();
+      })
+
       // TODO 触控板触摸时禁止滚动歌词
 
       return {
@@ -117,6 +136,7 @@
         lyricsList,
         seekAudioTimeWithLyricIdx,
         onWheel,
+        lyricsListDom,
       };
     }
   });

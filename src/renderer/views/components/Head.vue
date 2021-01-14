@@ -11,6 +11,7 @@
   align-items: center;
 
   > .win32, .darwin {
+    padding: 0 10px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -22,13 +23,7 @@
     }
   }
 
-  > .darwin {
-    padding-right: 10px;
-  }
-
   > .win32 {
-    padding-left: 10px;
-
     > .events {
       display: flex;
       justify-content: space-between;
