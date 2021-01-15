@@ -1,3 +1,7 @@
+<style lang="scss" scoped>
+@import "../scss/audio";
+</style>
+
 <template>
   <div class="audio-info">
     <div class="audio-info-progress">
@@ -96,7 +100,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss" scoped>
-@import "../scss/audio";
-</style>

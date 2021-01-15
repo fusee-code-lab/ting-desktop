@@ -9,8 +9,11 @@
   > .left {
     position: relative;
     width: 20%;
+    height: 100%;
     min-width: 220px;
     max-width: 320px;
+    background-color: #E3E3E8;
+    padding: 40px 10px 0;
   }
 
   > .right {
@@ -25,14 +28,15 @@
     <Head/>
     <div class="info">
       <div class="left">
-        <Menu/>
+        <Search></Search>
+        <Sheet></Sheet>
       </div>
       <div class="right">
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus/>
         </SidePopup>
-                        <SearchDetails/>
-<!--        <Sheet/>-->
+        <SearchDetails/>
+        <!-- <SheetDetails/>-->
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
@@ -44,18 +48,20 @@ import {defineComponent, ref} from "vue";
 import {messageData} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
-import Menu from "../components/Menu.vue";
+import Sheet from "../components/Sheet.vue";
 import SearchDetails from "../components/SearchDetails.vue";
-import Sheet from "@/renderer/views/components/Sheet.vue";
+import Search from "@/renderer/views/components/Search.vue";
+import SheetDetails from "@/renderer/views/components/SheetDetails.vue";
 import SidePopup from "@/renderer/views/components/SidePopup.vue";
 import SongStatus from "@/renderer/views/pages/SongStatus.vue";
 import {getGlobal} from "@/lib";
 
 export default defineComponent({
   components: {
-    Sheet,
+    Search,
+    SheetDetails,
     SearchDetails,
-    Menu,
+    Sheet,
     Head,
     Audio,
     SidePopup,

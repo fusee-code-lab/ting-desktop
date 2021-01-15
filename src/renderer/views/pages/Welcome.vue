@@ -32,6 +32,12 @@
       }
       >.but{
         margin-top: 35px;
+        width: 120px;
+        height: 32px;
+        background-color: var(--theme-blue);
+        outline: none;
+        color: var(--white);
+        font: 600 17px/32px segoe-ui;
       }
     }
 
@@ -71,14 +77,13 @@
       <div class="content">
         <img src="https://img.shuaxinjs.cn/favicon-16x16-next.png" alt="logo"/>
         <div class="title">欢迎来到<span style="margin-left: 10px;">Ting</span></div>
-        <Button class="but" @click="handleJumpHome" text="开始"/>
+        <button class="but" @click="handleJumpHome()">开始</button>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import {defineComponent} from "vue";
-import Button from '../components/Button.vue'
 import {getGlobal} from "@/lib";
 import {setMinSize, setSize, createWindow} from "@/renderer/utils";
 import Head from "@/renderer/views/components/Head.vue";
@@ -87,8 +92,7 @@ import {argsState} from "@/renderer/store";
 export default defineComponent({
   name: 'Welcome',
   components: {
-    Head,
-    Button,
+    Head
   },
   setup() {
     const args = argsState();

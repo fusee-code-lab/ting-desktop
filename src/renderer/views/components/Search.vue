@@ -1,0 +1,88 @@
+<style lang="scss" scoped>
+@import "~@/renderer/views/scss/mixin.scss";
+.search-info {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  z-index: 1;
+  padding: 0 0 10px;
+
+  > input {
+    background-color: #ffffff;
+    height: 26px;
+    width: calc(100% - 32px);
+    margin: 0;
+    font: normal 12px/12px ping-fang;
+    color: var(--label);
+
+    &::-webkit-input-placeholder {
+      color: var(--secondary-label);
+    }
+  }
+
+  > button {
+    background-color: #ffffff;
+    width: 32px;
+    height: 26px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover, &:active {
+      background-image: none;
+    }
+
+    &:before {
+      @include device-pixel("~@/renderer/assets/icons/search_icon");
+      content: "";
+      width: 15px;
+      height: 15px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+}
+</style>
+
+<template>
+  <div class="search-info">
+    <input placeholder="搜索" v-model.trim="searchData.keyword" @keydown.enter="search"/>
+    <button @click="search"></button>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent} from "vue";
+import {isNull} from "@/lib";
+import {audioSheetListData, searchData} from "@/core";
+import {searchSheet, searchSong} from "@/core/musicapi";
+
+export default defineComponent({
+  name: "Search",
+  setup() {
+    async function search() {
+      if (isNull(searchData.keyword)) return;
+      let reqs = await Promise.all([searchSong(searchData.keyword), searchSheet(searchData.keyword)]) as any;
+      if (reqs[0] && reqs[0].status) {
+        searchData.singleData.total = reqs[0].data.total;
+        searchData.singleData.songs = reqs[0].data.songs;
+      }
+      if (reqs[1] && reqs[1].status) {
+        searchData.sheetData.neteaseTotal = reqs[1].data.neteaseTotal;
+        searchData.sheetData.qqTotal = reqs[1].data.qqTotal;
+        searchData.sheetData.sheets = reqs[1].data.sheets;
+      }
+    }
+
+    return {
+      searchData,
+      audioSheetListData,
+      search
+    };
+  }
+})
+</script>

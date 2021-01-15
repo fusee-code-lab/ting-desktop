@@ -6,6 +6,12 @@ export enum Vendors {
     qq = "qq"
 }
 
+export interface BSongArrayOpt {
+    vendor: Vendors;
+    id: number | string
+}
+
+
 export const provider = {
     netease: NeteaseApi,
     qq: QQApi
@@ -52,7 +58,7 @@ export async function getAlbumDetail(vendor: Vendors, id: number | string) {
 }
 
 // 批量获取任意vendor歌曲详情
-export async function getAnyVendorSongDetail(arr: [], timeout = 0) {
+export async function getAnyVendorSongDetail(arr: BSongArrayOpt[], timeout = 0) {
     // 先分类
     let songsList: { [key: string]: any } = {
         netease: [],

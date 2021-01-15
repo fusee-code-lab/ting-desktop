@@ -18,6 +18,22 @@ export async function getSongDetail(vendor: Api.Vendors, id: number | string) {
 }
 
 /**
+ * 批量获取任意歌曲详情
+ */
+export async function getBSongDetail(arr: Api.BSongArrayOpt[]) {
+    try {
+        let req = await Api.getAnyVendorSongDetail(arr).catch(() => {
+            return null;
+        });
+        if (req.status && req.data) return req.data;
+        return null;
+    } catch (e) {
+        Log.error(e.toString());
+        return null;
+    }
+}
+
+/**
  * 获取歌曲播放链接
  */
 export async function getSongUrl(vendor: Api.Vendors, id: number | string) {
