@@ -257,7 +257,7 @@
           </div>
           <div class="buts">
             <button class="all-play" @click="playAll()">播放全部</button>
-            <button class="add-sheet" @click="addSheet()">添加</button>
+            <button class="add-sheet" @click="addSongAllSheet()">添加</button>
           </div>
         </div>
       </div>
@@ -358,13 +358,8 @@ export default defineComponent({
       await audio.load();
     }
 
-    async function addSheet() {
-      let params: SheetOpt = {
-        id: data.info.detail.id,
-        name: data.info.detail.name,
-        vendor: data.vendor
-      };
-      sheetCreate(data.info.detail.id, params);
+    async function addSongAllSheet() {
+      // TODO 添加所有歌曲至 歌单
     }
 
     return {
@@ -372,7 +367,7 @@ export default defineComponent({
       showHide,
       play,
       playAll,
-      addSheet
+      addSongAllSheet
     }
   }
 });

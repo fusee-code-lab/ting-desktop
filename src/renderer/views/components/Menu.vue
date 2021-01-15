@@ -8,17 +8,10 @@
       <div class="title">常听</div>
       <div class="content">
 
-        <div class="item act">
+        <div class="item" v-for="sheet in audioSheetListData">
           <div class="left">
             <div class="icon bg-img"></div>
-            <div class="text">Nav item</div>
-          </div>
-        </div>
-
-        <div class="item">
-          <div class="left">
-            <div class="icon bg-img"></div>
-            <div class="text">Nav item</div>
+            <div class="text">{{ sheet.detail.name }}</div>
           </div>
         </div>
 
@@ -30,12 +23,15 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {isNull} from "@/lib";
-import {searchData} from "@/core";
+import {searchData, audioSheetListData} from "@/core";
+import {sheetList} from "@/core/sheet";
 import {searchSong, searchSheet} from "@/core/musicapi";
 
 export default defineComponent({
   name: "Menu",
   setup() {
+
+    sheetList();
 
     async function search() {
       if (isNull(searchData.keyword)) return;
@@ -53,6 +49,7 @@ export default defineComponent({
 
     return {
       searchData,
+      audioSheetListData,
       search
     };
   }

@@ -8,7 +8,7 @@ import Log from "@/lib/log";
  */
 export function sheetList() {
     let req = findFileBySuffix(tingCfgData.sheet, sheetSuffix);
-    for (let i of req) {
+    if (req) for (let i of req) {
         readLine(i, -1).then((e: string) => {
             try {
                 let sheet = JSON.parse(e) as SheetOpt;
