@@ -27,6 +27,13 @@
       font: 400 22px ping-fang;
       z-index: 1000;
     }
+
+    > .null {
+      padding: 40px 0;
+      text-align: center;
+      font: 400 19px ping-fang;
+    }
+
   }
 }
 </style>
@@ -45,7 +52,8 @@
           <SongStatus/>
         </SidePopup>
         <SearchDetails v-if="messageData[messageKeys.Show] === componentShow.SearchDetails"/>
-        <SheetDetails v-if="messageData[messageKeys.Show] === componentShow.SheetDetails"/>
+        <SheetDetails v-else-if="messageData[messageKeys.Show] === componentShow.SheetDetails"/>
+        <div v-else class="null">左边搜索~ (当前测试阶段)</div>
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
