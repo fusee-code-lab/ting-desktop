@@ -31,8 +31,8 @@
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus/>
         </SidePopup>
-        <!--                <SearchDetails/>-->
-        <Sheet/>
+                        <SearchDetails/>
+<!--        <Sheet/>-->
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>

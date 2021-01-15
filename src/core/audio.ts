@@ -98,7 +98,7 @@ class Audios {
                 if (req) song.path = req.url;
                 else await this.next();
             }
-            if (song.id === audioData.songInfo.id
+            if (audioData.songInfo && song.id === audioData.songInfo.id
                 && this.currentAudio.src) {
                 if (audioData.paused === 1) this.currentAudio.play().catch(console.log);
                 return;
