@@ -19,6 +19,12 @@ export interface SongOpt {
     path?: string; //歌曲链接
 }
 
+export interface SheetOpt {
+    id: number; //歌单id
+    name: string; //歌单名称
+    vendor: Vendors; //歌单来源
+}
+
 export interface TingAudioOpt {
     playType: PlayTypeOpt; //播放模式
     volume: number; //音量
@@ -38,6 +44,10 @@ export interface TingCfgOpt {
 
 export interface TingPlayListOpt {
     [key: string]: SongOpt
+}
+
+export interface TingSheetListOpt {
+    [key: string]: { detail: SheetOpt, songs: SongOpt[] }
 }
 
 /**
@@ -72,11 +82,13 @@ let audio: TingAudioOpt = {
     songInfo: null //当前播放歌曲信息
 };
 
+let audioSheetList: TingSheetListOpt = {};
+
 let audioPlayList: TingPlayListOpt = {};
 
 try {
-    cfg = getGlobal("setting")["cfg"];
-    audio = getGlobal("setting")["audio"];
+    if (getGlobal("setting")["cfg"]) cfg = getGlobal("setting")["cfg"];
+    if (getGlobal("setting")["audio"]) audio = getGlobal("setting")["audio"];
 } catch (e) {
     Log.error("[getSetting]", e);
 }
@@ -97,6 +109,11 @@ export const audioData = reactive<TingAudioOpt>({
     ingTime: 0,
     allTime: 0
 });
+
+/**
+ * 歌单列表
+ */
+export const audioSheetListData = reactive<TingSheetListOpt>(audioSheetList);
 
 /**
  * 当前播放歌单
@@ -121,10 +138,10 @@ export const searchData = reactive({
 
 /**
  * 获取歌单路径
- * @param path 歌单名称
+ * @param name 歌单名称
  */
-export function getSheetPath(path: string) {
-    return `${tingCfgData.sheet}/${path}${sheetSuffix}`;
+export function getSheetPath(name: string) {
+    return `${tingCfgData.sheet}/${name}${sheetSuffix}`;
 }
 
 /**

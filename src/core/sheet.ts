@@ -1,40 +1,21 @@
 import {EOL} from "os";
-import {reactive} from "vue";
-import {tingCfgData, getSheetPath, sheetSuffix} from "@/core"
+import {tingCfgData, audioSheetListData, getSheetPath, sheetSuffix, SheetOpt, SongOpt} from "@/core"
 import {readLine, writeFile, appendFile, findFileBySuffix} from "@/lib/file";
 import Log from "@/lib/log";
-
-export const sheetData = reactive({
-    list: [] //歌单列表
-});
-
-export const songData = reactive({
-    list: [] //播放列表
-})
-
-export interface SheetList {
-    name: string; //歌单名称
-    cover?: string; //图片地址
-    path: string; //歌单对应文件路径
-}
-
-export interface SongData {
-    name: string; //歌曲名称
-    url: string; //歌曲地址
-    cover: string; //图片地址
-    album: { cover: string; id: number; name: string; }; //专辑信息
-    artists: [{ id: number; name: string }]; //歌手
-}
 
 /**
  * 当前歌单列表
  */
-export function list() {
+export function sheetList() {
     let req = findFileBySuffix(tingCfgData.sheet, sheetSuffix);
     for (let i of req) {
         readLine(i, -1).then((e: string) => {
             try {
-                if (e) sheetData.list.push(JSON.parse(e));
+                let sheet = JSON.parse(e) as SheetOpt;
+                if (sheet) audioSheetListData[`${sheet.vendor}|${sheet.id}`] = {
+                    detail: sheet,
+                    songs: []
+                };
             } catch (e) {
                 Log.error(e);
             }
@@ -44,13 +25,13 @@ export function list() {
 
 /**
  * 歌单详情
- * @param path
+ * @param key
  */
-async function details(path: string) {
+async function sheetDetails(key: string) {
     try {
-        let data = await readLine(path) as string[];
+        let data = await readLine(getSheetPath(audioSheetListData[key].detail.name)) as string[];
         data.shift();
-        songData.list = data.map(e => JSON.parse(e)) as SongData[];
+        audioSheetListData[key].songs = data.map(e => JSON.parse(e)) as SongOpt[];
     } catch (e) {
         Log.error(e);
     }
@@ -59,14 +40,14 @@ async function details(path: string) {
 /**
  * 创建歌单
  */
-async function create(name: string, data: SheetList) {
+export async function sheetCreate(name: string, data: SheetOpt) {
     return await writeFile(getSheetPath(name), Buffer.from(JSON.stringify(data) + EOL).toString("binary"), {encoding: "binary"});
 }
 
 /**
  * 添加歌曲到歌单
  */
-async function addSong(path: string, data: SongData) {
+export async function sheetAddSong(path: string, data: SongOpt) {
     try {
         return await appendFile(path, Buffer.from(JSON.stringify(data) + EOL).toString("binary"));
     } catch (e) {

@@ -257,7 +257,7 @@
           </div>
           <div class="buts">
             <button class="all-play" @click="playAll()">播放全部</button>
-            <button class="add-sheet">添加</button>
+            <button class="add-sheet" @click="addSheet()">添加</button>
           </div>
         </div>
       </div>
@@ -299,7 +299,8 @@ import {Vendors} from "@/core/musicapi/api";
 import {getPlaylistDetail, getSongUrl} from "@/core/musicapi";
 import Log from "@/lib/log";
 import {audio} from "@/core/audio";
-import {SongOpt, audioPlayListData} from "@/core";
+import {sheetCreate} from "@/core/sheet";
+import {SongOpt, audioPlayListData, SheetOpt} from "@/core";
 
 export default defineComponent({
   name: "Sheet",
@@ -308,7 +309,7 @@ export default defineComponent({
       info: null,
       isShow: false,
       songTime: "-",
-      vendor: "qq"
+      vendor: Vendors.netease
     });
 
     //"netease", 5382136003  "qq", 6970813620
@@ -357,11 +358,21 @@ export default defineComponent({
       await audio.load();
     }
 
+    async function addSheet() {
+      let params: SheetOpt = {
+        id: data.info.detail.id,
+        name: data.info.detail.name,
+        vendor: data.vendor
+      };
+      sheetCreate(data.info.detail.id, params);
+    }
+
     return {
       data,
       showHide,
       play,
-      playAll
+      playAll,
+      addSheet
     }
   }
 });
