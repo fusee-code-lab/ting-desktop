@@ -47,7 +47,10 @@
         <Sheet></Sheet>
       </div>
       <div class="right">
-        <div class="back no-drag cursor-pointer" @click="back()">←</div>
+        <div class="back no-drag cursor-pointer"
+             v-if="messageData[messageKeys.History]&&messageData[messageKeys.History].length>0"
+             @click="back()">←
+        </div>
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus/>
         </SidePopup>
@@ -94,7 +97,9 @@ export default defineComponent({
     }
 
     function back() {
-      messageData[messageKeys.Show] = messageData[messageKeys.History][1];
+      messageData[messageKeys.History].shift();
+      if (messageData[messageKeys.History].length > 0) messageData[messageKeys.Show] = messageData[messageKeys.History][0];
+      else messageData[messageKeys.Show] = "null";
     }
 
     return {
