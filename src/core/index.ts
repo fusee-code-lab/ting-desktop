@@ -127,14 +127,21 @@ export const searchData = reactive({
     keyword: "", //搜索关键字
     singleData: { //单曲列表
         songs: [],
-        total: 0
+        total: 0,
+        offset: 0
     },
     sheetData: { //歌单列表
         sheets: [],
         qqTotal: 0,
-        neteaseTotal: 0
+        neteaseTotal: 0,
+        offset: 0
     }
 });
+
+/**
+ * 歌单详情(在线)
+ */
+export const sheetData = ref(null);
 
 /**
  * 获取歌单路径

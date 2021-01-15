@@ -1,5 +1,6 @@
-import {reactive, provide, inject} from "vue";
+import {reactive, provide, inject, watch} from "vue";
 import {WindowOpt} from "@/lib/interface";
+import {isNull} from "@/lib";
 
 /**
  * 组件页面配置
@@ -43,10 +44,35 @@ export const getProvideState = (key: symbol) => inject(key);
 /**
  * 窗口通信消息内容
  * */
-export const messageData = reactive(<{ [key: string]: unknown }>{});
-export const setMessageData = (key: string, value: unknown) => {
+export const messageData = reactive(<{ [key: string]: any }>{});
+export const setMessageData = (key: string, value: any) => {
     messageData[key] = value;
 };
 export const removeMessageData = (key: string) => {
     delete messageData[key];
 };
+
+/**
+ * 常驻消息key
+ */
+export enum messageKeys {
+    Show = "show",
+    History = "history"
+}
+
+/**
+ * 控制组件显示隐藏
+ */
+export enum componentShow {
+    SheetDetails = "SheetDetails",
+    SearchDetails = "SearchDetails"
+}
+
+/**
+ * 组件显示历史
+ */
+watch(() => messageData[messageKeys.Show], (n) => {
+    if (isNull(messageData[messageKeys.History])) messageData[messageKeys.History] = [];
+    messageData[messageKeys.History].unshift(n);
+    if (messageData[messageKeys.History].length > 10) messageData[messageKeys.History].pop();
+})

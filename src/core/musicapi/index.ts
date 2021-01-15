@@ -71,10 +71,10 @@ export async function getLyric(vendor: Api.Vendors, id: number | string) {
  * @param limit 条数
  * @param offset 页码
  */
-export async function searchSong(keyword: string, limit: number = 5, offset: number = 0) {
+export async function searchSong(keyword: string, offset: number = 0, limit: number = 5) {
     try {
         let gets = [
-            Api.provider.netease.searchSong({keyword, limit, offset, type: 1}),
+            Api.provider.netease.searchSong({keyword, limit, offset: offset * limit, type: 1}),
             Api.provider.qq.searchSong({keyword, limit, offset})
         ];
         let req = await Promise.all(gets);
@@ -105,14 +105,13 @@ export async function searchSong(keyword: string, limit: number = 5, offset: num
 /**
  * 搜索歌单
  */
-export async function searchSheet(keyword: string, limit: number = 5, offset: number = 0) {
+export async function searchSheet(keyword: string, offset: number = 0, limit: number = 5) {
     try {
         let gets = [
-            Api.provider.netease.searchSong({keyword, limit, offset, type: 1000}),
+            Api.provider.netease.searchSong({keyword, limit, offset: offset * limit, type: 1000}),
             Api.provider.qq.searchSong({keyword, limit, offset, remoteplace: "txt.yqq.playlist"})
         ];
         let req = await Promise.all(gets);
-        console.log(req)
         let status = false;
         let neteaseTotal = 0, qqTotal = 0;
         let sheets = [];

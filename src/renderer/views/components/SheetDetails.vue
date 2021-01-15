@@ -248,10 +248,10 @@
             <span>{{ data.info.detail.tags.join("/") }}</span>
           </div>
           <div class="desc">
-            <div class="text" :class="{'hide':!data.isShow,'show':data.isShow}">{{ data.info.detail.desc }}</div>
-            <div v-if="!data.isShow" @click="showHide()" class="more cursor-pointer">更多</div>
+            <div class="text" :class="{'hide':!data.isDesc,'show':data.isDesc}">{{ data.info.detail.desc }}</div>
+            <div v-if="!data.isDesc" @click="showHide()" class="more cursor-pointer">更多</div>
           </div>
-          <div class="creat" :class="{'desc-show':data.isShow}">
+          <div class="creat" :class="{'desc-show':data.isDesc}">
             <div class="icon bg-img" :class="{'qq':data.vendor === 'qq'}"></div>
             <div class="nickname">@{{ data.info.detail.creat_name }}</div>
           </div>
@@ -299,22 +299,22 @@ import {Vendors} from "@/core/musicapi/api";
 import {getPlaylistDetail, getSongUrl} from "@/core/musicapi";
 import Log from "@/lib/log";
 import {audio} from "@/core/audio";
-import {SongOpt, audioPlayListData} from "@/core";
+import {SongOpt, audioPlayListData, sheetData} from "@/core";
+
+interface SheetDetailsOpt {
+  info?: any;
+  isDesc?: boolean;
+  songTime?: string;
+  vendor?: Vendors;
+}
 
 export default defineComponent({
   name: "SheetDetails",
   setup() {
-    const data = reactive({
-      info: null,
-      isShow: false,
-      songTime: "-",
-      vendor: Vendors.netease
-    });
+    const data = reactive<SheetDetailsOpt | null>({});
 
-    //"netease", 5382136003  "qq", 6970813620
     onMounted(async () => {
-      let req = await getPlaylistDetail(Vendors.netease, 5382136003);
-      console.log(req);
+      let req = await getPlaylistDetail(sheetData.value.vendor, sheetData.value.id || sheetData.value.dissid);
       if (req.status) {
         data.info = req.data;
         try {
@@ -328,7 +328,7 @@ export default defineComponent({
     })
 
     function showHide() {
-      data.isShow = !data.isShow;
+      data.isDesc = !data.isDesc;
     }
 
 

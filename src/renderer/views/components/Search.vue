@@ -1,5 +1,6 @@
 <style lang="scss" scoped>
 @import "~@/renderer/views/scss/mixin.scss";
+
 .search-info {
   position: relative;
   display: flex;
@@ -60,13 +61,18 @@ import {defineComponent} from "vue";
 import {isNull} from "@/lib";
 import {audioSheetListData, searchData} from "@/core";
 import {searchSheet, searchSong} from "@/core/musicapi";
+import {componentShow, messageKeys, messageData} from "@/renderer/store";
 
 export default defineComponent({
   name: "Search",
   setup() {
+
     async function search() {
       if (isNull(searchData.keyword)) return;
+      searchData.singleData.offset = 0;
+      searchData.sheetData.offset = 0;
       let reqs = await Promise.all([searchSong(searchData.keyword), searchSheet(searchData.keyword)]) as any;
+      console.log(reqs);
       if (reqs[0] && reqs[0].status) {
         searchData.singleData.total = reqs[0].data.total;
         searchData.singleData.songs = reqs[0].data.songs;
@@ -76,6 +82,7 @@ export default defineComponent({
         searchData.sheetData.qqTotal = reqs[1].data.qqTotal;
         searchData.sheetData.sheets = reqs[1].data.sheets;
       }
+      messageData[messageKeys.Show] = componentShow.SearchDetails;
     }
 
     return {

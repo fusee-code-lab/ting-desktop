@@ -19,6 +19,14 @@
   > .right {
     position: relative;
     width: 100%;
+
+    > .back {
+      position: absolute;
+      top: 0;
+      left: 12px;
+      font: 400 22px ping-fang;
+      z-index: 1000;
+    }
   }
 }
 </style>
@@ -32,11 +40,12 @@
         <Sheet></Sheet>
       </div>
       <div class="right">
+        <div class="back no-drag cursor-pointer" @click="back()">←</div>
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus/>
         </SidePopup>
-        <SearchDetails/>
-        <!-- <SheetDetails/>-->
+        <SearchDetails v-if="messageData[messageKeys.Show] === componentShow.SearchDetails"/>
+        <SheetDetails v-if="messageData[messageKeys.Show] === componentShow.SheetDetails"/>
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
@@ -45,15 +54,15 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {messageData} from "../../store";
+import {messageData, messageKeys, componentShow} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
 import Sheet from "../components/Sheet.vue";
 import SearchDetails from "../components/SearchDetails.vue";
-import Search from "@/renderer/views/components/Search.vue";
-import SheetDetails from "@/renderer/views/components/SheetDetails.vue";
-import SidePopup from "@/renderer/views/components/SidePopup.vue";
-import SongStatus from "@/renderer/views/pages/SongStatus.vue";
+import Search from "../components/Search.vue";
+import SheetDetails from "../components/SheetDetails.vue";
+import SidePopup from "../components/SidePopup.vue";
+import SongStatus from "../components/SongStatus.vue";
 import {getGlobal} from "@/lib";
 
 export default defineComponent({
@@ -69,19 +78,26 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
+
     const shownLyricsSidePopup = ref(false);
 
     function showLyricsSidePopup() {
       shownLyricsSidePopup.value = !shownLyricsSidePopup.value;
-      console.log("show lyrics", shownLyricsSidePopup.value)
+    }
+
+    function back() {
+      messageData[messageKeys.Show] = messageData[messageKeys.History][1];
     }
 
     return {
       platform: getGlobal("platform"),
       accentColor: getGlobal("appInfo")["accentColor"],
       messageData,
+      messageKeys,
+      componentShow,
       shownLyricsSidePopup,
-      showLyricsSidePopup
+      showLyricsSidePopup,
+      back
     }
   }
 });

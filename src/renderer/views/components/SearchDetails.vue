@@ -80,7 +80,7 @@
     <div class="single">
       <div class="title">
         <div class="text">单曲</div>
-        <div class="suffix">更多</div>
+        <div class="suffix" @click="songOf()">更多</div>
       </div>
       <div class="content">
         <div class="item" v-for="item in searchData.singleData.songs" v-bind:key="item.id"
@@ -96,10 +96,11 @@
     <div class="sheet">
       <div class="title">
         <div class="text">歌单</div>
+        <div class="suffix" @click="sheetOf()">更多</div>
       </div>
       <div class="content">
         <div class="item" v-for="item in searchData.sheetData.sheets" v-bind:key="item.id"
-             @click="play(item)">
+             @click="sheet(item)">
           <img v-if="item.vendor==='netease'" :src="item.coverImgUrl+'?param=120y120'"
                alt="">
           <img v-else :src="item.imgurl">
@@ -113,13 +114,32 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {searchData} from "@/core";
-import {getSongUrl} from "@/core/musicapi";
+import {searchData, sheetData} from "@/core";
+import {getSongUrl, searchSheet, searchSong} from "@/core/musicapi";
 import {audio} from "@/core/audio";
+import {componentShow, messageData, messageKeys} from "@/renderer/store";
 
 export default defineComponent({
   name: "SearchDetails",
   setup() {
+
+    async function songOf() {
+      searchData.singleData.offset += 1;
+      let req = await searchSong(searchData.keyword, searchData.singleData.offset) as any;
+      console.log("[songOf]",req)
+      if (req && req.status) {
+        searchData.singleData.songs.push(...req.data.songs);
+      }
+    }
+
+    async function sheetOf() {
+      searchData.sheetData.offset += 1;
+      let req = await searchSheet(searchData.keyword, searchData.sheetData.offset) as any;
+      console.log("[sheetOf]",req)
+      if (req && req.status) {
+        searchData.sheetData.sheets.push(...req.data.sheets);
+      }
+    }
 
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
@@ -133,9 +153,17 @@ export default defineComponent({
       });
     }
 
+    async function sheet(item: any) {
+      sheetData.value = item;
+      messageData[messageKeys.Show] = componentShow.SheetDetails;
+    }
+
     return {
       searchData,
-      play
+      play,
+      sheet,
+      songOf,
+      sheetOf
     }
   }
 })
