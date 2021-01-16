@@ -127,7 +127,8 @@ export const searchData = reactive({
     keyword: "", //搜索关键字
     singleData: { //单曲列表
         songs: [],
-        total: 0,
+        qqTotal: 0,
+        neteaseTotal: 0,
         offset: 0
     },
     sheetData: { //歌单列表

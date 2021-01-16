@@ -314,6 +314,7 @@ export default defineComponent({
     const data = reactive<SheetDetailsOpt | null>({});
 
     onMounted(async () => {
+      data.vendor = sheetData.value.vendor || null;
       let req = await getPlaylistDetail(sheetData.value.vendor, sheetData.value.id || sheetData.value.dissid);
       if (req.status) {
         data.info = req.data;

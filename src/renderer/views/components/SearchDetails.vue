@@ -67,6 +67,16 @@
         }
       }
     }
+
+    > .suffix {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--theme-blue);
+      font-size: 12px;
+      height: 30px;
+    }
+
   }
 }
 </style>
@@ -80,7 +90,7 @@
     <div class="single">
       <div class="title">
         <div class="text">单曲</div>
-        <div class="suffix" @click="songOf()">更多</div>
+        <!--        <div v-if="data.isSongOf" class="suffix" @click="songOf()">更多</div>-->
       </div>
       <div class="content">
         <div class="item" v-for="item in searchData.singleData.songs" v-bind:key="item.id"
@@ -92,11 +102,14 @@
           <div class="subtitle">{{ item.artists.map(e => e.name).join() }}</div>
         </div>
       </div>
+      <div v-if="data.isSongOf" class="suffix cursor-pointer" @click="songOf()">
+        {{ data.isSongOfText }}
+      </div>
     </div>
     <div class="sheet">
       <div class="title">
         <div class="text">歌单</div>
-        <div class="suffix" @click="sheetOf()">更多</div>
+        <!--        <div v-if="data.isSheetOf" class="suffix" @click="sheetOf()">更多</div>-->
       </div>
       <div class="content">
         <div class="item" v-for="item in searchData.sheetData.sheets" v-bind:key="item.id"
@@ -108,12 +121,15 @@
           <div class="subtitle">{{ item.description || item.introduction }}</div>
         </div>
       </div>
+      <div v-if="data.isSheetOf" class="suffix cursor-pointer" @click="sheetOf()">
+        {{ data.isSheetOfText }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, reactive} from "vue";
 import {searchData, sheetData} from "@/core";
 import {getSongUrl, searchSheet, searchSong} from "@/core/musicapi";
 import {audio} from "@/core/audio";
@@ -122,23 +138,33 @@ import {componentShow, messageData, messageKeys} from "@/renderer/store";
 export default defineComponent({
   name: "SearchDetails",
   setup() {
+    const data = reactive({
+      isSongOf: true,
+      isSongOfText: "加载更多",
+      isSheetOf: true,
+      isSheetOfText: "加载更多",
+    })
 
     async function songOf() {
       searchData.singleData.offset += 1;
+      data.isSongOfText = "加载中...";
       let req = await searchSong(searchData.keyword, searchData.singleData.offset) as any;
-      console.log("[songOf]",req)
-      if (req && req.status) {
+      data.isSongOfText = "加载更多";
+      console.log("[songOf]", req)
+      if (req && req.status && req.data.songs.length > 0) {
         searchData.singleData.songs.push(...req.data.songs);
-      }
+      } else data.isSongOf = false;
     }
 
     async function sheetOf() {
       searchData.sheetData.offset += 1;
+      data.isSheetOfText = "加载中...";
       let req = await searchSheet(searchData.keyword, searchData.sheetData.offset) as any;
-      console.log("[sheetOf]",req)
-      if (req && req.status) {
+      data.isSheetOfText = "加载更多";
+      console.log("[sheetOf]", req)
+      if (req && req.status && req.data.sheets.length > 0) {
         searchData.sheetData.sheets.push(...req.data.sheets);
-      }
+      } else data.isSheetOf = false;
     }
 
     async function play(item: any) {
@@ -159,6 +185,7 @@ export default defineComponent({
     }
 
     return {
+      data,
       searchData,
       play,
       sheet,

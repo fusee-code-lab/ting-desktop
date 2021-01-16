@@ -79,20 +79,24 @@ export async function searchSong(keyword: string, offset: number = 0, limit: num
         ];
         let req = await Promise.all(gets);
         let status = false;
-        let total = 0;
+        let neteaseTotal = 0, qqTotal = 0;
         let songs = [];
-        for (let i of req) {
-            if (i.status) {
-                status = true;
-                total += i.data.total;
-                songs.push(...i.data.songs);
-            }
+        if (req[0].status) {
+            status = true;
+            neteaseTotal = req[0].data.total;
+            songs.push(...req[0].data.songs);
+        }
+        if (req[1].status) {
+            status = true;
+            qqTotal = req[1].data.total;
+            songs.push(...req[1].data.songs);
         }
         return {
             status,
             data: {
                 songs,
-                total
+                neteaseTotal,
+                qqTotal
             }
         }
     } catch (e) {

@@ -74,7 +74,8 @@ export default defineComponent({
       let reqs = await Promise.all([searchSong(searchData.keyword), searchSheet(searchData.keyword)]) as any;
       console.log(reqs);
       if (reqs[0] && reqs[0].status) {
-        searchData.singleData.total = reqs[0].data.total;
+        searchData.singleData.neteaseTotal = reqs[0].data.neteaseTotal;
+        searchData.singleData.qqTotal = reqs[0].data.qqTotal;
         searchData.singleData.songs = reqs[0].data.songs;
       }
       if (reqs[1] && reqs[1].status) {
