@@ -1,11 +1,11 @@
 import {resolve} from "path";
-import {app, globalShortcut, ipcMain, systemPreferences} from "electron";
+import {app, globalShortcut, ipcMain} from "electron";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
 import {Window} from "./window";
 import {Updates} from "./update";
 import {Sockets} from "./socket";
+import {Platform} from "./platform";
 import Log from "@/lib/log";
-import {getExternPath} from "@/lib";
 import {readFile} from "@/lib/file";
 
 declare global {
@@ -15,17 +15,6 @@ declare global {
         }
     }
 }
-
-global.sharedObject = {
-    isPackaged: app.isPackaged, //是否打包
-    platform: process.platform, //当前运行平台
-    appInfo: { //应用信息
-        name: app.name,
-        version: app.getVersion()
-    }
-};
-
-if (process.platform === "win32") global.sharedObject["appInfo"]["accentColor"] = systemPreferences.getAccentColor();
 
 class Init {
 
@@ -82,6 +71,8 @@ class Init {
         if (!app.isPackaged) args.push(resolve(process.argv[1]));
         args.push("--");
         app.setAsDefaultProtocolClient(app.name, process.execPath, args);
+        await this.initialGlobal();
+        await this.ipc();
     }
 
     async ipc() {
@@ -240,23 +231,32 @@ class Init {
         });
     }
 
+    async initialGlobal() {
+        global.sharedObject = {
+            isPackaged: app.isPackaged, //是否打包
+            platform: process.platform, //当前运行平台
+            appInfo: { //应用信息
+                name: app.name,
+                version: app.getVersion()
+            }
+        };
+        try {
+            let req = await Promise.all([readFile("./data/cfg/index.json"), readFile("./data/cfg/audio.json")]);
+            global.sharedObject["setting"] = {
+                cfg: JSON.parse(req[0] as string),
+                audio: JSON.parse(req[1] as string)
+            }
+        } catch (e) {
+            Log.error("[setting]", e);
+            global.sharedObject["setting"] = {};
+        }
+        Platform[global.sharedObject.platform]();
+    }
 }
 
 /**
  * 启动
  * */
 (async () => {
-    try {
-        let req = await Promise.all([readFile(getExternPath("cfg.json")), readFile(getExternPath("audio.json"))]);
-        global.sharedObject["setting"] = {
-            cfg: JSON.parse(req[0] as string),
-            audio: JSON.parse(req[1] as string)
-        }
-    } catch (e) {
-        Log.error("[setting]", e);
-        global.sharedObject["setting"] = {};
-    }
-    const app = new Init();
-    await app.ipc();
-    await app.init();
+    new Init().init().then();
 })()

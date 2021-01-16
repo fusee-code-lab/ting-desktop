@@ -164,14 +164,28 @@ export function getSheetPath(name: string) {
 /**
  * 监听 音量、播放类型 变化
  */
-function watchTingOpt() {
+function TingAudioWatch() {
     const audio = {
         playType: audioData.playType,
         volume: audioData.volume,
         volumeGradualTime: audioData.volumeGradualTime,
         songInfo: audioData.songInfo
     }
-    writeFile(getExternPath("audio.json"), JSON.stringify(audio)).then();
+    writeFile("./data/cfg/audio.json", JSON.stringify(audio)).then();
 }
 
-watch(() => [audioData.volume, audioData.playType], debounce(watchTingOpt, 3000));
+watch(() => [audioData.volume, audioData.playType], debounce(TingAudioWatch, 3000));
+
+
+/**
+ * 监听 路径配置变化
+ */
+function TingCfgWatch() {
+    const index = {
+        sheet: tingCfgData.sheet,
+        down: tingCfgData.down
+    }
+    writeFile("./data/cfg/index.json", JSON.stringify(index)).then();
+}
+
+watch(() => [tingCfgData.down, tingCfgData.sheet], debounce(TingCfgWatch, 3000));
