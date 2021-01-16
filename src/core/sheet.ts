@@ -1,37 +1,47 @@
 import {EOL} from "os";
-import {tingCfgData, audioSheetListData, getSheetPath, sheetSuffix, SheetOpt, SongOpt} from "@/core"
+import {
+    tingCfgData,
+    audioSheetListData,
+    getSheetPath,
+    sheetSuffix,
+    SheetOpt,
+    SongOpt,
+    SheetListOpt
+} from "@/core"
 import {readLine, writeFile, appendFile, findFileBySuffix} from "@/lib/file";
 import Log from "@/lib/log";
 
 /**
  * 当前歌单列表
  */
-export function sheetList() {
+export async function sheetList() {
     let req = findFileBySuffix(tingCfgData.sheet, sheetSuffix);
-    if (req) for (let i of req) {
-        readLine(i, -1).then((e: string) => {
-            try {
-                let sheet = JSON.parse(e) as SheetOpt;
-                if (sheet) audioSheetListData[`${sheet.vendor}|${sheet.id}`] = {
+    if (req) {
+        let data: SheetListOpt[] = [];
+        for (let i of req) {
+            let res = await readLine(i, -1);
+            if (res) {
+                let sheet = JSON.parse(res as string) as SheetOpt;
+                if (sheet) data.push({
                     detail: sheet,
                     songs: []
-                };
-            } catch (e) {
-                Log.error(e);
+                })
             }
-        });
+        }
+        console.log(data)
+        audioSheetListData.list = data;
     }
 }
 
 /**
  * 歌单详情
- * @param key
+ * @param name
  */
-async function sheetDetails(key: string) {
+async function sheetDetails(name: string) {
     try {
-        let data = await readLine(getSheetPath(audioSheetListData[key].detail.name)) as string[];
+        let data = await readLine(getSheetPath(name)) as string[];
         data.shift();
-        audioSheetListData[key].songs = data.map(e => JSON.parse(e)) as SongOpt[];
+        audioSheetListData.list[audioSheetListData.list.map(e => e.detail.name).indexOf(name)].songs = data.map(e => JSON.parse(e)) as SongOpt[];
     } catch (e) {
         Log.error(e);
     }

@@ -299,7 +299,7 @@ import {Vendors} from "@/core/musicapi/api";
 import {getPlaylistDetail, getSongUrl} from "@/core/musicapi";
 import Log from "@/lib/log";
 import {audio} from "@/core/audio";
-import {SongOpt, audioPlayListData, sheetData} from "@/core";
+import {SongOpt, audioPlayListData, sheetData, TingPlayListOpt} from "@/core";
 
 interface SheetDetailsOpt {
   info?: any;
@@ -318,6 +318,7 @@ export default defineComponent({
       let req = await getPlaylistDetail(sheetData.value.vendor, sheetData.value.id || sheetData.value.dissid);
       if (req.status) {
         data.info = req.data;
+
         try {
           let songTime = 0;
           data.info.songs.map((e: any) => songTime += e.songTime);
@@ -346,7 +347,7 @@ export default defineComponent({
     }
 
     async function playAll() {
-      let songs: { [key: string]: SongOpt } = {};
+      let songs: TingPlayListOpt = {};
       data.info.songs.forEach((e: any) => songs[`${e.vendor}|${e.id}`] = {
         id: e.id,
         vendor: e.vendor,

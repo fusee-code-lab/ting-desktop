@@ -20,9 +20,14 @@ export interface SongOpt {
 }
 
 export interface SheetOpt {
-    id: number; //歌单id
+    id?: number; //歌单id
     name: string; //歌单名称
-    vendor: Vendors; //歌单来源
+    vendor?: Vendors; //歌单来源
+}
+
+export interface SheetListOpt {
+    detail: SheetOpt;
+    songs: SongOpt[];
 }
 
 export interface TingAudioOpt {
@@ -47,7 +52,8 @@ export interface TingPlayListOpt {
 }
 
 export interface TingSheetListOpt {
-    [key: string]: { detail: SheetOpt, songs: SongOpt[] }
+    list: SheetListOpt[];
+    index: string;
 }
 
 /**
@@ -82,7 +88,10 @@ let audio: TingAudioOpt = {
     songInfo: null //当前播放歌曲信息
 };
 
-let audioSheetList: TingSheetListOpt = {};
+let audioSheetList: TingSheetListOpt = {
+    list: [],
+    index: ''
+};
 
 let audioPlayList: TingPlayListOpt = {};
 

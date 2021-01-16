@@ -17,7 +17,7 @@ export interface WindowOpt {
 export interface IpcMsg {
     type: IPC_MSG_TYPE;
     key?: string;
-    value?: unknown;
+    value?: any;
 }
 
 export interface SocketMsg {
