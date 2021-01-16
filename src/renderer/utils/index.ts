@@ -20,7 +20,6 @@ export function messageBack() {
  * 消息发送
  */
 export function messageSend(args: IpcMsg) {
-    console.log(args);
     ipcRenderer.send("message-send", args);
 }
 
