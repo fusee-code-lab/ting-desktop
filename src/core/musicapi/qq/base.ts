@@ -1,14 +1,4 @@
-import {instance, randomUserAgent, isBrowser} from '../util'
-
-const getACSRFToken = function (cookie: any) {
-    function e(e: any) {
-        for (var n = 5381, o = 0, t = e.length; t > o; ++o)
-            n += (n << 5) + e.charCodeAt(o);
-        return 2147483647 & n
-    }
-
-    return e(cookie)
-}
+import {instance, randomUserAgent} from '../util'
 
 export function Base() {
     const fly = instance()
@@ -30,22 +20,6 @@ export function Base() {
         // 浏览器且本地有cookie信息 接口就都带上cookie
         let loginUin = 0
         let g_tk = 5381
-        if (isBrowser) {
-            const loginCookies = window.localStorage.getItem('@suen/music-api-qq-login-cookie')
-            if (loginCookies) {
-                try {
-                    config.headers.Cookie = loginCookies
-                    const cookiesObject: { [key: string]: any } = {}
-                    loginCookies.replace(/\s*/g, '').split(';').map(item => item.split('=')).forEach(item => {
-                        cookiesObject[item[0]] = item[1]
-                    })
-                    loginUin = cookiesObject['uin'].substring(2)
-                    g_tk = getACSRFToken(cookiesObject["p_skey"] || cookiesObject["skey"] || cookiesObject["p_lskey"] || cookiesObject["lskey"])
-                } catch (e) {
-                    console.warn(e)
-                }
-            }
-        }
         config.body = Object.assign({}, {
             g_tk,
             format: 'jsonp',

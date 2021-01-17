@@ -107,5 +107,3 @@ export function completeCookie(cookie?: string) {
 
     return extra.map(x => x[0]).join('; ')
 }
-
-export const isBrowser = typeof (window) !== 'undefined' && window.localStorage

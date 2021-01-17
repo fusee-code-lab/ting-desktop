@@ -1,4 +1,4 @@
-import {instance, randomUserAgent, completeCookie, isBrowser} from '../util'
+import {instance, randomUserAgent, completeCookie} from '../util'
 import querystring from 'querystring'
 import crypto from 'crypto';
 
@@ -56,13 +56,6 @@ export function Base() {
 
     fly.interceptors.request.use((config: { [key: string]: any }) => {
         if (config.pureFly) return config
-        // 浏览器且本地有cookie信息 接口就都带上cookie
-        if (isBrowser) {
-            const loginCookies = window.localStorage.getItem('@suen/music-api-netease-login-cookie')
-            if (loginCookies) {
-                config.headers.Cookie = loginCookies
-            }
-        }
         let data
         if (config.crypto === 'linuxapi') {
             data = linuxapi({
