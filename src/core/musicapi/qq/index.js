@@ -32,16 +32,13 @@ export function Api(instance) {
         }
     }
     const getMusicInfo2 = (info) => {
-        let songTime = 0;
-        if (info.size128) songTime = info.size128 * 8 / 128000;
-        else if (info.size320) songTime = info.size320 * 8 / 128000;
         return {
             album: {
                 id: info.albumid,
                 name: info.albumname,
                 cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${info.albummid}.jpg`,
             },
-            songTime,
+            songTime: info.interval,
             artists: info.singer.map(singer => {
                 return {
                     id: singer.id,

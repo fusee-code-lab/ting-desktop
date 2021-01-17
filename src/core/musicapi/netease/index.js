@@ -53,14 +53,6 @@ export function Api(instance) {
         if (!privilege) {
             privilege = info.privilege;
         }
-        let songTime = 0;
-        if (info.l) {
-            songTime = info.l.size * 8 / info.l.br;
-        } else if (info.m) {
-            songTime = info.m.size * 8 / info.m.br;
-        } else if (info.h) {
-            songTime = info.h.size * 8 / info.h.br;
-        }
         return {
             album: {
                 id: info.al.id,
@@ -73,7 +65,7 @@ export function Api(instance) {
                     name: ar.name
                 };
             }),
-            songTime,
+            songTime: info.dt / 1000,
             name: info.name,
             link: `https://music.163.com/#/song?id=${info.id}`,
             id: info.id,
