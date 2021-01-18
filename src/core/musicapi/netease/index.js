@@ -1,8 +1,8 @@
 import {lyric_decode, noSongsDetailMsg} from "../util";
 import {isNull} from "@/lib";
-import {Base} from './base';
+import {base} from './base';
 
-export function Api(instance) {
+export function Api() {
     // getRestrictLevel方法 来源于网易云音乐web端代码
     const getRestrictLevel = function (bm5r, fC7v) {
         if (!bm5r)
@@ -111,7 +111,6 @@ export function Api(instance) {
         };
     };
     return {
-        instance,
         async searchSong({keyword, limit = 30, offset = 0, type = 1}) {
             // *(type)* 搜索单曲(1)，歌手(100)，专辑(10)，歌单(1000)，用户(1002)
             const params = {
@@ -122,7 +121,7 @@ export function Api(instance) {
                 offset
             };
             try {
-                let {result} = await instance.post("/weapi/cloudsearch/get/web", params);
+                let {result} = await base("/weapi/cloudsearch/get/web", "POST", params);
                 if (type === 1) {
                     if (!result) {
                         result = {
@@ -185,7 +184,7 @@ export function Api(instance) {
         },
         async getSongDetail(id) {
             try {
-                let data = await instance.post("/weapi/v3/song/detail", {
+                let data = await base("/weapi/v3/song/detail", "POST", {
                     c: JSON.stringify([{id: id}]),
                     ids: "[" + id + "]",
                     csrf_token: ""
@@ -212,7 +211,7 @@ export function Api(instance) {
         async getBatchSongDetail(ids) {
             ids = ids.map(item => parseInt(item));
             try {
-                let data = await instance.post("/weapi/v3/song/detail", {
+                let data = await base("/weapi/v3/song/detail", "POST", {
                     c: JSON.stringify(ids.map(item => ({id: item}))),
                     ids: JSON.stringify(ids),
                     csrf_token: ""
@@ -241,7 +240,7 @@ export function Api(instance) {
                 csrf_token: ""
             };
             try {
-                let {data} = await instance.post("/weapi/song/enhance/player/url", params);
+                let {data} = await base("/weapi/song/enhance/player/url", "POST", params);
                 try {
                     if (isNull(data[0]).url) {
                         return {
@@ -274,7 +273,7 @@ export function Api(instance) {
         },
         async getLyric(id) {
             try {
-                let data = await instance.post("/weapi/song/lyric?lv=-1&kv=-1&tv=-1", {
+                let data = await base("/weapi/song/lyric?lv=-1&kv=-1&tv=-1", "POST", {
                     id
                 }, {
                     crypto: "linuxapi"
@@ -316,7 +315,7 @@ export function Api(instance) {
         },
         async getTopList(id, limit = 1000) {
             try {
-                const {playlist, privileges} = await instance.post("/weapi/v3/playlist/detail", {
+                const {playlist, privileges} = await base("/weapi/v3/playlist/detail", "POST", {
                     id,
                     offset: 0,
                     total: true,
@@ -365,7 +364,7 @@ export function Api(instance) {
                     hotComments,
                     comments,
                     total
-                } = await instance.post("/weapi/v1/resource/comments/R_SO_4_" + rid + "/?csrf_token=", {
+                } = await base("/weapi/v1/resource/comments/R_SO_4_" + rid + "/?csrf_token=", "POST", {
                     offset: (page - 1) * limit,
                     rid,
                     limit,
@@ -389,7 +388,7 @@ export function Api(instance) {
         },
         async getArtistSongs(id, offset, limit) {
             try {
-                let data = await instance.post(`/weapi/v1/artist/${id}`, {
+                let data = await base(`/weapi/v1/artist/${id}`, "POST", {
                     csrf_token: "",
                     offset,
                     limit
@@ -416,7 +415,7 @@ export function Api(instance) {
         },
         async getPlaylistDetail(id, offset, limit) {
             try {
-                const {playlist, privileges} = await instance.post(`/weapi/v3/playlist/detail`, {
+                const {playlist, privileges} = await base(`/weapi/v3/playlist/detail`, "POST", {
                     id,
                     n: limit,
                     s: 8,
@@ -464,7 +463,7 @@ export function Api(instance) {
         },
         async getAlbumDetail(id) {
             try {
-                const {album, songs} = await instance.post(`/weapi/v1/album/${id}`, {});
+                const {album, songs} = await base(`/weapi/v1/album/${id}`, "POST", {});
                 return {
                     status: true,
                     data: {
@@ -489,12 +488,7 @@ export function Api(instance) {
         },
         async getBanner() {
             try {
-                const {data} = await instance.get("http://music.163.com/discover", {}, {
-                    headers: {
-                        Referer: "http://music.163.com",
-                        "User-Agent":
-                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3380.0 Safari/537.36"
-                    },
+                const {data} = await base("http://music.163.com/discover", "GET", {}, {
                     pureFly: true
                 });
                 const pattern = /window.Gbanners[\s\S]+?(\[[\s\S]+?\])/;
@@ -513,7 +507,7 @@ export function Api(instance) {
         },
         async getMvDetail(id) {
             try {
-                const {data} = await instance.post(`/weapi/mv/detail`, {
+                const {data} = await base(`/weapi/mv/detail`, "POST", {
                     id
                 });
                 return {
@@ -530,7 +524,7 @@ export function Api(instance) {
         },
         async getMvComment(id, page = 1, limit = 20) {
             try {
-                const data = await instance.post(`/weapi/v1/resource/comments/R_MV_5_${id}/?csrf_token=`, {
+                const data = await base(`/weapi/v1/resource/comments/R_MV_5_${id}/?csrf_token=`,"POST", {
                     offset: (page - 1) * limit,
                     rid: id,
                     limit,
@@ -554,7 +548,7 @@ export function Api(instance) {
         },
         async getTopPlaylist(cat = "全部", page = 1, limit = 20) {
             try {
-                const data = await instance.post(`/weapi/playlist/highquality/list`, {
+                const data = await base(`/weapi/playlist/highquality/list`,"POST", {
                     cat,
                     offset: (page - 1) * limit,
                     limit,
@@ -574,7 +568,7 @@ export function Api(instance) {
         },
         async getNewestMvs(limit = 20) {
             try {
-                const {data} = await instance.post("/weapi/mv/first", {
+                const {data} = await base("/weapi/mv/first","POST", {
                     total: true,
                     limit,
                     csrf_token: ""
@@ -593,7 +587,7 @@ export function Api(instance) {
         },
         async getRecommendSongs(page = 1, limit = 30) {
             try {
-                let data = await instance.post(`/weapi/v1/discovery/recommend/songs`, {
+                let data = await base(`/weapi/v1/discovery/recommend/songs`,"POST", {
                     limit,
                     offset: page - 1,
                     total: true
@@ -612,7 +606,7 @@ export function Api(instance) {
         },
         async getPersonalizedPlaylist(page = 1, limit = 30) {
             try {
-                let data = await instance.post(`/weapi/personalized/playlist`, {
+                let data = await base(`/weapi/personalized/playlist`, "POST",{
                     limit: 30,
                     offset: page - 1,
                     total: true,
@@ -632,7 +626,7 @@ export function Api(instance) {
         },
         async getAllTopList() {
             try {
-                const data = await instance.post("/weapi/toplist/detail", {});
+                const data = await base("/weapi/toplist/detail", "POST",{});
                 return {
                     status: true,
                     data: data.list.map(item => {
@@ -658,4 +652,4 @@ export function Api(instance) {
     };
 }
 
-export const NeteaseApi = Api(Base());
+export const NeteaseApi = Api();

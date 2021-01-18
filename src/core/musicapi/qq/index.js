@@ -1,8 +1,8 @@
 import {lyric_decode, noSongsDetailMsg} from '../util';
 import {random, isNull} from "@/lib";
-import {Base} from "./base";
+import {base} from "./base";
 
-export function Api(instance) {
+export function Api() {
     const getMusicInfo = (info) => {
         const file = info.file
         return {
@@ -32,6 +32,7 @@ export function Api(instance) {
         }
     }
     const getMusicInfo2 = (info) => {
+        console.log(info.songurl)
         return {
             album: {
                 id: info.albumid,
@@ -46,7 +47,7 @@ export function Api(instance) {
                 }
             }),
             name: info.songname,
-            link: `https://y.qq.com/n/yqq/song/${info.mid}.html`,
+            link: `https://y.qq.com/n/yqq/song/${info.songmid}.html`,
             id: info.songid,
             cp: info.msgid === 3 || !info.interval,
             dl: !info.pay.paydownload,
@@ -60,7 +61,6 @@ export function Api(instance) {
         }
     }
     return {
-        instance,
         async searchSong({keyword, limit = 30, offset = 0, remoteplace = "txt.yqq.song"}) {
             let params = {
                 p: offset + 1,
@@ -84,7 +84,7 @@ export function Api(instance) {
                 }
             }
             try {
-                let data = await instance.get(url, params)
+                let data = await base(url, params);
                 if (remoteplace === "txt.yqq.playlist") {
                     return {
                         status: true,
@@ -101,18 +101,19 @@ export function Api(instance) {
                     status: true,
                     data: {
                         total: data.data.song.totalnum,
-                        songs: data.data.song.list.map(item => getMusicInfo(item))
+                        songs: data.data.song.list.map(item => getMusicInfo2(item))
                     }
                 }
             } catch (e) {
+                console.log(e)
                 return e
             }
         },
         async getSongDetail(id, raw = false, type = 'songid') {
             try {
-                const data = await instance.get('/v8/fcg-bin/fcg_play_single_song.fcg', {
+                const data = await base('/v8/fcg-bin/fcg_play_single_song.fcg', {
                     [type]: id,
-                    tpl: 'yqq_song_detail',
+                    format: 'json'
                 })
                 const info = data.data[0]
                 if (!info) {
@@ -131,9 +132,9 @@ export function Api(instance) {
         },
         async getBatchSongDetail(songids) {
             try {
-                const data = await instance.get('/v8/fcg-bin/fcg_play_single_song.fcg', {
+                const data = await base('/v8/fcg-bin/fcg_play_single_song.fcg', {
                     songid: songids.join(','),
-                    tpl: 'yqq_song_detail',
+                    format: 'json'
                 })
                 return {
                     status: true,
@@ -160,7 +161,7 @@ export function Api(instance) {
                 const {
                     req: {data: {freeflowsip}},
                     req_0: {data: {midurlinfo}}
-                } = await instance.get('/cgi-bin/musicu.fcg', {
+                } = await base('/cgi-bin/musicu.fcg', {
                     data: JSON.stringify({
                         "req": {
                             "module": "CDN.SrfCdnDispatchServer",
@@ -185,9 +186,7 @@ export function Api(instance) {
                         },
                         "comm": {uin, "format": "json", "ct": 24, "cv": 0}
                     })
-                }, {
-                    newApi: true
-                })
+                }, true);
                 try {
                     const host = freeflowsip[random(0, freeflowsip.length - 1)];
                     if (isNull(midurlinfo[0].purl)) {
@@ -221,7 +220,7 @@ export function Api(instance) {
         async getLyric(songid) {
             try {
                 const mid = await this.getMid(songid)
-                let data = await instance.get('/lyric/fcgi-bin/fcg_query_lyric_new.fcg', {
+                let data = await base('/lyric/fcgi-bin/fcg_query_lyric_new.fcg', {
                     'pcachetime': Date.parse(new Date()),
                     'songmid': mid,
                 })
@@ -249,7 +248,7 @@ export function Api(instance) {
         },
         async getComment(songid, page = 1, pagesize = 20) {
             try {
-                const {comment, hot_comment} = await instance.get('/base/fcgi-bin/fcg_global_comment_h5.fcg', {
+                const {comment, hot_comment} = await base('/base/fcgi-bin/fcg_global_comment_h5.fcg', {
                     reqtype: 2,
                     biztype: 1,
                     topid: songid,
@@ -283,7 +282,7 @@ export function Api(instance) {
                     num: limit,
                     songstatus: 1
                 }
-                const {data} = await instance.get('/v8/fcg-bin/fcg_v8_singer_track_cp.fcg', params)
+                const {data} = await base('/v8/fcg-bin/fcg_v8_singer_track_cp.fcg', params)
                 return {
                     status: true,
                     data: {
@@ -304,10 +303,16 @@ export function Api(instance) {
             try {
                 const params = {
                     type: 1,
+                    json: 1,
+                    utf8: 1,
                     onlysong: 0,
-                    disstid: id
+                    disstid: id,
+                    format: 'json',
+                    inCharset: 'utf8',
+                    outCharset: 'utf-8',
+                    platform: 'yqq',
                 }
-                const {cdlist} = await instance.get('/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg', params);
+                const {cdlist}= await base('/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg', params);
                 return {
                     status: true,
                     data: {
@@ -327,7 +332,7 @@ export function Api(instance) {
             }
         },
         getMusicu(data) {
-            return instance.get('/cgi-bin/musicu.fcg', {
+            return base('/cgi-bin/musicu.fcg', {
                 data: JSON.stringify(data),
             }, {
                 newApi: true
@@ -364,7 +369,7 @@ export function Api(instance) {
         },
         async getAlbumDetail(id) {
             try {
-                const {data} = await instance.get('https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg', {
+                const {data} = await base('https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg', {
                     albumid: id,
                     tpl: 'yqq_song_detail',
                 })
@@ -394,7 +399,7 @@ export function Api(instance) {
                 v8debug: 1,
             }
             try {
-                let data = await instance.get('/v8/fcg-bin/fcg_v8_toplist_opt.fcg', params, {
+                let data = await base('/v8/fcg-bin/fcg_v8_toplist_opt.fcg', params, {
                     nocode: true
                 })
                 return {
@@ -430,7 +435,7 @@ export function Api(instance) {
                 type: 'top'
             }
             try {
-                let data = await instance.get('/v8/fcg-bin/fcg_v8_toplist_cp.fcg', params)
+                let data = await base('/v8/fcg-bin/fcg_v8_toplist_cp.fcg', params)
                 return {
                     status: true,
                     data: {
@@ -447,7 +452,7 @@ export function Api(instance) {
         },
         async getUserInfo() {
             try {
-                const {data} = await instance.get('/portalcgi/fcgi-bin/music_mini_portal/fcg_getuser_infoEx.fcg')
+                const {data} = await base('/portalcgi/fcgi-bin/music_mini_portal/fcg_getuser_infoEx.fcg')
                 return {
                     status: true,
                     data
@@ -502,4 +507,4 @@ export function Api(instance) {
     }
 }
 
-export const QQApi = Api(Base());
+export const QQApi = Api();
