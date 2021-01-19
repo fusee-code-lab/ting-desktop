@@ -1,6 +1,6 @@
 import {readFile} from "@/lib/file";
 import {SongType, audioPlayListData, audioData, SongOpt, PlayTypeOpt} from "@/core";
-import {getSongUrl} from "@/core/musicapi";
+import {getSongUrl} from "@/lib/musicapi";
 import {isNull, random} from "@/lib";
 
 async function pathToSrc(path: string) {

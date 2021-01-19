@@ -60,7 +60,7 @@
 import {defineComponent} from "vue";
 import {isNull} from "@/lib";
 import {audioSheetListData, searchData} from "@/core";
-import {searchSheet, searchSong} from "@/core/musicapi";
+import {searchSheet, searchSong} from "@/lib/musicapi";
 import {componentShow, messageKeys, messageData} from "@/renderer/store";
 
 export default defineComponent({

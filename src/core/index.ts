@@ -1,7 +1,7 @@
 import {reactive, ref, watch} from "vue";
 import Log from "@/lib/log";
-import {getGlobal, debounce, getExternPath} from "@/lib";
-import {Vendors} from "@/core/musicapi/api";
+import {getGlobal, debounce} from "@/lib";
+import {Vendors} from "@/lib/musicapi/api";
 import {writeFile} from "@/lib/file";
 
 export enum PlayTypeOpt { //播放类型

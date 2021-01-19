@@ -1,5 +1,5 @@
 import *as Api from "./api";
-import Log from "../../lib/log";
+import Log from "../log";
 
 /**
  * 获取歌曲详情

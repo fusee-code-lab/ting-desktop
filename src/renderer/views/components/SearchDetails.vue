@@ -131,7 +131,7 @@
 <script lang="ts">
 import {defineComponent, reactive} from "vue";
 import {searchData, sheetData} from "@/core";
-import {getSongUrl, searchSheet, searchSong} from "@/core/musicapi";
+import {getSongUrl, searchSheet, searchSong} from "@/lib/musicapi";
 import {audio} from "@/core/audio";
 import {componentShow, messageData, messageKeys} from "@/renderer/store";
 
