@@ -28,7 +28,6 @@ export async function sheetList() {
                 })
             }
         }
-        console.log(data)
         audioSheetListData.list = data;
     }
 }

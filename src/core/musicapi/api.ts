@@ -1,5 +1,5 @@
-import {NeteaseApi} from './netease';
-import {QQApi} from './qq';
+import * as NeteaseApi from './netease';
+import * as QQApi from './qq';
 
 export enum Vendors {
     netease = "netease",
@@ -23,8 +23,8 @@ export async function getSongDetail(vendor: Vendors, id: number | string) {
 }
 
 // 批量获取歌曲详情
-export async function getBatchSongDetail(vendor: Vendors, id: number | string) {
-    return await provider[vendor]['getBatchSongDetail'](id)
+export async function getBatchSongDetail(vendor: Vendors, ids: number[]) {
+    return await provider[vendor]['getBatchSongDetail'](ids)
 }
 
 //获取歌曲url
