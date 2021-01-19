@@ -41,10 +41,8 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "electron-updater": "^4.3.5",
     "node-abort-controller": "^1.1.0",
     "node-fetch": "^2.6.1",
-    "socket.io-client": "^3.0.5",
     "vue": "^3.0.4"
   }
 }

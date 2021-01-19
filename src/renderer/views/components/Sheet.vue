@@ -90,7 +90,7 @@
 import {defineComponent, watch, toRaw, onMounted} from "vue";
 import {audioSheetListData} from "@/core";
 import {sheetList, sheetCreate} from "@/core/sheet";
-import {createWindow} from "@/renderer/utils"
+import {createWindow} from "@/renderer/utils/window"
 import {argsState, messageData} from "@/renderer/store";
 
 export default defineComponent({

@@ -85,7 +85,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {getGlobal} from "@/lib";
-import {setMinSize, setSize, createWindow} from "@/renderer/utils";
+import {setMinSize, setSize, createWindow} from "@/renderer/utils/window";
 import Head from "@/renderer/views/components/Head.vue";
 import {argsState} from "@/renderer/store";
 

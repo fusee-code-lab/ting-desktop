@@ -20,11 +20,12 @@
 <script lang="ts">
 import {defineComponent, reactive, toRaw} from "vue";
 import {getGlobal} from "@/lib";
-import {messageSend, closeWindow} from "@/renderer/utils";
+import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";
 import {SheetOpt} from "@/core"
 import {argsState} from "@/renderer/store";
+import {closeWindow} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "SheetCreate",

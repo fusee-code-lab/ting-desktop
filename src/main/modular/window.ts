@@ -2,7 +2,7 @@ import {join} from "path";
 import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
 import Log from "@/lib/log";
 import {WindowOpt} from "@/lib/interface";
-import ico from "./assets/tray.png";
+import ico from "../assets/tray.png";
 
 const config = require("@/cfg/config.json");
 
@@ -128,7 +128,7 @@ export class Window {
     /**
      * 创建托盘
      * */
-    async createTray() {
+    createTray() {
         const contextMenu = Menu.buildFromTemplate([{
             label: "显示",
             click: () => {
