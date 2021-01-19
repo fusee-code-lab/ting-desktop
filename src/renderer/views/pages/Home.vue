@@ -54,9 +54,11 @@
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus/>
         </SidePopup>
-        <SearchDetails v-if="messageData[messageKeys.Show] === componentShow.SearchDetails"/>
-        <SheetDetails v-else-if="messageData[messageKeys.Show] === componentShow.SheetDetails"/>
-        <div v-else class="null">左边搜索~ (当前测试阶段)</div>
+        <component :is="messageData[messageKeys.Show]"/>
+        <div class="null"
+             v-if="!messageData[messageKeys.Show] || messageData[messageKeys.Show]==='null'">
+          左边搜索~ (当前测试阶段)
+        </div>
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
