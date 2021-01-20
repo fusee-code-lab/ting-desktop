@@ -1,11 +1,14 @@
 import fetch, {RequestInit, Headers} from "node-fetch";
 import AbortController from 'node-abort-controller'
-import {getGlobal, sendGlobal} from "@/lib";
+import querystring from "querystring";
+import {getGlobal, isNull, sendGlobal} from "@/lib";
 
 const config = require('@/cfg/config.json');
 
 export interface NetOpt extends RequestInit {
-    data?: unknown;
+    isHeaders?: boolean; //是否获取headers
+    isQuerystring?: boolean; //是否querystring参数
+    data?: any;
     type?: NET_RESPONSE_TYPE; //返回数据类型
 }
 
@@ -28,24 +31,6 @@ export function AbortSignal() {
  * @param url string
  * @param param NetSendOpt
  * */
-
-/**
- * 对象转url参数
- * */
-export function convertObj(data: any): string {
-    let _result = [];
-    for (let key in data) {
-        let value = data[key] as Array<any>;
-        if (value && value.constructor == Array) {
-            value.forEach((_value) => {
-                _result.push(key + "=" + _value);
-            });
-        } else {
-            _result.push(key + "=" + value);
-        }
-    }
-    return _result.join("&");
-}
 
 /**
  * url参数转对象
@@ -102,13 +87,25 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
         .then(async (res) => {
             switch (sendData.type) {
                 case NET_RESPONSE_TYPE.TEXT:
-                    return await res.text();
+                    return sendData.isQuerystring ? {
+                        headers: await res.headers,
+                        data: await res.text()
+                    } : await res.text();
                 case NET_RESPONSE_TYPE.JSON:
-                    return await res.json();
+                    return sendData.isQuerystring ? {
+                        headers: await res.headers,
+                        data: await res.json()
+                    } : await res.json();
                 case NET_RESPONSE_TYPE.BUFFER:
-                    return await res.arrayBuffer();
+                    return sendData.isQuerystring ? {
+                        headers: await res.headers,
+                        data: await res.arrayBuffer()
+                    } : await res.arrayBuffer();
                 case NET_RESPONSE_TYPE.BLOB:
-                    return await res.blob();
+                    return sendData.isQuerystring ? {
+                        headers: await res.headers,
+                        data: await res.blob()
+                    } : await res.blob();
             }
         })
 }
@@ -121,6 +118,8 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
 export async function net(url: string, param: NetOpt = {}): Promise<any> {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetOpt = {
+        isQuerystring: param.isQuerystring,
+        isHeaders: param.isHeaders,
         headers: new Headers(Object.assign({
                 "Content-type": "application/json;charset=utf-8",
                 "authorization": getGlobal("authorization") as string || ""
@@ -131,8 +130,11 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
         method: param.method || "GET",
         signal: param.signal || null
     };
-    if (sendData.method === "GET") url = url + convertObj(param.data);
-    else sendData.body = JSON.stringify(param.data);
+    if (!isNull(sendData.data)) {
+        if (sendData.method === "GET") url = `${url}?${querystring.stringify(param.data)}`;
+        else if (sendData.isQuerystring) sendData.body = querystring.stringify(param.data);
+        else sendData.body = param.data;
+    }
     return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])
         .catch(err => errorReturn(err.message));
 }
