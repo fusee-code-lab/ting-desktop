@@ -1,6 +1,7 @@
 import fetch, {RequestInit} from "node-fetch";
 import {isNull} from "@/lib";
 import querystring from "querystring";
+import {randomUserAgent} from "@/lib/musicapi/util";
 
 const baseURL = 'https://c.y.qq.com'
 const newURL = "https://u.y.qq.com";
@@ -68,6 +69,20 @@ export async function base(uri: string, data?: any, newApi: boolean = false) {
     return req;
 }
 
+export function qqHeaders() {
+    let url: string[] = [baseURL + "/*", newURL + "/*"];
+    let headers: { [key: string]: { [key: string]: string } } = {
+        "https://c.y.qq.com": {
+            "referer": "https://y.qq.com/portal/player.html",
+            "user-agent": randomUserAgent()
+        },
+        "https://u.y.qq.com": {
+            "referer": "https://y.qq.com/portal/player.html",
+            "user-agent": randomUserAgent()
+        }
+    };
+    return {url, headers}
+}
 
 export function getMusicInfo(info: any) {
     const file = info.file

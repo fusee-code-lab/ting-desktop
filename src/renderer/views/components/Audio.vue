@@ -52,8 +52,8 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {audioData, PlayTypeOpt} from "@/core";
-import {audio} from "@/core/audio";
+import {audioData, PlayTypeOpt} from "@/renderer/core";
+import {audio} from "@/renderer/core/audio";
 
 export default defineComponent({
   name: "Audio",

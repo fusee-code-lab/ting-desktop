@@ -23,7 +23,7 @@ import {getGlobal} from "@/lib";
 import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";
-import {SheetOpt} from "@/core"
+import {SheetOpt} from "@/renderer/core"
 import {argsState} from "@/renderer/store";
 import {closeWindow} from "@/renderer/utils/window";
 

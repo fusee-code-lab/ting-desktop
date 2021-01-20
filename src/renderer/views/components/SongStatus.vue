@@ -14,9 +14,9 @@
 
 <script lang="ts">
   import { defineComponent, ref, reactive, watch, onMounted , onBeforeUnmount} from "vue";
-  import { audioData } from "@/core"
+  import { audioData } from "@/renderer/core"
   import { getLyric } from "@/lib/musicapi/api"
-  import { audio } from "@/core/audio";
+  import { audio } from "@/renderer/core/audio";
   import { debounce } from "@/lib";
   import {WatchStopHandle} from "@vue/runtime-core";
 

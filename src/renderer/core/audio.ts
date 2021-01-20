@@ -1,5 +1,5 @@
 import {readFile} from "@/lib/file";
-import {SongType, audioPlayListData, audioData, SongOpt, PlayTypeOpt} from "@/core";
+import {SongType, audioPlayListData, audioData, SongOpt, PlayTypeOpt} from "@/renderer/core/index";
 import {getSongUrl} from "@/lib/musicapi";
 import {isNull, random} from "@/lib";
 

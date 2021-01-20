@@ -1,5 +1,5 @@
 import {writeFile} from "@/lib/file";
-import {tingCfgData, SongType} from "@/core";
+import {tingCfgData, SongType} from "@/renderer/core/index";
 import {net, NET_RESPONSE_TYPE} from "@/lib/net";
 
 /**

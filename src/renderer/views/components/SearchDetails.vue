@@ -130,9 +130,9 @@
 
 <script lang="ts">
 import {defineComponent, reactive} from "vue";
-import {searchData, sheetData} from "@/core";
+import {searchData, sheetData} from "@/renderer/core";
 import {getSongUrl, searchSheet, searchSong} from "@/lib/musicapi";
-import {audio} from "@/core/audio";
+import {audio} from "@/renderer/core/audio";
 import {componentShow, messageData, messageKeys} from "@/renderer/store";
 
 export default defineComponent({

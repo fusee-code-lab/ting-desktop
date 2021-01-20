@@ -59,7 +59,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {isNull} from "@/lib";
-import {audioSheetListData, searchData} from "@/core";
+import {audioSheetListData, searchData} from "@/renderer/core";
 import {searchSheet, searchSong} from "@/lib/musicapi";
 import {componentShow, messageKeys, messageData} from "@/renderer/store";
 

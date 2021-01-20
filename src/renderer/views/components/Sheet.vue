@@ -88,8 +88,8 @@
 
 <script lang="ts">
 import {defineComponent, watch, toRaw, onMounted} from "vue";
-import {audioSheetListData} from "@/core";
-import {sheetList, sheetCreate} from "@/core/sheet";
+import {audioSheetListData} from "@/renderer/core";
+import {sheetList, sheetCreate} from "@/renderer/core/sheet";
 import {createWindow} from "@/renderer/utils/window"
 import {argsState, messageData} from "@/renderer/store";
 

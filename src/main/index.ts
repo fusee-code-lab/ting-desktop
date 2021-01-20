@@ -1,11 +1,11 @@
 import {resolve} from "path";
 import {app, globalShortcut, ipcMain} from "electron";
 import {IPC_MSG_TYPE} from "@/lib/interface";
-import {Window} from "./modular/window";
-import {Platform} from "./platform";
 import Log from "@/lib/log";
 import {readFile} from "@/lib/file";
-import {sessionInit} from "@/main/modular/session";
+import {Window} from "./modular/window";
+import {Session} from "./modular/session";
+import {Platform} from "./platform";
 
 declare global {
     namespace NodeJS {
@@ -26,7 +26,8 @@ global.sharedObject = {
 
 class Init {
 
-    private window = new Window()
+    private window = new Window();
+    private session = new Session();
 
     constructor() {
     }
@@ -41,6 +42,7 @@ class Init {
         args.push("--");
         app.setAsDefaultProtocolClient(app.name, process.execPath, args);
         app.allowRendererProcessReuse = true;
+
         if (!app.requestSingleInstanceLock()) {
             app.quit();
         } else {
@@ -52,16 +54,19 @@ class Init {
                 }
             })
         }
+
         app.on("window-all-closed", () => {
             if (process.platform !== "darwin") {
                 app.quit();
             }
         })
+
         app.on("activate", () => {
             if (this.window.getAllWindows().length === 0) {
                 this.window.createWindow({isMainWin: true});
             }
         })
+
         //获得焦点时发出
         app.on("browser-window-focus", () => {
             //关闭刷新
@@ -73,12 +78,14 @@ class Init {
             // 注销关闭刷新
             globalShortcut.unregister("CommandOrControl+R");
         });
+
         //启动
-        await Promise.all([this.global(), this.ipc(), app.whenReady()]);
-        //创建窗口、托盘
+        await Promise.all([this.global(), app.whenReady()]);
+
+        //开启通讯、创建窗口、托盘
+        this.ipc();
         this.window.createWindow({isMainWin: true});
         this.window.createTray();
-        sessionInit();
     }
 
     async global() {
@@ -95,91 +102,13 @@ class Init {
         Platform[global.sharedObject.platform]();
     }
 
-    async ipc() {
+    ipc() {
         /**
-         * 主体
-         * */
-        //关闭
-        ipcMain.on("window-closed", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).close();
-                if (this.window.group[Number(winId)]) delete this.window.group[Number(winId)];
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).close();
-            }
-        });
-        //隐藏
-        ipcMain.on("window-hide", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).hide();
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).hide();
-            }
-        });
-        //显示
-        ipcMain.on("window-show", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).show();
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).show();
-            }
-        });
-        //最小化
-        ipcMain.on("window-mini", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).minimize();
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).minimize();
-            }
-        });
-        //最大化
-        ipcMain.on("window-max", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).maximize();
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).maximize();
-            }
-        });
-        //最大化最小化窗口
-        ipcMain.on("window-max-min-size", (event, winId) => {
-            if (winId) {
-                if (this.window.getWindow(winId).isMaximized()) {
-                    this.window.getWindow(winId).unmaximize();
-                    this.window.getWindow(winId).movable = true;
-                } else {
-                    this.window.getWindow(winId).movable = false;
-                    this.window.getWindow(winId).maximize();
-                }
-            }
-        });
-        //复原
-        ipcMain.on("window-restore", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).restore();
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).restore();
-            }
-        });
-        //重载
-        ipcMain.on("window-reload", (event, winId) => {
-            if (winId) {
-                this.window.getWindow(Number(winId)).reload();
-            } else {
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).reload();
-            }
-        });
-        //重启
+         * app重启
+         */
         ipcMain.on("app-relaunch", () => {
             app.relaunch({args: process.argv.slice(1)});
         });
-        //创建窗口
-        ipcMain.on("window-new", (event, args) => this.window.createWindow(args));
-        //设置窗口大小
-        ipcMain.on("window-size-set", (event, args) => this.window.setSize(args));
-        //设置窗口最小大小
-        ipcMain.on("window-min-size-set", (event, args) => this.window.setMinSize(args));
-        //设置窗口最大大小
-        ipcMain.on("window-max-size-set", (event, args) => this.window.setMaxSize(args));
 
         /**
          * 全局变量赋值
@@ -194,15 +123,21 @@ class Init {
         });
 
         /**
-         * 消息反馈
+         * 消息反馈(根据需要增加修改)
          */
         ipcMain.on("message-send", (event, args) => {
             switch (args.type) {
-                case IPC_MSG_TYPE.WIN:
+                case IPC_MSG_TYPE.WIN: //window模块
                     for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send("message-back", args);
                     break;
             }
         });
+
+        /**
+         * 开启模块监听
+         */
+        this.window.on();
+        this.session.on();
     }
 }
 

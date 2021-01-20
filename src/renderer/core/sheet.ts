@@ -7,7 +7,7 @@ import {
     SheetOpt,
     SongOpt,
     SheetListOpt
-} from "@/core"
+} from "@/renderer/core/index"
 import {readLine, writeFile, appendFile, findFileBySuffix} from "@/lib/file";
 import Log from "@/lib/log";
 
