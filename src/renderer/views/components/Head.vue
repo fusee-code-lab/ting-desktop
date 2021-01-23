@@ -60,7 +60,7 @@
   <div class="head-info drag">
     <div v-if="platform==='win32'" :class="platform">
       <div class="title">
-        Ting
+        {{ title }}
       </div>
       <div class="events">
         <div @click="close" class="event close no-drag cursor-pointer"></div>
@@ -69,7 +69,7 @@
     <div v-else-if="platform==='darwin'" :class="platform">
       <div></div>
       <div class="title">
-        Ting
+        {{ title }}
       </div>
     </div>
   </div>
@@ -93,7 +93,8 @@ export default defineComponent({
 
     return {
       close,
-      platform: getGlobal("platform")
+      title: args.title || args.appInfo.name,
+      platform: args.platform
     }
   }
 });

@@ -70,7 +70,7 @@
       {
         "target": "portable",
         "arch": [
-          "ia32"
+          "x64"
         ]
       }
     ]

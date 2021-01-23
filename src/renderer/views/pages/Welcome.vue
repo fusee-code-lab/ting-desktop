@@ -30,7 +30,8 @@
         letter-spacing: 1px;
         color: var(--theme-blue);
       }
-      >.but{
+
+      > .but {
         margin-top: 35px;
         width: 120px;
         height: 32px;
@@ -96,8 +97,8 @@ export default defineComponent({
   },
   setup() {
     const args = argsState();
-    setMinSize(args.id,[800, 600]);
-    setSize(args.id,[800, 600]);
+    setMinSize(args.id, [800, 600]);
+    setSize(args.id, [800, 600]);
 
     const handleJumpHome = () => {
       createWindow({
@@ -109,8 +110,8 @@ export default defineComponent({
 
     return {
       handleJumpHome,
-      platform: getGlobal("platform"),
-      accentColor: getGlobal("appInfo")["accentColor"]
+      platform: args.platform,
+      accentColor: args.appInfo.accentColor
     }
   },
 })

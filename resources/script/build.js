@@ -34,7 +34,7 @@ config.win.requestedExecutionLevel = ["asInvoker", "highestAvailable"][0]; //应
 config.win.target = [];
 config.win.target.push({ //单文件
     "target": "portable",
-    "arch": ["ia32"]
+    "arch": ["x64"]
 });
 // config.win.target.push({ //nsis打包
 //     "target": "nsis",

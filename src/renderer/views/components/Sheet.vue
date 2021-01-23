@@ -115,6 +115,7 @@ export default defineComponent({
 
     function addSheet() {
       createWindow({
+        title: "歌单添加",
         route: "/sheetCreate",
         parentId: args.id,
         width: 400,
