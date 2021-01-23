@@ -6,7 +6,7 @@ export default createRouter({
         {
             path: '/',
             name: 'Welcome',
-            component: () => import('../views/pages/Welcome.vue')
+            component: () => import/* webpackChunkName: "welcome" */ ('../views/pages/Welcome.vue')
         },
         {
             path: "/home",

@@ -43,6 +43,7 @@ export interface TingAudioOpt {
 }
 
 export interface TingCfgOpt {
+    first: boolean; //是否首次打开
     sheet: string; //歌单路径
     down: string; //下载歌曲存储路径
 }
@@ -72,6 +73,7 @@ export const SongType: string[] = [
 export const sheetSuffix: string = ".ting";//歌单后缀名
 
 let cfg: TingCfgOpt = {
+    first: true, //是否第一次打开
     sheet: "./data/sheet", //歌单路径
     down: "./data/down", //下载歌曲存储路径
 }
@@ -182,10 +184,11 @@ watch(() => [audioData.volume, audioData.playType], debounce(TingAudioWatch, 300
  */
 function TingCfgWatch() {
     const index = {
+        first: tingCfgData.first,
         sheet: tingCfgData.sheet,
         down: tingCfgData.down
     }
     writeFile("./data/cfg/index.json", JSON.stringify(index)).then();
 }
 
-watch(() => [tingCfgData.down, tingCfgData.sheet], debounce(TingCfgWatch, 3000));
+watch(() => [tingCfgData.first, tingCfgData.down, tingCfgData.sheet], debounce(TingCfgWatch, 1000));

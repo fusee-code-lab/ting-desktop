@@ -84,11 +84,12 @@
   </div>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
-import {getGlobal} from "@/lib";
+import {defineComponent, toRaw} from "vue";
 import {setMinSize, setSize, createWindow} from "@/renderer/utils/window";
 import Head from "@/renderer/views/components/Head.vue";
 import {argsState} from "@/renderer/store";
+import {tingCfgData} from "@/renderer/core";
+import {writeFile} from "@/lib/file";
 
 export default defineComponent({
   name: 'Welcome',
@@ -100,7 +101,9 @@ export default defineComponent({
     setMinSize(args.id, [800, 600]);
     setSize(args.id, [800, 600]);
 
-    const handleJumpHome = () => {
+    const handleJumpHome = async () => {
+      tingCfgData.first = false;
+      await writeFile("./data/cfg/index.json", JSON.stringify(toRaw(tingCfgData)));
       createWindow({
         isMainWin: true,
         resizable: true,

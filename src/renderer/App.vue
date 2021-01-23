@@ -9,11 +9,13 @@
 import {toRefs} from "vue";
 import {useRouter} from "vue-router";
 import {argsState, keepAliveOpt} from "./store";
+import {tingCfgData} from "@/renderer/core";
 
 export default {
   setup() {
     const args = argsState();
     if (args.route) useRouter().replace(args.route);
+    else if (!tingCfgData.first) useRouter().replace("/home");
     return {...toRefs(keepAliveOpt)};
   }
 }

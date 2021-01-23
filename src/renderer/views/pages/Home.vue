@@ -1,24 +1,20 @@
 <style lang="scss" scoped>
 .info {
-  width: 100%;
   height: 100%;
   position: relative;
   display: flex;
-  flex-shrink: 0;
 
   > .left {
     position: relative;
-    width: 20%;
     height: 100%;
-    min-width: 220px;
-    max-width: 320px;
+    width: 220px;
     background-color: #E3E3E8;
     padding: 40px 10px 0;
   }
 
   > .right {
     position: relative;
-    width: 100%;
+    width: calc(100% - 220px);
 
     > .back {
       position: absolute;
