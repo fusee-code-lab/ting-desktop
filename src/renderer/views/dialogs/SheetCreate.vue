@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import {defineComponent, reactive, toRaw} from "vue";
-import {getGlobal} from "@/lib";
+import {isNull, getGlobal} from "@/lib";
 import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";
@@ -38,6 +38,7 @@ export default defineComponent({
     })
 
     function send() {//为主窗口发送消息
+      if (isNull(formData.name)) return;
       messageSend({
         type: IPC_MSG_TYPE.WIN,
         key: "sheet-create",
