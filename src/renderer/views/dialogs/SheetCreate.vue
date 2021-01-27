@@ -8,7 +8,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
     <div class="info">
       <input v-model.trim="formData.name" placeholder="歌单名称"/>
@@ -24,14 +24,14 @@ import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";
 import {SheetOpt} from "@/renderer/core"
-import {argsState} from "@/renderer/store";
+import {argsData} from "@/renderer/store";
 import {closeWindow, windowShow} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "SheetCreate",
   components: {Head},
   setup() {
-    const args = argsState();
+
     const formData = reactive<SheetOpt>({
       name: ""
     })
@@ -43,15 +43,16 @@ export default defineComponent({
         key: "sheet-create",
         value: toRaw(formData)
       });
-      closeWindow(args.id);
+      closeWindow(argsData.window.id);
     }
 
     onMounted(() => {
-      windowShow(args.id);
+      windowShow(argsData.window.id);
     })
 
     return {
-      platform: args.platform,
+      platform: argsData.window.platform,
+      accentColor: argsData.window.appInfo.accentColor,
       formData,
       send
     }

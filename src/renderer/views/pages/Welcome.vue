@@ -72,7 +72,7 @@
 }
 </style>
 <template>
-  <div class="container bg-img drag" :class="platform">
+  <div class="container bg-img drag" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
     <div class="main" :class="platform">
       <div class="content">
@@ -87,7 +87,7 @@
 import {defineComponent, onMounted, toRaw} from "vue";
 import {setMinSize, setSize, createWindow, windowShow} from "@/renderer/utils/window";
 import Head from "@/renderer/views/components/Head.vue";
-import {argsState} from "@/renderer/store";
+import {argsData} from "@/renderer/store";
 import {tingCfgData} from "@/renderer/core";
 import {writeFile} from "@/lib/file";
 
@@ -97,9 +97,7 @@ export default defineComponent({
     Head
   },
   setup() {
-    const args = argsState();
-    setMinSize(args.id, [800, 600]);
-    setSize(args.id, [800, 600]);
+    setSize(argsData.window.id, [800, 600]);
 
     const handleJumpHome = async () => {
       tingCfgData.first = false;
@@ -112,12 +110,13 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      windowShow(args.id);
+      windowShow(argsData.window.id);
     })
 
     return {
       handleJumpHome,
-      platform: args.platform
+      platform: argsData.window.platform,
+      accentColor: argsData.window.appInfo.accentColor
     }
   },
 })

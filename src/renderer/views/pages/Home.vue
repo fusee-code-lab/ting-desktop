@@ -35,7 +35,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
     <div class="info">
       <div class="left">
@@ -63,7 +63,7 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, ref} from "vue";
-import {messageData, messageKeys, componentShow, argsState} from "../../store";
+import {messageData, messageKeys, componentShow, argsData} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
 import Sheet from "../components/Sheet.vue";
@@ -87,7 +87,7 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
-    const args = argsState();
+
     const shownLyricsSidePopup = ref(false);
 
     function showLyricsSidePopup() {
@@ -101,11 +101,12 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      windowShow(args.id);
+      windowShow(argsData.window.id);
     })
 
     return {
-      platform: args.platform,
+      platform: argsData.window.platform,
+      accentColor: argsData.window.appInfo.accentColor,
       messageData,
       messageKeys,
       componentShow,

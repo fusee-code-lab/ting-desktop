@@ -91,12 +91,11 @@ import {defineComponent, watch, toRaw, onMounted} from "vue";
 import {audioSheetListData} from "@/renderer/core";
 import {sheetList, sheetCreate} from "@/renderer/core/sheet";
 import {createWindow} from "@/renderer/utils/window"
-import {argsState, messageData} from "@/renderer/store";
+import {argsData, messageData} from "@/renderer/store";
 
 export default defineComponent({
   name: "Sheet",
   setup() {
-    const args = argsState();
 
     watch(() => messageData["sheet-create"], async (n) => {
       console.log(n);
@@ -117,7 +116,7 @@ export default defineComponent({
       createWindow({
         title: "歌单添加",
         route: "/sheetCreate",
-        parentId: args.id,
+        parentId: argsData.window.id,
         width: 400,
         height: 150,
         modal: true

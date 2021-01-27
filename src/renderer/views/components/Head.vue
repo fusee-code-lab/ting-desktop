@@ -77,24 +77,21 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {argsState} from "@/renderer/store";
-import {isNull} from "@/lib";
+import {argsData} from "@/renderer/store";
 import {closeWindow} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "Head",
   setup() {
-    const args = argsState();
 
     function close() {
-      if (isNull(args)) closeWindow();
-      else closeWindow(args.id);
+      closeWindow(argsData.window.id);
     }
 
     return {
       close,
-      title: args.title || args.appInfo.name,
-      platform: args.platform
+      title: argsData.window.title || argsData.window.appInfo.name,
+      platform: argsData.window.platform
     }
   }
 });

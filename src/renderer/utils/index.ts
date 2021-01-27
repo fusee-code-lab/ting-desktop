@@ -1,6 +1,6 @@
 import {ipcRenderer} from "electron";
-import {setMessageData} from "../store";
 import {IpcMsg} from "@/lib/interface";
+import {setMessageData} from "@/renderer/store";
 
 /**
  * 渲染进程初始化 (i)
@@ -10,7 +10,7 @@ export async function windowLoad() {
 }
 
 /**
- * 消息反馈
+ * 消息反馈 (i)
  */
 export function messageBack() {
     ipcRenderer.on("message-back", (event, args) => setMessageData(args.key, args.value));

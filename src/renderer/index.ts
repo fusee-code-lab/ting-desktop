@@ -1,14 +1,13 @@
 import {createApp} from "vue";
 import App from "./App.vue";
-import {argsSymbol, createArgs} from "./store";
 import router from "./router";
+import {argsData} from "./store";
 import {windowLoad, messageBack} from "./utils";
 
-(async () => {
-    messageBack();
-    const Args = await windowLoad();
-    createApp(App as any)
+messageBack();
+windowLoad().then(args => {
+    argsData.window = args;
+    createApp(App)
         .use(router)
-        .provide(argsSymbol, createArgs(Args))
         .mount("#app");
-})()
+});
