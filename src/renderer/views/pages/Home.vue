@@ -35,7 +35,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+  <div class="container" :class="platform">
     <Head/>
     <div class="info">
       <div class="left">
@@ -62,8 +62,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import {messageData, messageKeys, componentShow} from "../../store";
+import {defineComponent, onMounted, ref} from "vue";
+import {messageData, messageKeys, componentShow, argsState} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
 import Sheet from "../components/Sheet.vue";
@@ -73,6 +73,7 @@ import SheetDetails from "../components/SheetDetails.vue";
 import SidePopup from "../components/SidePopup.vue";
 import SongStatus from "../components/SongStatus.vue";
 import {getGlobal} from "@/lib";
+import {windowShow} from "@/renderer/utils/window";
 
 export default defineComponent({
   components: {
@@ -87,7 +88,7 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
-
+    const args = argsState();
     const shownLyricsSidePopup = ref(false);
 
     function showLyricsSidePopup() {
@@ -100,9 +101,12 @@ export default defineComponent({
       else messageData[messageKeys.Show] = "null";
     }
 
+    onMounted(() => {
+      windowShow(args.id);
+    })
+
     return {
-      platform: getGlobal("platform"),
-      accentColor: getGlobal("appInfo")["accentColor"],
+      platform: args.platform,
       messageData,
       messageKeys,
       componentShow,

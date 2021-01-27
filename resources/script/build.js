@@ -18,6 +18,7 @@ config.asar = true;//是否asar打包
 let nConf = {
     "appW": 980, //app默认宽
     "appH": 700, //app默认高
+    "appBackgroundColor": "#ffffff", //app默认背景色
     "appPort": cfg.port,
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -32,14 +33,14 @@ config.nsis.shortcutName = "Ting"; //快捷方式名称(可中文)
 config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ["asInvoker", "highestAvailable"][0]; //应用权限
 config.win.target = [];
-config.win.target.push({ //单文件
-    "target": "portable",
-    "arch": ["x64"]
-});
-// config.win.target.push({ //nsis打包
-//     "target": "nsis",
-//     "arch": ["ia32"]
+// config.win.target.push({ //单文件
+//     "target": "portable",
+//     "arch": ["x64"]
 // });
+config.win.target.push({ //nsis打包
+    "target": "nsis",
+    "arch": ["ia32"]
+});
 let nsh = "";
 if (config.nsis.allowToChangeInstallationDirectory) {
     nsh = "!macro customHeader\n" +

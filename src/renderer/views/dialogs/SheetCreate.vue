@@ -8,7 +8,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+  <div class="container" :class="platform">
     <Head/>
     <div class="info">
       <input v-model.trim="formData.name" placeholder="歌单名称"/>
@@ -18,21 +18,20 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, toRaw} from "vue";
+import {defineComponent, onMounted, reactive, toRaw} from "vue";
 import {isNull, getGlobal} from "@/lib";
 import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";
 import {SheetOpt} from "@/renderer/core"
 import {argsState} from "@/renderer/store";
-import {closeWindow} from "@/renderer/utils/window";
+import {closeWindow, windowShow} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "SheetCreate",
   components: {Head},
   setup() {
     const args = argsState();
-
     const formData = reactive<SheetOpt>({
       name: ""
     })
@@ -47,9 +46,12 @@ export default defineComponent({
       closeWindow(args.id);
     }
 
+    onMounted(() => {
+      windowShow(args.id);
+    })
+
     return {
-      platform: getGlobal("platform"),
-      accentColor: getGlobal("appInfo")["accentColor"],
+      platform: args.platform,
       formData,
       send
     }
