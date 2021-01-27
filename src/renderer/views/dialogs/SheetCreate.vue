@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import {defineComponent, onMounted, reactive, toRaw} from "vue";
-import {isNull, getGlobal} from "@/lib";
+import {isNull} from "@/lib";
 import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";

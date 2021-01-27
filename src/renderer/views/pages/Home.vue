@@ -72,7 +72,6 @@ import Search from "../components/Search.vue";
 import SheetDetails from "../components/SheetDetails.vue";
 import SidePopup from "../components/SidePopup.vue";
 import SongStatus from "../components/SongStatus.vue";
-import {getGlobal} from "@/lib";
 import {windowShow} from "@/renderer/utils/window";
 
 export default defineComponent({

@@ -78,7 +78,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
-import {isNull, getGlobal} from "@/lib";
+import {isNull} from "@/lib";
 import {closeWindow} from "@/renderer/utils/window";
 
 export default defineComponent({
