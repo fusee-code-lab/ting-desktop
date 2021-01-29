@@ -45,8 +45,17 @@ class Audios {
     }
 
     onAudio() {
-        this.currentAudio.oncanplay = () => { //可以开始播放
-            this.currentAudio.play();
+
+        this.currentAudio.onerror = async () => {
+            audioData.paused = 1;
+            audioData.cachedType = 0;
+            audioData.cachedTime = 0;
+            audioData.ingTime = 0;
+            await this.next();
+        }
+
+        this.currentAudio.oncanplay = async () => { //可以开始播放
+            await this.currentAudio.play();
         }
 
         this.currentAudio.oncanplaythrough = () => { //当前歌曲缓存完毕
