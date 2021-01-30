@@ -48,9 +48,14 @@
         background-color: var(--red);
       }
 
-      > .setting {
-        background-color: var(--cyan);
+      > .normal {
+        background-color: var(--theme-blue);
       }
+
+      > .top {
+        background-color: var(--theme-pink);
+      }
+
     }
   }
 }
@@ -60,16 +65,24 @@
   <div class="head-info drag">
     <div v-if="platform==='win32'" :class="platform">
       <div class="title">
-        {{ title }}
+        <span v-if="audioData.type !== 'mini'">{{ title }}</span>
       </div>
-      <div class="events">
+      <div class="events" v-if="audioData.type !== 'mini'">
         <div @click="close" class="event close no-drag cursor-pointer"></div>
+      </div>
+      <div class="events" v-if="audioData.type === 'mini'">
+        <div @click="windowSize" class="event normal no-drag cursor-pointer"></div>
+        <div @click="top" class="event top no-drag cursor-pointer"></div>
       </div>
     </div>
     <div v-else-if="platform==='darwin'" :class="platform">
       <div></div>
-      <div class="title">
-        {{ title }}
+      <div class="title" v-if="audioData.type !== 'mini'">
+        <span v-if="audioData.type !== 'mini'">{{ title }}</span>
+      </div>
+      <div class="events" v-if="audioData.type === 'mini'">
+        <div @click="windowSize" class="event normal no-drag cursor-pointer"></div>
+        <div @click="top" class="event top no-drag cursor-pointer"></div>
       </div>
     </div>
   </div>
@@ -78,20 +91,36 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsData} from "@/renderer/store";
-import {closeWindow} from "@/renderer/utils/window";
+import {windowAlwaysOnTop, windowClose, windowSetSize} from "@/renderer/utils/window";
+import {audioData} from "@/renderer/core";
 
 export default defineComponent({
   name: "Head",
   setup() {
 
+    let isAlwaysOnTop = false;
+
     function close() {
-      closeWindow(argsData.window.id);
+      windowClose(argsData.window.id);
+    }
+
+    function windowSize() {
+      windowSetSize(argsData.window.id, [980, 700]);
+      audioData.type = "normal";
+    }
+
+    function top() {
+      windowAlwaysOnTop(argsData.window.id, !isAlwaysOnTop, "pop-up-menu");
+      isAlwaysOnTop = !isAlwaysOnTop;
     }
 
     return {
+      top,
       close,
+      windowSize,
       title: argsData.window.title || argsData.window.appInfo.name,
-      platform: argsData.window.platform
+      platform: argsData.window.platform,
+      audioData
     }
   }
 });

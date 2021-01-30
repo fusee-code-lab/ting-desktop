@@ -85,7 +85,7 @@
 </template>
 <script lang="ts">
 import {defineComponent, onMounted, toRaw} from "vue";
-import {setMinSize, setSize, createWindow, windowShow} from "@/renderer/utils/window";
+import {windowSetSize, windowCreate, windowShow} from "@/renderer/utils/window";
 import Head from "@/renderer/views/components/Head.vue";
 import {argsData} from "@/renderer/store";
 import {tingCfgData} from "@/renderer/core";
@@ -97,12 +97,12 @@ export default defineComponent({
     Head
   },
   setup() {
-    setSize(argsData.window.id, [800, 600]);
+    windowSetSize(argsData.window.id, [800, 600]);
 
     const handleJumpHome = async () => {
       tingCfgData.first = false;
       await writeFile("./data/cfg/index.json", JSON.stringify(toRaw(tingCfgData)));
-      createWindow({
+      windowCreate({
         isMainWin: true,
         resizable: true,
         route: "/home"

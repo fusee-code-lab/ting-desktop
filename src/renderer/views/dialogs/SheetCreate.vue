@@ -25,7 +25,7 @@ import {IPC_MSG_TYPE} from "@/lib/interface";
 import Head from "@/renderer/views/components/Head.vue";
 import {SheetOpt} from "@/renderer/core"
 import {argsData} from "@/renderer/store";
-import {closeWindow, windowShow} from "@/renderer/utils/window";
+import {windowClose, windowShow} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "SheetCreate",
@@ -43,7 +43,7 @@ export default defineComponent({
         key: "sheet-create",
         value: toRaw(formData)
       });
-      closeWindow(argsData.window.id);
+      windowClose(argsData.window.id);
     }
 
     onMounted(() => {

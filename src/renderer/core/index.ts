@@ -31,6 +31,7 @@ export interface SheetListOpt {
 }
 
 export interface TingAudioOpt {
+    type: "normal" | "mini"; //播放器显示模式
     playType: PlayTypeOpt; //播放模式
     volume: number; //音量
     volumeGradualTime: number;//音量渐进时间(秒)
@@ -79,6 +80,7 @@ let cfg: TingCfgOpt = {
 }
 
 let audio: TingAudioOpt = {
+    type: "normal",
     playType: PlayTypeOpt.list,//播放模式
     volume: 1, //音量
     volumeGradualTime: 0.7,//音量渐进时间(秒)
@@ -168,6 +170,7 @@ export function getSheetPath(name: string) {
  */
 function TingAudioWatch() {
     const audio = {
+        type: audioData.type,
         playType: audioData.playType,
         volume: audioData.volume,
         volumeGradualTime: audioData.volumeGradualTime,
@@ -176,7 +179,7 @@ function TingAudioWatch() {
     writeFile("./data/cfg/audio.json", JSON.stringify(audio)).then();
 }
 
-watch(() => [audioData.volume, audioData.playType], debounce(TingAudioWatch, 3000));
+watch(() => [audioData.volume, audioData.playType, audioData.type, audioData.songInfo], debounce(TingAudioWatch, 3000));
 
 
 /**

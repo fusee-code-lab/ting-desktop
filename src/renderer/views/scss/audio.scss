@@ -110,7 +110,7 @@
   justify-content: center;
   align-items: center;
 
-  > .pre, .next {
+  .pre, .next {
     position: relative;
     width: 55px;
     display: flex;
@@ -119,7 +119,7 @@
     cursor: pointer;
   }
 
-  > .play, .pause {
+  .play, .pause {
     position: relative;
     width: 28px;
     display: flex;
@@ -128,7 +128,7 @@
     cursor: pointer;
   }
 
-  > .pre {
+  .pre {
     &:before {
       @include device-pixel("~@/renderer/assets/icons/audio/pre_btn");
       content: "";
@@ -140,7 +140,7 @@
     }
   }
 
-  > .next {
+  .next {
     &:before {
       @include device-pixel("~@/renderer/assets/icons/audio/next_btn");
       content: "";
@@ -152,7 +152,7 @@
     }
   }
 
-  > .play {
+  .play {
     &:before {
       @include device-pixel("~@/renderer/assets/icons/audio/play_btn");
       content: "";
@@ -164,7 +164,7 @@
     }
   }
 
-  > .pause {
+  .pause {
     &:before {
       @include device-pixel("~@/renderer/assets/icons/audio/pause_btn");
       content: "";
@@ -266,5 +266,50 @@
     width: 20px;
     height: 20px;
     background-color: var(--theme-blue);
+  }
+}
+
+
+.audio-info.mini {
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  background-image: var(--songCover);
+
+  > .audio-info-progress {
+    top: auto;
+    bottom: 0;
+    z-index: 2;
+
+    > .progress-input {
+      height: 6px;
+    }
+  }
+
+  > .audio-info-mini {
+    backdrop-filter: saturate(180%) blur(60px);
+    height: 100%;
+    padding: 20px;
+
+    > .audio-info-song {
+      width: 100%;
+      max-width: 100%;
+      height: 37px;
+    }
+
+    > .audio-info-buts {
+      width: 100%;
+      height: calc(100% - 37px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+
+      > .buts {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
   }
 }

@@ -3,10 +3,10 @@
 </style>
 
 <template>
-  <div class="audio-info">
+  <div class="audio-info bg-img" :class="co.type" :style="{'--songCover': 'url('+ co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`+')'}">
     <div class="audio-info-progress">
       <input type="range" class="progress-input"
-             :style="{'--audio-progres':`linear-gradient(to right, var(--theme-blue) ${isProgress===1?speedProgress/co.allTime.toFixed(0)*100:co.ingTime/co.allTime.toFixed(0)*100}%, #fff 0%)`}"
+             :style="{'--audio-progres':`linear-gradient(to right, var(--theme-blue) ${isProgress===1?speedProgress/co.allTime.toFixed(0)*100:co.ingTime/co.allTime.toFixed(0)*100}%, transparent 0%)`}"
              :max="co.allTime.toFixed(0)"
              min="0"
              step="any"
@@ -15,7 +15,7 @@
              @mouseup="co.paused===1?audio.currentIngTime(speedProgress):audio.currentTime(speedProgress);oProgress()"
              :value="isProgress===1?speedProgress:co.ingTime"/>
     </div>
-    <div class="audio-info-content">
+    <div v-if="co.type==='normal'" class="audio-info-content">
       <div class="audio-info-song">
         <div class="cover">
           <img v-if="co.songInfo"
@@ -46,7 +46,30 @@
         <div class="sheet" @click="onLyricsButtonClick"></div>
       </div>
     </div>
-
+    <div v-if="co.type==='mini'" class="audio-info-mini">
+      <div class="audio-info-song">
+        <div class="cover">
+          <img v-if="co.songInfo"
+               :src="co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`">
+        </div>
+        <div class="content">
+          <div v-if="co.songInfo" class="song-name">{{ co.songInfo.name }}</div>
+          <div v-if="co.songInfo" class="song-singer"> {{ co.songInfo.singer }}</div>
+        </div>
+      </div>
+      <div class="audio-info-buts">
+        <div class="rules">
+          <div class="random" @click="rules(PlayTypeOpt.random)"></div>
+          <div class="single" @click="rules(PlayTypeOpt.single)"></div>
+        </div>
+        <div class="buts">
+          <div class="pre" @click="audio.pre()"></div>
+          <div v-if="co.paused===1" class="play" @click="play()"></div>
+          <div v-if="co.paused===0" class="pause" @click="pause()"></div>
+          <div class="next" @click="audio.next()"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

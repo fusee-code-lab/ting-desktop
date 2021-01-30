@@ -37,7 +37,7 @@
 <template>
   <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
-    <div class="info">
+    <div class="info" v-if="audioData.type==='normal'">
       <div class="left">
         <Search></Search>
         <Sheet></Sheet>
@@ -58,6 +58,9 @@
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
+    <div class="mini-info" v-else-if="audioData.type==='mini'">
+      <Audio/>
+    </div>
   </div>
 </template>
 
@@ -73,6 +76,7 @@ import SheetDetails from "../components/SheetDetails.vue";
 import SidePopup from "../components/SidePopup.vue";
 import SongStatus from "../components/SongStatus.vue";
 import {windowShow} from "@/renderer/utils/window";
+import {audioData} from "@/renderer/core";
 
 export default defineComponent({
   components: {
@@ -108,6 +112,7 @@ export default defineComponent({
       platform: argsData.window.platform,
       accentColor: argsData.window.appInfo.accentColor,
       messageData,
+      audioData,
       messageKeys,
       componentShow,
       shownLyricsSidePopup,
