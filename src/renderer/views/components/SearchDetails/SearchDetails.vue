@@ -53,10 +53,64 @@
       height: 100%;
       padding: 20px 0 10px;
 
+      > .item:hover {
+        > .cover {
+          transform: scale(1.05) translateY(-5px);
+          transition: all 0.2s ease-in-out;
+        }
+
+        > .cover > .img-cover {
+          transition: all 0.2s ease-in-out;
+          background-color: rgba($color: #333333, $alpha: 0.7); // TODO 使用颜色变量
+
+          > .play-symbol {
+            background-color: var(--white);
+            transition: all 0.2s ease-in-out;
+          }
+        }
+      }
+
+      > .item > .cover > .img-cover > .play-symbol:hover {
+        background-color: var(--theme-blue);
+        transition: all 0.2s ease-in-out;
+      }
+
       > .item {
-        > img {
+        > .cover {
           width: 120px;
           height: 120px;
+          border-radius: 2px;
+          transition: all 0.1s ease-in-out;
+          background-position: center;
+          background-size: 100%;
+
+          > .img-cover {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            top: 0;
+            left: 0;
+            border-radius: 2px;
+            transition: all 0.1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+
+            > .play-symbol {
+              width: 20px;
+              height: 20px;
+              background-color: transparent;
+              transition: all 0.1s ease-in-out;
+            }
+          }
+        }
+
+        > .img-cover {
+          position: relative;
+          top: 0;
+          left: 0;
+          background-color: rebeccapurple;
         }
 
         > .title {
@@ -116,7 +170,14 @@
               v-bind:key="item.id"
               @click="searchRes.clickItemAction(item)"
             >
-              <img :src="item.coverUrl" alt="" />
+              <div
+                class="cover"
+                :style="{ 'background-image': `url(${item.coverUrl})` }"
+              >
+                <div class="img-cover">
+                  <i class="play-symbol"></i>
+                </div>
+              </div>
               <div class="title">{{ item.title }}</div>
               <div class="subtitle">{{ item.subtitle }}</div>
             </div>
@@ -217,7 +278,6 @@ export default defineComponent({
       messageData[messageKeys.Show] = componentShow.SheetDetails;
     }
 
-    // TODO 优化 as unknown as ...
     // TODO 有些没有 cover 的音乐 。。。
     const listData = computed<Section<String, SearchResultItem>[]>(() => {
       return [
