@@ -70,7 +70,7 @@ import {messageData, messageKeys, componentShow, argsData} from "../../store";
 import Head from "../components/Head.vue";
 import Audio from "../components/Audio.vue";
 import Sheet from "../components/Sheet.vue";
-import SearchDetails from "../components/SearchDetails.vue";
+import SearchDetails from "../components/SearchDetails/SearchDetails.vue";
 import Search from "../components/Search.vue";
 import SheetDetails from "../components/SheetDetails.vue";
 import SidePopup from "../components/SidePopup.vue";
