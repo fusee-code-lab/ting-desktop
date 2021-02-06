@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div class="audio-info bg-img" :class="co.type" :style="{'--songCover': 'url('+ co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`+')'}">
+    <div class="audio-info bg-img" v-if="co.songInfo" :class="co.type" :style="{'--songCover': 'url('+ co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`+')'}">
     <div class="audio-info-progress">
       <input type="range" class="progress-input"
              :style="{'--audio-progres':`linear-gradient(to right, var(--theme-blue) ${isProgress===1?speedProgress/co.allTime.toFixed(0)*100:co.ingTime/co.allTime.toFixed(0)*100}%, transparent 0%)`}"

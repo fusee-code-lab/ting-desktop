@@ -10,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
 
-  > .win32, .darwin {
+  > .win32, .darwin,.linux {
     padding: 0 10px;
     width: 100%;
     height: 100%;
@@ -23,7 +23,7 @@
     }
   }
 
-  > .win32 {
+  > .win32 ,.linux {
     > .events {
       display: flex;
       justify-content: space-between;
@@ -63,22 +63,22 @@
 
 <template>
   <div class="head-info drag">
-    <div v-if="platform==='win32'" :class="platform">
-      <div class="title">
+    <div v-if="platform==='darwin'" :class="platform">
+      <div></div>
+      <div class="title" v-if="audioData.type !== 'mini'">
         <span v-if="audioData.type !== 'mini'">{{ title }}</span>
-      </div>
-      <div class="events" v-if="audioData.type !== 'mini'">
-        <div @click="close" class="event close no-drag cursor-pointer"></div>
       </div>
       <div class="events" v-if="audioData.type === 'mini'">
         <div @click="windowSize" class="event normal no-drag cursor-pointer"></div>
         <div @click="top" class="event top no-drag cursor-pointer"></div>
       </div>
     </div>
-    <div v-else-if="platform==='darwin'" :class="platform">
-      <div></div>
-      <div class="title" v-if="audioData.type !== 'mini'">
+    <div v-else :class="platform">
+      <div class="title">
         <span v-if="audioData.type !== 'mini'">{{ title }}</span>
+      </div>
+      <div class="events" v-if="audioData.type !== 'mini'">
+        <div @click="close" class="event close no-drag cursor-pointer"></div>
       </div>
       <div class="events" v-if="audioData.type === 'mini'">
         <div @click="windowSize" class="event normal no-drag cursor-pointer"></div>

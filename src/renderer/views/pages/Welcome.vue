@@ -44,7 +44,7 @@
 
   }
 
-  > .win32 {
+  > .win32 ,.linux{
     right: 0;
 
     > .content {
