@@ -1,3 +1,53 @@
+<template>
+  <div class="container bg-img drag" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+    <Head/>
+    <div class="main" :class="platform">
+      <div class="content">
+        <img src="https://img.shuaxinjs.cn/favicon-16x16-next.png" alt="logo"/>
+        <div class="title">欢迎来到<span style="margin-left: 10px;">Ting</span></div>
+        <button class="but" @click="handleJumpHome()">开始</button>
+      </div>
+    </div>
+  </div>
+</template>
+<script lang="ts">
+import {defineComponent, onMounted, toRaw} from "vue";
+import {windowSetSize, windowCreate, windowShow} from "@/renderer/utils/window";
+import Head from "@/renderer/views/components/Head.vue";
+import {argsData} from "@/renderer/store";
+import {tingCfgData} from "@/renderer/core";
+import {writeFile} from "@/lib/file";
+
+export default defineComponent({
+  name: 'Welcome',
+  components: {
+    Head
+  },
+  setup() {
+    windowSetSize(argsData.window.id, [800, 600]);
+
+    const handleJumpHome = async () => {
+      tingCfgData.first = false;
+      await writeFile("./data/cfg/index.json", JSON.stringify(toRaw(tingCfgData)));
+      windowCreate({
+        isMainWin: true,
+        resizable: true,
+        route: "/home"
+      })
+    }
+
+    onMounted(() => {
+      windowShow(argsData.window.id);
+    })
+
+    return {
+      handleJumpHome,
+      platform: argsData.window.platform,
+      accentColor: argsData.window.appInfo.accentColor
+    }
+  },
+})
+</script>
 <style lang="scss" scoped>
 .container {
   position: relative;
@@ -71,53 +121,3 @@
   }
 }
 </style>
-<template>
-  <div class="container bg-img drag" :class="platform" :style="{'--accentColor':'#'+accentColor}">
-    <Head/>
-    <div class="main" :class="platform">
-      <div class="content">
-        <img src="https://img.shuaxinjs.cn/favicon-16x16-next.png" alt="logo"/>
-        <div class="title">欢迎来到<span style="margin-left: 10px;">Ting</span></div>
-        <button class="but" @click="handleJumpHome()">开始</button>
-      </div>
-    </div>
-  </div>
-</template>
-<script lang="ts">
-import {defineComponent, onMounted, toRaw} from "vue";
-import {windowSetSize, windowCreate, windowShow} from "@/renderer/utils/window";
-import Head from "@/renderer/views/components/Head.vue";
-import {argsData} from "@/renderer/store";
-import {tingCfgData} from "@/renderer/core";
-import {writeFile} from "@/lib/file";
-
-export default defineComponent({
-  name: 'Welcome',
-  components: {
-    Head
-  },
-  setup() {
-    windowSetSize(argsData.window.id, [800, 600]);
-
-    const handleJumpHome = async () => {
-      tingCfgData.first = false;
-      await writeFile("./data/cfg/index.json", JSON.stringify(toRaw(tingCfgData)));
-      windowCreate({
-        isMainWin: true,
-        resizable: true,
-        route: "/home"
-      })
-    }
-
-    onMounted(() => {
-      windowShow(argsData.window.id);
-    })
-
-    return {
-      handleJumpHome,
-      platform: argsData.window.platform,
-      accentColor: argsData.window.appInfo.accentColor
-    }
-  },
-})
-</script>

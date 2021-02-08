@@ -1,3 +1,143 @@
+<template>
+  <div class="sheet-info">
+
+    <div v-if="data.info" class="head">
+      <div class="left">
+        <div class="icon bg-img" :style="{'background-image': 'url('+data.info.detail.cover+')'}"></div>
+      </div>
+      <div class="right">
+        <div class="title">
+          <div class="name">{{ data.info.detail.name }}</div>
+          <div class="vice">
+            <span>{{ data.info.songs.length }}个 · {{ data.songTime }}分钟</span>
+            <span>{{ data.info.detail.tags.join("/") }}</span>
+          </div>
+          <div class="desc">
+            <div class="text" :class="{'hide':!data.isDesc,'show':data.isDesc}">{{ data.info.detail.desc }}</div>
+            <div v-if="!data.isDesc" @click="showHide()" class="more cursor-pointer">更多</div>
+          </div>
+          <div class="creat" :class="{'desc-show':data.isDesc}">
+            <div class="icon bg-img" :class="{'qq':data.vendor === 'qq'}"></div>
+            <div class="nickname">@{{ data.info.detail.creat_name }}</div>
+          </div>
+          <div class="buts">
+            <button class="all-play" @click="playAll()">播放全部</button>
+            <button class="add-sheet" @click="addSongAllSheet()">添加</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="data.info" class="content">
+      <div class="head">
+        <div>歌曲</div>
+        <div>艺人</div>
+        <div>专辑</div>
+        <div>时长</div>
+      </div>
+
+      <div class="songs">
+
+        <div class="item" v-for="(song) in data.info.songs" v-bind:key="song.id"
+             @click="play(song)">
+          <div>
+            <div v-if="data.vendor==='netease'" class="icon bg-img"
+                 :style="{'--coverUrl':'url('+song.album.cover+'?param=28y28)'}"></div>
+            <div v-else class="icon bg-img"
+                 :style="{'--coverUrl':'url('+song.album.cover+')'}"></div>
+            <div class="name">{{ song.name }}</div>
+          </div>
+          <div>{{ song.artists.map(e => e.name).join() }}</div>
+          <div>{{ song.album.name }}</div>
+          <div>{{ Math.floor(song.songTime / 60) + ":" + (song.songTime % 60 / 100).toFixed(2).slice(-2) }}</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent, onMounted, reactive} from "vue";
+import {Vendors} from "@/lib/musicapi/api";
+import {getPlaylistDetail, getSongUrl} from "@/lib/musicapi";
+import Log from "@/lib/log";
+import {audio} from "@/renderer/core/audio";
+import {audioPlayListData, sheetData, TingPlayListOpt} from "@/renderer/core";
+
+interface SheetDetailsOpt {
+  info?: any;
+  isDesc?: boolean;
+  songTime?: string;
+  vendor?: Vendors;
+}
+
+export default defineComponent({
+  name: "SheetDetails",
+  setup() {
+    const data = reactive<SheetDetailsOpt | null>({});
+
+    onMounted(async () => {
+      data.vendor = sheetData.value.vendor || null;
+      let req = await getPlaylistDetail(sheetData.value.vendor, sheetData.value.id || sheetData.value.dissid);
+      if (req.status) {
+        data.info = req.data;
+
+        try {
+          let songTime = 0;
+          data.info.songs.map((e: any) => songTime += e.songTime);
+          data.songTime = (songTime / 60).toFixed(0);
+        } catch (e) {
+          Log.error("[Sheet-onMounted]", e);
+        }
+      }
+    })
+
+    function showHide() {
+      data.isDesc = !data.isDesc;
+    }
+
+
+    async function play(item: any) {
+      let req = await getSongUrl(item.vendor, item.id);
+      if (req) await audio.play({
+        id: item.id,
+        vendor: item.vendor,
+        path: req.url,
+        name: item.name,
+        cover: item.album.cover,
+        singer: item.artists.map((e: any) => e.name).toString()
+      });
+    }
+
+    async function playAll() {
+      let songs: TingPlayListOpt = {};
+      data.info.songs.forEach((e: any) => songs[`${e.vendor}|${e.id}`] = {
+        id: e.id,
+        vendor: e.vendor,
+        name: e.name,
+        cover: e.album.cover,
+        singer: e.artists.map((e: any) => e.name).toString()
+      });
+      audioPlayListData.value = songs;
+      await audio.load();
+    }
+
+    async function addSongAllSheet() {
+      // TODO 添加所有歌曲至 歌单
+    }
+
+    return {
+      data,
+      showHide,
+      play,
+      playAll,
+      addSongAllSheet
+    }
+  }
+});
+</script>
 <style lang="scss" scoped>
 @import "~@/renderer/views/scss/mixin.scss";
 
@@ -232,144 +372,3 @@
 
 }
 </style>
-
-<template>
-  <div class="sheet-info">
-
-    <div v-if="data.info" class="head">
-      <div class="left">
-        <div class="icon bg-img" :style="{'background-image': 'url('+data.info.detail.cover+')'}"></div>
-      </div>
-      <div class="right">
-        <div class="title">
-          <div class="name">{{ data.info.detail.name }}</div>
-          <div class="vice">
-            <span>{{ data.info.songs.length }}个 · {{ data.songTime }}分钟</span>
-            <span>{{ data.info.detail.tags.join("/") }}</span>
-          </div>
-          <div class="desc">
-            <div class="text" :class="{'hide':!data.isDesc,'show':data.isDesc}">{{ data.info.detail.desc }}</div>
-            <div v-if="!data.isDesc" @click="showHide()" class="more cursor-pointer">更多</div>
-          </div>
-          <div class="creat" :class="{'desc-show':data.isDesc}">
-            <div class="icon bg-img" :class="{'qq':data.vendor === 'qq'}"></div>
-            <div class="nickname">@{{ data.info.detail.creat_name }}</div>
-          </div>
-          <div class="buts">
-            <button class="all-play" @click="playAll()">播放全部</button>
-            <button class="add-sheet" @click="addSongAllSheet()">添加</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="data.info" class="content">
-      <div class="head">
-        <div>歌曲</div>
-        <div>艺人</div>
-        <div>专辑</div>
-        <div>时长</div>
-      </div>
-
-      <div class="songs">
-
-        <div class="item" v-for="(song) in data.info.songs" v-bind:key="song.id"
-             @click="play(song)">
-          <div>
-            <div v-if="data.vendor==='netease'" class="icon bg-img"
-                 :style="{'--coverUrl':'url('+song.album.cover+'?param=28y28)'}"></div>
-            <div v-else class="icon bg-img"
-                 :style="{'--coverUrl':'url('+song.album.cover+')'}"></div>
-            <div class="name">{{ song.name }}</div>
-          </div>
-          <div>{{ song.artists.map(e => e.name).join() }}</div>
-          <div>{{ song.album.name }}</div>
-          <div>{{ Math.floor(song.songTime / 60) + ":" + (song.songTime % 60 / 100).toFixed(2).slice(-2) }}</div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</template>
-
-<script lang="ts">
-import {defineComponent, onMounted, reactive} from "vue";
-import {Vendors} from "@/lib/musicapi/api";
-import {getPlaylistDetail, getSongUrl} from "@/lib/musicapi";
-import Log from "@/lib/log";
-import {audio} from "@/renderer/core/audio";
-import {audioPlayListData, sheetData, TingPlayListOpt} from "@/renderer/core";
-
-interface SheetDetailsOpt {
-  info?: any;
-  isDesc?: boolean;
-  songTime?: string;
-  vendor?: Vendors;
-}
-
-export default defineComponent({
-  name: "SheetDetails",
-  setup() {
-    const data = reactive<SheetDetailsOpt | null>({});
-
-    onMounted(async () => {
-      data.vendor = sheetData.value.vendor || null;
-      let req = await getPlaylistDetail(sheetData.value.vendor, sheetData.value.id || sheetData.value.dissid);
-      if (req.status) {
-        data.info = req.data;
-
-        try {
-          let songTime = 0;
-          data.info.songs.map((e: any) => songTime += e.songTime);
-          data.songTime = (songTime / 60).toFixed(0);
-        } catch (e) {
-          Log.error("[Sheet-onMounted]", e);
-        }
-      }
-    })
-
-    function showHide() {
-      data.isDesc = !data.isDesc;
-    }
-
-
-    async function play(item: any) {
-      let req = await getSongUrl(item.vendor, item.id);
-      if (req) await audio.play({
-        id: item.id,
-        vendor: item.vendor,
-        path: req.url,
-        name: item.name,
-        cover: item.album.cover,
-        singer: item.artists.map((e: any) => e.name).toString()
-      });
-    }
-
-    async function playAll() {
-      let songs: TingPlayListOpt = {};
-      data.info.songs.forEach((e: any) => songs[`${e.vendor}|${e.id}`] = {
-        id: e.id,
-        vendor: e.vendor,
-        name: e.name,
-        cover: e.album.cover,
-        singer: e.artists.map((e: any) => e.name).toString()
-      });
-      audioPlayListData.value = songs;
-      await audio.load();
-    }
-
-    async function addSongAllSheet() {
-      // TODO 添加所有歌曲至 歌单
-    }
-
-    return {
-      data,
-      showHide,
-      play,
-      playAll,
-      addSongAllSheet
-    }
-  }
-});
-</script>

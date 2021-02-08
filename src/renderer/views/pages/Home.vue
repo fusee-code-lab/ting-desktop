@@ -1,39 +1,3 @@
-<style lang="scss" scoped>
-.info {
-  height: 100%;
-  position: relative;
-  display: flex;
-
-  > .left {
-    position: relative;
-    height: 100%;
-    width: 220px;
-    background-color: #E3E3E8;
-    padding: 40px 10px 0;
-  }
-
-  > .right {
-    position: relative;
-    width: calc(100% - 220px);
-
-    > .back {
-      position: absolute;
-      top: 0;
-      left: 12px;
-      font: 400 22px ping-fang;
-      z-index: 1000;
-    }
-
-    > .null {
-      padding: 40px 0;
-      text-align: center;
-      font: 400 19px ping-fang;
-    }
-
-  }
-}
-</style>
-
 <template>
   <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
@@ -122,3 +86,38 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="scss" scoped>
+.info {
+  height: 100%;
+  position: relative;
+  display: flex;
+
+  > .left {
+    position: relative;
+    height: 100%;
+    width: 220px;
+    background-color: #E3E3E8;
+    padding: 40px 10px 0;
+  }
+
+  > .right {
+    position: relative;
+    width: calc(100% - 220px);
+
+    > .back {
+      position: absolute;
+      top: 0;
+      left: 12px;
+      font: 400 22px ping-fang;
+      z-index: 1000;
+    }
+
+    > .null {
+      padding: 40px 0;
+      text-align: center;
+      font: 400 19px ping-fang;
+    }
+
+  }
+}
+</style>

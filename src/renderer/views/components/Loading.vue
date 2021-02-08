@@ -1,17 +1,3 @@
-<style lang="scss" scoped>
-.loading-info {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 10px;
-}
-</style>
-
 <template>
   <div class="loading-info">
     Loading
@@ -28,3 +14,16 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="scss" scoped>
+.loading-info {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 10px;
+}
+</style>

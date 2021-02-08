@@ -1,7 +1,3 @@
-<style lang="scss" scoped>
-@import "../scss/audio";
-</style>
-
 <template>
     <div class="audio-info bg-img" v-if="co.songInfo" :class="co.type" :style="{'--songCover': 'url('+ co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`+')'}">
     <div class="audio-info-progress">
@@ -123,3 +119,6 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="scss" scoped>
+@import "../scss/audio";
+</style>

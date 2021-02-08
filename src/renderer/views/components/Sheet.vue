@@ -1,70 +1,3 @@
-<style lang="scss" scoped>
-@import "~@/renderer/views/scss/mixin.scss";
-
-.sheet-info {
-  > .items {
-    > .title {
-      padding: 10px 0;
-      color: var(--tertiary-label);
-      font: normal 12px/12px ping-fang;
-    }
-
-    > .content {
-
-      > .item {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-        height: 20px;
-
-        > .left {
-          width: 90%;
-          display: flex;
-          align-items: center;
-
-          > .icon {
-            @include device-pixel("~@/renderer/assets/icons/play_list_icon");
-            width: 16px;
-            height: 16px;
-            margin-right: 12px;
-          }
-
-          > .text {
-            @include text-overflow(1);
-            width: calc(100% - 28px);
-            color: var(--label);
-            font: normal 14px segoe-ui;
-          }
-        }
-
-        > .right {
-          width: 10%;
-        }
-      }
-
-      > .item.act {
-        &:before {
-          content: "";
-          position: absolute;
-          left: -10px;
-          height: 20px;
-          width: 4px;
-          background-color: var(--theme-blue);
-        }
-      }
-
-    }
-
-    > .add {
-      color: var(--theme-blue);
-      font: normal 12px/16px segoe-ui;
-    }
-  }
-}
-</style>
-
 <template>
   <div class="sheet-info">
     <div class="items">
@@ -142,3 +75,69 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="scss" scoped>
+@import "~@/renderer/views/scss/mixin.scss";
+
+.sheet-info {
+  > .items {
+    > .title {
+      padding: 10px 0;
+      color: var(--tertiary-label);
+      font: normal 12px/12px ping-fang;
+    }
+
+    > .content {
+
+      > .item {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        height: 20px;
+
+        > .left {
+          width: 90%;
+          display: flex;
+          align-items: center;
+
+          > .icon {
+            @include device-pixel("~@/renderer/assets/icons/play_list_icon");
+            width: 16px;
+            height: 16px;
+            margin-right: 12px;
+          }
+
+          > .text {
+            @include text-overflow(1);
+            width: calc(100% - 28px);
+            color: var(--label);
+            font: normal 14px segoe-ui;
+          }
+        }
+
+        > .right {
+          width: 10%;
+        }
+      }
+
+      > .item.act {
+        &:before {
+          content: "";
+          position: absolute;
+          left: -10px;
+          height: 20px;
+          width: 4px;
+          background-color: var(--theme-blue);
+        }
+      }
+
+    }
+
+    > .add {
+      color: var(--theme-blue);
+      font: normal 12px/16px segoe-ui;
+    }
+  }
+}
+</style>

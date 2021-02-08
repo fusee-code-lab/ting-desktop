@@ -5,6 +5,7 @@ export function win32() {
 }
 
 export function linux() {
+    global.sharedObject["appInfo"]["accentColor"] = "333333";
 }
 
 export function darwin() {

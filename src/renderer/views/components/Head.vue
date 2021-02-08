@@ -1,66 +1,3 @@
-<style lang="scss">
-.head-info {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 32px;
-  z-index: 999;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  > .win32, .darwin,.linux {
-    padding: 0 10px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    > .title {
-      font: normal 13px /13px ping-fang;
-    }
-  }
-
-  > .win32 ,.linux {
-    > .events {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      > .event {
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        width: 15px;
-        height: 15px;
-        margin-left: 4px;
-      }
-
-      > .event:hover {
-        opacity: .9;
-      }
-
-      > .event:active {
-        opacity: .7;
-      }
-
-      > .close {
-        background-color: var(--red);
-      }
-
-      > .normal {
-        background-color: var(--theme-blue);
-      }
-
-      > .top {
-        background-color: var(--theme-pink);
-      }
-
-    }
-  }
-}
-</style>
-
 <template>
   <div class="head-info drag">
     <div v-if="platform==='darwin'" :class="platform">
@@ -125,3 +62,65 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="scss">
+.head-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > .win32, .darwin,.linux {
+    padding: 0 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > .title {
+      font: normal 13px /13px ping-fang;
+    }
+  }
+
+  > .win32 ,.linux {
+    > .events {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      > .event {
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        width: 15px;
+        height: 15px;
+        margin-left: 4px;
+      }
+
+      > .event:hover {
+        opacity: .9;
+      }
+
+      > .event:active {
+        opacity: .7;
+      }
+
+      > .close {
+        background-color: var(--red);
+      }
+
+      > .normal {
+        background-color: var(--theme-blue);
+      }
+
+      > .top {
+        background-color: var(--theme-pink);
+      }
+
+    }
+  }
+}
+</style>

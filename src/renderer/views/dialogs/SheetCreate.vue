@@ -1,12 +1,3 @@
-<style lang="scss" scoped>
-.info {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  padding: 32px 10px 0;
-}
-</style>
-
 <template>
   <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head/>
@@ -59,3 +50,11 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="scss" scoped>
+.info {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 32px 10px 0;
+}
+</style>
