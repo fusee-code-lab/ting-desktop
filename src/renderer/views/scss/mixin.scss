@@ -16,12 +16,14 @@
   overflow: hidden;
 }
 
+//层级管理
 $z-layers: (
         "default": 1,
         "below": -1,
         'modal': ('base': 500, 'close': 100, 'header': 50, 'footer': 10),
 );
 
+//获取层级
 @function z($layers...) {
   $keys: '';
   @each $layer in $layers {

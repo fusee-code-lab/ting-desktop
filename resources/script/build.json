@@ -76,8 +76,8 @@
     ]
   },
   "linux": {
-    "icon": "resources/icons",
-    "target": "pacman",
+    "icon": "resources/icons/icon.png",
+    "target": "AppImage",
     "executableName": "ting"
   },
   "npmRebuild": true

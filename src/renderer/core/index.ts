@@ -3,6 +3,7 @@ import Log from "@/lib/log";
 import {getGlobal, debounce} from "@/lib";
 import {Vendors} from "@/lib/musicapi/api";
 import {writeFile} from "@/lib/file";
+import {getAppPath} from "@/renderer/utils";
 
 export enum PlayTypeOpt { //播放类型
     list,
@@ -75,8 +76,8 @@ export const sheetSuffix: string = ".ting";//歌单后缀名
 
 let cfg: TingCfgOpt = {
     first: true, //是否第一次打开
-    sheet: "./data/sheet", //歌单路径
-    down: "./data/down", //下载歌曲存储路径
+    sheet: getAppPath("music") + "/ting/sheet", //默认歌单路径
+    down: getAppPath("music") + "/ting/down", //默认下载歌曲存储路径
 }
 
 let audio: TingAudioOpt = {
@@ -176,7 +177,7 @@ function TingAudioWatch() {
         volumeGradualTime: audioData.volumeGradualTime,
         songInfo: audioData.songInfo
     }
-    writeFile("./data/cfg/audio.json", JSON.stringify(audio)).then();
+    writeFile(getAppPath("userData") + "/cfg/audio.json", JSON.stringify(audio)).then();
 }
 
 watch(() => [audioData.volume, audioData.playType, audioData.type, audioData.songInfo], debounce(TingAudioWatch, 3000));
@@ -191,7 +192,7 @@ function TingCfgWatch() {
         sheet: tingCfgData.sheet,
         down: tingCfgData.down
     }
-    writeFile("./data/cfg/index.json", JSON.stringify(index)).then();
+    writeFile(getAppPath("userData") + "/cfg/index.json", JSON.stringify(index)).then();
 }
 
 watch(() => [tingCfgData.first, tingCfgData.down, tingCfgData.sheet], debounce(TingCfgWatch, 1000));

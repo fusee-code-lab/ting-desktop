@@ -82,6 +82,10 @@ class Init {
         ipcMain.on("app-relaunch", () => {
             app.relaunch({args: process.argv.slice(1)});
         });
+        //app常用获取路径
+        ipcMain.on("app-path-get", (event, args) => {
+            event.returnValue = app.getPath(args.key)
+        });
 
         //启动
         await Promise.all([this.global(), app.whenReady()]);
@@ -94,7 +98,7 @@ class Init {
 
     async global() {
         try {
-            let req = await Promise.all([readFile("./data/cfg/index.json"), readFile("./data/cfg/audio.json")]);
+            let req = await Promise.all([readFile(app.getPath("userData") + "/cfg/index.json"), readFile(app.getPath("userData") + "/cfg/audio.json")]);
             global.sharedObject["setting"] = {
                 cfg: JSON.parse(req[0] as string),
                 audio: JSON.parse(req[1] as string)

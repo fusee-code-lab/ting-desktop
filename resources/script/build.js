@@ -82,7 +82,7 @@ if (config.nsis.allowToChangeInstallationDirectory) {
 }
 
 /** linux配置 **/
-config.linux.target = ["AppImage", "snap", "deb", "rpm", "pacman"][4];
+config.linux.target = ["AppImage", "snap", "deb", "rpm", "pacman"][0];
 config.linux.executableName = name;
 
 fs.writeFileSync("./resources/script/cfg.json", JSON.stringify(cfg));
