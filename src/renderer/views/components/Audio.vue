@@ -1,5 +1,6 @@
 <template>
-    <div class="audio-info bg-img" v-if="co.songInfo" :class="co.type" :style="{'--songCover': 'url('+ co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`+')'}">
+  <div class="audio-info bg-img" v-if="co.songInfo" :class="co.type"
+       :style="{'--songCover': 'url('+ co.songInfo.cover+`${co.songInfo.vendor==='netease'?'?param=35y35':''}`+')'}">
     <div class="audio-info-progress">
       <input type="range" class="progress-input"
              :style="{'--audio-progres':`linear-gradient(to right, var(--theme-blue) ${isProgress===1?speedProgress/co.allTime.toFixed(0)*100:co.ingTime/co.allTime.toFixed(0)*100}%, transparent 0%)`}"
@@ -44,7 +45,7 @@
     </div>
     <div v-if="co.type==='mini'" class="audio-info-mini drag">
       <div class="head">
-        <div class="reduction no-drag" @click="windowSize()"></div>
+        <div class="reduction no-drag" @click="switchAudioType()"></div>
         <div class="top no-drag" @click="top()"></div>
       </div>
       <div class="audio-info-song">
@@ -75,9 +76,9 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {audioData, PlayTypeOpt} from "@/renderer/core";
+import {switchAudioType, audioData, PlayTypeOpt} from "@/renderer/core";
 import {audio} from "@/renderer/core/audio";
-import {windowAlwaysOnTop, windowSetSize} from "@/renderer/utils/window";
+import {windowAlwaysOnTop,} from "@/renderer/utils/window";
 import {argsData} from "@/renderer/store";
 
 export default defineComponent({
@@ -88,13 +89,8 @@ export default defineComponent({
     const isProgress = ref(0); //是否正在拖动进度
     const speedProgress = ref(0); //拖动进度结果
 
-
-    function windowSize() {
-      windowSetSize(argsData.window.id, [980, 700]);
-      audioData.type = "normal";
-    }
-
     let isAlwaysOnTop = false;
+
     function top() {
       windowAlwaysOnTop(argsData.window.id, !isAlwaysOnTop, "pop-up-menu");
       isAlwaysOnTop = !isAlwaysOnTop;
@@ -129,7 +125,7 @@ export default defineComponent({
       speedProgress,
       PlayTypeOpt,
       top,
-      windowSize,
+      switchAudioType,
       play,
       pause,
       oProgress,

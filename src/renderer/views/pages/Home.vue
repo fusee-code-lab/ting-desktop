@@ -40,7 +40,7 @@ import SheetDetails from "../components/SheetDetails.vue";
 import SidePopup from "../components/SidePopup.vue";
 import SongStatus from "../components/SongStatus.vue";
 import {windowShow} from "@/renderer/utils/window";
-import {audioData} from "@/renderer/core";
+import {audioData,switchAudioType} from "@/renderer/core";
 
 export default defineComponent({
   components: {
@@ -55,6 +55,8 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
+
+    switchAudioType(audioData.type);
 
     const shownLyricsSidePopup = ref(false);
 

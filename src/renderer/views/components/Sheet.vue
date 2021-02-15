@@ -16,15 +16,15 @@
         创建歌单
       </div>
     </div>
-    <button @click="test">miniTest</button>
+    <button @click="switchAudioType()">miniTest</button>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, watch, toRaw, onMounted} from "vue";
-import {audioData, audioSheetListData} from "@/renderer/core";
+import {switchAudioType, audioSheetListData} from "@/renderer/core";
 import {sheetList, sheetCreate} from "@/renderer/core/sheet";
-import {windowCreate, windowSetSize} from "@/renderer/utils/window"
+import {windowCreate} from "@/renderer/utils/window"
 import {argsData, messageData} from "@/renderer/store";
 
 export default defineComponent({
@@ -57,20 +57,14 @@ export default defineComponent({
       });
     }
 
-    function test() {
-      audioData.type = "mini";
-      windowSetSize(argsData.window.id, [195, 150], false);
-    }
-
-
     onMounted(async () => {
       await sheetList()
     })
 
     return {
       audioSheetListData,
-      addSheet,
-      test
+      switchAudioType,
+      addSheet
     };
   }
 });

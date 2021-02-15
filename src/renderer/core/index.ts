@@ -1,9 +1,11 @@
 import {reactive, ref, watch} from "vue";
 import Log from "@/lib/log";
-import {getGlobal, debounce} from "@/lib";
+import {getGlobal, debounce, isNull} from "@/lib";
 import {Vendors} from "@/lib/musicapi/api";
 import {writeFile} from "@/lib/file";
 import {getAppPath} from "@/renderer/utils";
+import {windowSetSize} from "@/renderer/utils/window";
+import {argsData} from "@/renderer/store";
 
 export enum PlayTypeOpt { //播放类型
     list,
@@ -164,6 +166,23 @@ export const sheetData = ref(null);
  */
 export function getSheetPath(name: string) {
     return `${tingCfgData.sheet}/${name}${sheetSuffix}`;
+}
+
+/**
+ * 切换播放器状态
+ */
+export function switchAudioType(type?: string) {
+    if (!isNull(type)) {
+        if (type === "mini") windowSetSize(argsData.window.id, [195, 150], false);
+    } else {
+        if (audioData.type === "normal") {
+            windowSetSize(argsData.window.id, [195, 150], false);
+            audioData.type = "mini";
+        } else {
+            windowSetSize(argsData.window.id, [980, 700]);
+            audioData.type = "normal";
+        }
+    }
 }
 
 /**
