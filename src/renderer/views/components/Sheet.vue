@@ -3,9 +3,7 @@
     <div class="items">
       <div class="title">歌单</div>
       <div class="content">
-        <div class="item"
-
-             v-for="sheet in audioSheetListData.list">
+        <div class="item" v-for="(sheet, index) in audioSheetListData.list" :key="index">
           <div class="left">
             <div class="icon bg-img"></div>
             <div class="text">{{ sheet.detail.name }}</div>
