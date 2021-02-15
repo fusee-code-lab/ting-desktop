@@ -291,6 +291,30 @@
     height: 100%;
     padding: 20px;
 
+    > .head {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 20px;
+      display: flex;
+      justify-content: flex-end;
+
+      > .reduction {
+        width: 15px;
+        height: 15px;
+        background-color: var(--theme-blue);
+        cursor: pointer;
+      }
+
+      > .top {
+        width: 15px;
+        height: 15px;
+        background-color: var(--theme-pink);
+        cursor: pointer;
+      }
+    }
+
     > .audio-info-song {
       width: 100%;
       max-width: 100%;

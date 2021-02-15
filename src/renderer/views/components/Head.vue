@@ -2,24 +2,16 @@
   <div class="head-info drag">
     <div v-if="platform==='darwin'" :class="platform">
       <div></div>
-      <div class="title" v-if="audioData.type !== 'mini'">
-        <span v-if="audioData.type !== 'mini'">{{ title }}</span>
-      </div>
-      <div class="events" v-if="audioData.type === 'mini'">
-        <div @click="windowSize" class="event normal no-drag cursor-pointer"></div>
-        <div @click="top" class="event top no-drag cursor-pointer"></div>
+      <div class="title">
+        <span>{{ title }}</span>
       </div>
     </div>
     <div v-else :class="platform">
       <div class="title">
-        <span v-if="audioData.type !== 'mini'">{{ title }}</span>
+        <span>{{ title }}</span>
       </div>
-      <div class="events" v-if="audioData.type !== 'mini'">
+      <div class="events">
         <div @click="close" class="event close no-drag cursor-pointer"></div>
-      </div>
-      <div class="events" v-if="audioData.type === 'mini'">
-        <div @click="windowSize" class="event normal no-drag cursor-pointer"></div>
-        <div @click="top" class="event top no-drag cursor-pointer"></div>
       </div>
     </div>
   </div>
@@ -28,33 +20,19 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsData} from "@/renderer/store";
-import {windowAlwaysOnTop, windowClose, windowSetSize} from "@/renderer/utils/window";
+import {windowClose} from "@/renderer/utils/window";
 import {audioData} from "@/renderer/core";
 
 export default defineComponent({
   name: "Head",
   setup() {
 
-    let isAlwaysOnTop = false;
-
     function close() {
       windowClose(argsData.window.id);
     }
 
-    function windowSize() {
-      windowSetSize(argsData.window.id, [980, 700]);
-      audioData.type = "normal";
-    }
-
-    function top() {
-      windowAlwaysOnTop(argsData.window.id, !isAlwaysOnTop, "pop-up-menu");
-      isAlwaysOnTop = !isAlwaysOnTop;
-    }
-
     return {
-      top,
       close,
-      windowSize,
       title: argsData.window.title || argsData.window.appInfo.name,
       platform: argsData.window.platform,
       audioData

@@ -42,7 +42,11 @@
         <div class="sheet" @click="onLyricsButtonClick"></div>
       </div>
     </div>
-    <div v-if="co.type==='mini'" class="audio-info-mini">
+    <div v-if="co.type==='mini'" class="audio-info-mini drag">
+      <div class="head">
+        <div class="reduction no-drag" @click="windowSize()"></div>
+        <div class="top no-drag" @click="top()"></div>
+      </div>
       <div class="audio-info-song">
         <div class="cover">
           <img v-if="co.songInfo"
@@ -54,11 +58,11 @@
         </div>
       </div>
       <div class="audio-info-buts">
-        <div class="rules">
+        <div class="rules no-drag">
           <div class="random" @click="rules(PlayTypeOpt.random)"></div>
           <div class="single" @click="rules(PlayTypeOpt.single)"></div>
         </div>
-        <div class="buts">
+        <div class="buts no-drag">
           <div class="pre" @click="audio.pre()"></div>
           <div v-if="co.paused===1" class="play" @click="play()"></div>
           <div v-if="co.paused===0" class="pause" @click="pause()"></div>
@@ -73,6 +77,8 @@
 import {defineComponent, ref} from "vue";
 import {audioData, PlayTypeOpt} from "@/renderer/core";
 import {audio} from "@/renderer/core/audio";
+import {windowAlwaysOnTop, windowSetSize} from "@/renderer/utils/window";
+import {argsData} from "@/renderer/store";
 
 export default defineComponent({
   name: "Audio",
@@ -81,6 +87,18 @@ export default defineComponent({
 
     const isProgress = ref(0); //是否正在拖动进度
     const speedProgress = ref(0); //拖动进度结果
+
+
+    function windowSize() {
+      windowSetSize(argsData.window.id, [980, 700]);
+      audioData.type = "normal";
+    }
+
+    let isAlwaysOnTop = false;
+    function top() {
+      windowAlwaysOnTop(argsData.window.id, !isAlwaysOnTop, "pop-up-menu");
+      isAlwaysOnTop = !isAlwaysOnTop;
+    }
 
     async function play() {
       await audio.play();
@@ -110,6 +128,8 @@ export default defineComponent({
       isProgress,
       speedProgress,
       PlayTypeOpt,
+      top,
+      windowSize,
       play,
       pause,
       oProgress,

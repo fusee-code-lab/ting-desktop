@@ -1,6 +1,6 @@
 <template>
   <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
-    <Head/>
+    <Head v-if="audioData.type==='normal'"/>
     <div class="info" v-if="audioData.type==='normal'">
       <div class="left">
         <Search></Search>
@@ -119,5 +119,7 @@ export default defineComponent({
     }
 
   }
+}
+.mini-info{
 }
 </style>
