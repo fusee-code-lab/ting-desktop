@@ -50,7 +50,7 @@ export default defineComponent({
         route: "/sheetCreate",
         parentId: argsData.window.id,
         width: 400,
-        height: 150,
+        height: 180,
         modal: true
       });
     }

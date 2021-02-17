@@ -1,9 +1,17 @@
 <template>
   <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
-    <Head/>
-    <div class="info">
-      <input v-model.trim="formData.name" placeholder="歌单名称"/>
-      <button @click="send()">确定</button>
+    <div class="info drag">
+      <div class="head">
+        创建歌单
+      </div>
+      <div class="content">
+        <div class="title">起个响亮的名字</div>
+        <input v-model.trim="formData.name" placeholder="歌单名称"/>
+      </div>
+      <div class="buts">
+        <button @click="close()">取消</button>
+        <button class="confirm" @click="send()">确定</button>
+      </div>
     </div>
   </div>
 </template>
@@ -13,19 +21,23 @@ import {defineComponent, onMounted, reactive, toRaw} from "vue";
 import {isNull} from "@/lib";
 import {messageSend} from "@/renderer/utils";
 import {IPC_MSG_TYPE} from "@/lib/interface";
-import Head from "@/renderer/views/components/Head.vue";
 import {SheetOpt} from "@/renderer/core"
 import {argsData} from "@/renderer/store";
 import {windowClose, windowShow} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "SheetCreate",
-  components: {Head},
   setup() {
+
+    // TODO  输入框部分未完成
 
     const formData = reactive<SheetOpt>({
       name: ""
     })
+
+    function close() {
+      windowClose(argsData.window.id);
+    }
 
     function send() {//为主窗口发送消息
       if (isNull(formData.name)) return;
@@ -34,7 +46,7 @@ export default defineComponent({
         key: "sheet-create",
         value: toRaw(formData)
       });
-      windowClose(argsData.window.id);
+      close();
     }
 
     onMounted(() => {
@@ -45,6 +57,7 @@ export default defineComponent({
       platform: argsData.window.platform,
       accentColor: argsData.window.appInfo.accentColor,
       formData,
+      close,
       send
     }
   }
@@ -53,8 +66,40 @@ export default defineComponent({
 <style lang="scss" scoped>
 .info {
   width: 100%;
-  height: 100%;
+  height: 180px;
   position: relative;
-  padding: 32px 10px 0;
+  padding: 20px;
+
+  > .head {
+    height: 24px;
+    font: normal 20px/24px segoe-ui;
+  }
+
+  > .content {
+    height: calc(100% - 24px - 36px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    > .title {
+      font: normal 14px/20px segoe-ui;
+    }
+  }
+
+  > .buts {
+    height: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > button {
+      width: 49%;
+    }
+
+    > .confirm {
+      background-color: var(--theme-blue);
+      color: var(--white);
+    }
+  }
 }
 </style>
