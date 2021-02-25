@@ -1,27 +1,27 @@
 <template>
   <div
-    class="enhanced-list"
-    :style="{
+      class="enhanced-list"
+      :style="{
       'padding-top': `${insets.top}px`,
       'padding-bottom': `${insets.bottom}px`,
       'padding-left': `${insets.left}px`,
       'padding-right': `${insets.right}px`,
     }"
-    @scroll="onScroll"
+      @scroll="onScroll"
   >
     <div
-      class="enhanced-list-header"
-      v-if="hasHeaderSlot"
-      :class="{ fixed: fixedHeader }"
-      :ref="headerDom"
+        class="enhanced-list-header"
+        v-if="hasHeaderSlot"
+        :class="{ fixed: fixedHeader }"
+        :ref="headerDom"
     >
       <!-- @slot 列表头 -->
       <slot name="header"></slot>
     </div>
     <div
-      class="enhanced-list-section"
-      v-for="(item, index) in data"
-      :key="index"
+        class="enhanced-list-section"
+        v-for="(item, index) in data"
+        :key="index"
     >
       <!-- 
         @slot 分段头 
@@ -29,18 +29,18 @@
         @binding {Object} data of section header, typed EnhancedListSection's SectionData
       -->
       <div
-        class="enhanced-list-section-header"
-        :class="{ sticky: stickySectionHeader }"
-        :style="{ top: `${headerHeight}px` }"
+          class="enhanced-list-section-header"
+          :class="{ sticky: stickySectionHeader }"
+          :style="{ top: `${headerHeight}px` }"
       >
-        <slot name="section-header" :index="index" :section="item.data"> </slot>
+        <slot name="section-header" :index="index" :section="item.data"></slot>
       </div>
       <!-- 
         @slot 列表中的每一项
         @binding {Number} index of section
         @binding {Object} data of section, typed EnhancedListSection's ItemData
       -->
-      <slot name="item" :index="index" :item="item.item"> </slot>
+      <slot name="item" :index="index" :item="item.item"></slot>
     </div>
   </div>
 </template>
@@ -52,7 +52,6 @@ import {
   PropType,
   reactive,
   ref,
-  toRefs,
 } from "vue";
 
 export interface EdgesInsets {
@@ -61,15 +60,14 @@ export interface EdgesInsets {
   bottom: Number;
   right: Number;
 }
-const defaultEdgesInsts: EdgesInsets = { top: 0, left: 0, bottom: 0, right: 0 };
+
+const defaultEdgesInsts: EdgesInsets = {top: 0, left: 0, bottom: 0, right: 0};
 
 /**
  * EnhancedList 的每一段的数据模型
  */
-export interface EnhancedListSection<
-  SectionData = unknown,
-  ItemData = unknown
-> {
+export interface EnhancedListSection<SectionData = unknown,
+    ItemData = unknown> {
   data: SectionData;
   item: ItemData;
 }
@@ -128,7 +126,7 @@ export default defineComponent({
       default: true,
     },
   },
-  setup: (props, { slots }) => {
+  setup: (props, {slots}) => {
     const hasHeaderSlot = ref(!!slots.header);
     const edgesInsets = reactive<EdgesInsets>({
       ...defaultEdgesInsts,
@@ -162,6 +160,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "~@/renderer/views/scss/mixin.scss";
+
 .enhanced-list {
   width: 100%;
   height: 100%;
@@ -169,7 +169,7 @@ export default defineComponent({
   overflow-y: overlay;
 
   > .enhanced-list-header {
-    z-index: 100;
+    z-index: z("enhanced.header");
   }
 
   > .enhanced-list-header.fixed {
@@ -178,7 +178,7 @@ export default defineComponent({
   }
 
   .enhanced-list-section-header {
-    z-index: 50;
+    z-index: z("enhanced.section");
   }
 
   .enhanced-list-section-header.sticky {

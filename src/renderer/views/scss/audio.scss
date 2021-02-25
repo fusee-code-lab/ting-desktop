@@ -2,6 +2,7 @@
 
 .audio-info {
   position: absolute;
+  z-index: z("audio");
   height: 50px;
   left: 0;
   right: 0;

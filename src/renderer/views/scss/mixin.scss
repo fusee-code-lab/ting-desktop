@@ -20,7 +20,10 @@
 $z-layers: (
         "default": 1,
         "below": -1,
-        'modal': ('base': 500, 'close': 100, 'header': 50, 'footer': 10),
+        "head":100,
+        "audio":70,
+        "enhanced": ("header": 50,"section": 40),
+        "side-popup":60
 );
 
 //获取层级

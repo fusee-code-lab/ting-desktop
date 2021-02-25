@@ -34,8 +34,10 @@
 </script>
 
 <style lang="scss" scoped>
+@import "~@/renderer/views/scss/mixin.scss";
   .side-popup {
     position: absolute;
+    z-index: z("side-popup");
     width: 298px;
     height: 100%;
     background-color: var(--blur-background);

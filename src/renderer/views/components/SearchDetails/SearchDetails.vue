@@ -1,9 +1,9 @@
 <template>
   <div class="Search-details-info">
     <EnhancedList
-      :contentInsets="{ left: 20, right: 20, bottom: 10 }"
-      :fixedHeader="true"
-      :data="listData"
+        :contentInsets="{ left: 20, right: 20, bottom: 10 }"
+        :fixedHeader="true"
+        :data="listData"
     >
       <template v-slot:header>
         <div :topInsets="40" class="header">
@@ -24,14 +24,14 @@
         <div class="section-body">
           <div class="content">
             <div
-              class="item"
-              v-for="item in searchRes.items"
-              v-bind:key="item.id"
-              @click="searchRes.clickItemAction(item)"
+                class="item"
+                v-for="item in searchRes.items"
+                v-bind:key="item.id"
+                @click="searchRes.clickItemAction(item)"
             >
               <div
-                class="cover"
-                :style="{ 'background-image': `url(${item.coverUrl})` }"
+                  class="cover"
+                  :style="{ 'background-image': `url(${item.coverUrl})` }"
               >
                 <div class="img-cover">
                   <i class="play-symbol"></i>
@@ -42,9 +42,9 @@
             </div>
           </div>
           <div
-            v-if="searchRes.haveMore"
-            class="suffix cursor-pointer"
-            @click="searchRes.moreAction"
+              v-if="searchRes.haveMore"
+              class="suffix cursor-pointer"
+              @click="searchRes.moreAction"
           >
             {{ searchRes.moreText }}
           </div>
@@ -55,11 +55,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from "vue";
-import { searchData, sheetData } from "@/renderer/core";
-import { getSongUrl, searchSheet, searchSong } from "@/lib/musicapi";
-import { audio } from "@/renderer/core/audio";
-import { componentShow, messageData, messageKeys } from "@/renderer/store";
+import {computed, defineComponent, reactive} from "vue";
+import {searchData, sheetData} from "@/renderer/core";
+import {getSongUrl, searchSheet, searchSong} from "@/lib/musicapi";
+import {audio} from "@/renderer/core/audio";
+import {componentShow, messageData, messageKeys} from "@/renderer/store";
 import EnhancedList, {
   EnhancedListSection as Section,
 } from "./EnhancedList.vue";
@@ -82,7 +82,7 @@ interface SearchResultItem {
 
 export default defineComponent({
   name: "SearchDetails",
-  components: { EnhancedList },
+  components: {EnhancedList},
   setup() {
     const data = reactive({
       isSongOf: true,
@@ -95,8 +95,8 @@ export default defineComponent({
       searchData.singleData.offset += 1;
       data.isSongOfText = "加载中...";
       let req = (await searchSong(
-        searchData.keyword,
-        searchData.singleData.offset
+          searchData.keyword,
+          searchData.singleData.offset
       )) as any;
       data.isSongOfText = "加载更多";
       console.log("[songOf]", req);
@@ -109,8 +109,8 @@ export default defineComponent({
       searchData.sheetData.offset += 1;
       data.isSheetOfText = "加载中...";
       let req = (await searchSheet(
-        searchData.keyword,
-        searchData.sheetData.offset
+          searchData.keyword,
+          searchData.sheetData.offset
       )) as any;
       data.isSheetOfText = "加载更多";
       console.log("[sheetOf]", req);
@@ -148,9 +148,9 @@ export default defineComponent({
               ...i,
               id: i.id,
               coverUrl:
-                i.vendor === "netease"
-                  ? `${i?.album?.cover}?param=120y120`
-                  : `${i?.album?.cover}`,
+                  i.vendor === "netease"
+                      ? `${i?.album?.cover}?param=120y120`
+                      : `${i?.album?.cover}`,
               title: i.name,
               subtitle: i.artists.map((e: any) => e.name).join(),
             })),
@@ -168,9 +168,9 @@ export default defineComponent({
               ...i,
               id: i.id,
               coverUrl:
-                i.vendor === "netease"
-                  ? `${i.coverImgUrl}?param=120y120`
-                  : `${i.imgurl}`,
+                  i.vendor === "netease"
+                      ? `${i.coverImgUrl}?param=120y120`
+                      : `${i.imgurl}`,
               title: i.name || i.dissname,
               subtitle: i.description || i.introduction,
             })),
@@ -189,9 +189,7 @@ export default defineComponent({
       listData,
       searchData,
       play,
-      sheet,
-      songOf,
-      sheetOf,
+      sheet
     };
   },
 });
@@ -242,6 +240,7 @@ export default defineComponent({
 
   .section-body {
     padding-left: 12px;
+
     > .content {
       display: grid;
       grid-template-columns: repeat(auto-fill, 120px);

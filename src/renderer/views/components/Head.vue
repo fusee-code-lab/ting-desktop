@@ -41,13 +41,14 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+@import "~@/renderer/views/scss/mixin.scss";
 .head-info {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 32px;
-  z-index: 999;
+  z-index: z("head");
   display: flex;
   justify-content: space-between;
   align-items: center;
