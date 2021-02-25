@@ -1,7 +1,7 @@
 <template>
   <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
-    <Head v-if="audioData.type==='normal'"/>
-    <div class="info" v-if="audioData.type==='normal'">
+    <Head v-show="audioData.type==='normal'"/>
+    <div class="info" v-show="audioData.type==='normal'">
       <div class="left">
         <Search></Search>
         <Sheet></Sheet>
@@ -22,7 +22,7 @@
         <Audio @show-lyrics="showLyricsSidePopup"/>
       </div>
     </div>
-    <div class="mini-info" v-else-if="audioData.type==='mini'">
+    <div class="mini-info" v-if="audioData.type==='mini'">
       <Audio/>
     </div>
   </div>
