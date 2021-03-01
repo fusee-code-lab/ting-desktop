@@ -3,13 +3,19 @@ const webpack = require('webpack');
 const {spawn} = require('child_process');
 const electron = require('electron');
 const path = require('path');
-const cfg = require('./cfg.json');
+const fs = require('fs');
 
 let electronProcess = null;
 let manualRestart = false
 
 
 async function startRenderer() {
+    let port = 0;
+    try {
+        port = fs.readFileSync(path.resolve('.port'), 'utf8');
+    } catch (e) {
+        throw "not found .port"
+    }
     const config = require('./webpack.renderer.config');
     const options = {
         contentBase: path.resolve("dist"),
@@ -19,8 +25,8 @@ async function startRenderer() {
     webpackDevServer.addDevServerEntrypoints(config, options);
     const compiler = webpack(config);
     const server = new webpackDevServer(compiler, options);
-    server.listen(cfg.port, 'localhost', () => {
-        console.log(`dev server listening on port ${cfg.port}`);
+    server.listen(port, 'localhost', () => {
+        console.log(`dev server listening on port ${port}`);
     });
 }
 

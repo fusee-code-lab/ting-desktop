@@ -47,6 +47,7 @@ class Audios {
     onAudio() {
 
         this.currentAudio.onerror = async () => {
+            console.log("歌曲源失效");
             audioData.paused = 1;
             audioData.cachedType = 0;
             audioData.cachedTime = 0;
