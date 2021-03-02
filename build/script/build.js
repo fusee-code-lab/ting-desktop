@@ -1,7 +1,7 @@
 const fs = require("fs");
 const cfg = require("./cfg.json");
 const {name} = require("../../package.json");
-const config = require("./build.json");
+const config = require("../cfg/build.json");
 const webpack = require("webpack");
 const path = require('path');
 const main = require('./webpack.main.config'); //主进程
@@ -81,9 +81,8 @@ if (config.nsis.allowToChangeInstallationDirectory) {
 config.linux.target = ["AppImage", "snap", "deb", "rpm", "pacman"][0];
 config.linux.executableName = name;
 
-fs.writeFileSync("./resources/script/cfg.json", JSON.stringify(cfg));
-fs.writeFileSync("./resources/script/build.json", JSON.stringify(config, null, 2));
-fs.writeFileSync("./resources/script/installer.nsh", nsh);
+fs.writeFileSync("./build/cfg/build.json", JSON.stringify(config, null, 2));
+fs.writeFileSync("./build/cfg/installer.nsh", nsh);
 fs.writeFileSync("./src/cfg/config.json", JSON.stringify(nConf, null, 2));
 
 function deleteFolderRecursive(url) {
@@ -106,8 +105,8 @@ function deleteFolderRecursive(url) {
 
 deleteFolderRecursive(path.resolve('dist'));//清除dist
 webpack([
-    {...main},
-    {...renderer}
+    {...main('production')},
+    {...renderer('production')}
 ], (err, stats) => {
     if (err || stats.hasErrors()) {
         // 在这里处理错误
