@@ -122,7 +122,7 @@ export function getRestrictLevel(bm5r: any, fC7v: any) {
             return 10;
         return 100;
     }
-};
+}
 
 // 来自网易云前端 l2x.qA8s
 function qA8s(fB4F: any) {

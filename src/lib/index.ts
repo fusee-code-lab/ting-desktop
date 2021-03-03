@@ -1,5 +1,5 @@
-import {resolve} from "path";
-import {ipcRenderer} from "electron";
+import { resolve } from 'path';
+import { ipcRenderer } from 'electron';
 
 /**
  * 设置全局参数
@@ -7,7 +7,7 @@ import {ipcRenderer} from "electron";
  * @param value 值
  */
 export function sendGlobal(key: string, value: unknown) {
-    !isNull(global.sharedObject) ? global.sharedObject[key] = value : ipcRenderer.sendSync("global-sharedObject-set", {
+    !isNull(global.sharedObject) ? global.sharedObject[key] = value : ipcRenderer.sendSync('global-sharedObject-set', {
         key,
         value
     });
@@ -18,7 +18,7 @@ export function sendGlobal(key: string, value: unknown) {
  * @param key 键
  */
 export function getGlobal(key: string) {
-    return !isNull(global.sharedObject) ? global.sharedObject[key] : ipcRenderer.sendSync("global-sharedObject-get", {
+    return !isNull(global.sharedObject) ? global.sharedObject[key] : ipcRenderer.sendSync('global-sharedObject-get', {
         key
     });
 }
@@ -28,7 +28,7 @@ export function getGlobal(key: string) {
  * @param path lib/inside为起点的相对路径
  * */
 export function getInsidePath(path: string): string {
-    return getGlobal("isPackaged") ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
+    return getGlobal('isPackaged') ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
 }
 
 /**
@@ -36,14 +36,14 @@ export function getInsidePath(path: string): string {
  * @param path lib/extern为起点的相对路径
  * */
 export function getExternPath(path: string): string {
-    return getGlobal("isPackaged") ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
+    return getGlobal('isPackaged') ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
 }
 
 /**
  * 判空
  * */
 export function isNull(o: unknown): boolean {
-    return o === "" || o === undefined || o === null || o === "undefined" || o === "null";
+    return o === '' || o === undefined || o === null || o === 'undefined' || o === 'null';
 }
 
 /**
@@ -68,17 +68,17 @@ export function swapArr<T>(arr: T[], index1: number, index2: number): void {
 export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
     let date = new Date();
     let o: { [key: string]: unknown } = {
-        "M+": date.getMonth() + 1,                 //月份
-        "d+": date.getDate(),                    //日
-        "h+": date.getHours(),                   //小时
-        "m+": date.getMinutes(),                 //分
-        "s+": date.getSeconds(),                 //秒
-        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
-        "S": date.getMilliseconds()             //毫秒
+        'M+': date.getMonth() + 1,                 //月份
+        'd+': date.getDate(),                    //日
+        'h+': date.getHours(),                   //小时
+        'm+': date.getMinutes(),                 //分
+        's+': date.getSeconds(),                 //秒
+        'q+': Math.floor((date.getMonth() + 3) / 3), //季度
+        'S': date.getMilliseconds()             //毫秒
     };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
     for (let k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) as string : (("00" + o[k]).substr(("" + o[k]).length)));
+        if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) as string : (('00' + o[k]).substr(('' + o[k]).length)));
     return fmt;
 }
 
@@ -89,7 +89,7 @@ export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
  */
 export function deepClone(sourceObj: any, targetObj: any) {
     let cloneObj: any = {};
-    if (!sourceObj || typeof sourceObj !== "object" || sourceObj.length === undefined) {
+    if (!sourceObj || typeof sourceObj !== 'object' || sourceObj.length === undefined) {
         return sourceObj;
     }
     if (sourceObj instanceof Array) {
@@ -111,12 +111,12 @@ export function deepClone(sourceObj: any, targetObj: any) {
  */
 export function debounce(fun: Function, wait: number) {
     let timer: number = null;
-    return function () {
+    return function() {
         if (timer !== null) {
             clearTimeout(timer);
         }
         timer = setTimeout(fun, wait);
-    }
+    };
 }
 
 /**
@@ -125,7 +125,7 @@ export function debounce(fun: Function, wait: number) {
 export function throttle(fun: Function, delay: number) {
     let timer: number = null;
     let startTime = Date.now();
-    return function () {
+    return function() {
         let curTime = Date.now();
         let remaining = delay - (curTime - startTime);
         let context = this;
@@ -137,7 +137,7 @@ export function throttle(fun: Function, delay: number) {
         } else {
             timer = setTimeout(fun, remaining);
         }
-    }
+    };
 }
 
 /**
@@ -157,7 +157,7 @@ function shuffle(arr: string[]) {
     let n = arr.length, random;
     while (0 != n) {
         random = (Math.random() * n--) >>> 0; // 无符号右移位运算符向下取整
-        [arr[n], arr[random]] = [arr[random], arr[n]] // ES6的结构赋值实现变量互换
+        [arr[n], arr[random]] = [arr[random], arr[n]]; // ES6的结构赋值实现变量互换
     }
     return arr;
 }
