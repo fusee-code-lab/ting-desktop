@@ -1,5 +1,4 @@
 const fs = require("fs");
-const cfg = require("./cfg.json");
 const {name} = require("../../package.json");
 const config = require("../cfg/build.json");
 const webpack = require("webpack");
