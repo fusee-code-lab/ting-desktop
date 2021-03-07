@@ -24,10 +24,10 @@
         </div>
       </div>
       <div class="audio-info-buts">
-        <div class="pre" @click="audio.pre()"></div>
+        <div class="pre" @click="audio.next(-1)"></div>
         <div v-if="co.paused===1" class="play" @click="play()"></div>
         <div v-if="co.paused===0" class="pause" @click="pause()"></div>
-        <div class="next" @click="audio.next()"></div>
+        <div class="next" @click="audio.next(1)"></div>
         <div class="rules">
           <div class="random" @click="rules(PlayTypeOpt.random)"></div>
           <div class="single" @click="rules(PlayTypeOpt.single)"></div>

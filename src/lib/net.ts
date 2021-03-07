@@ -81,8 +81,8 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
                 case NET_RESPONSE_TYPE.BUFFER:
                     return sendData.isQuerystring ? {
                         headers: await res.headers,
-                        data: await res.arrayBuffer()
-                    } : await res.arrayBuffer();
+                        data: await res.buffer()
+                    } : await res.buffer();
                 case NET_RESPONSE_TYPE.BLOB:
                     return sendData.isQuerystring ? {
                         headers: await res.headers,

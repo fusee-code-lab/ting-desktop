@@ -1,14 +1,14 @@
-import {readFile} from "@/lib/file";
-import {SongType, audioPlayListData, audioData, SongOpt, PlayTypeOpt} from "@/renderer/core/index";
-import {getSongUrl} from "@/lib/musicapi";
-import {isNull, random} from "@/lib";
+import { readFile } from '@/lib/file';
+import { SongType, audioPlayListData, audioData, SongOpt, PlayTypeOpt } from '@/renderer/core/index';
+import { getSongUrl } from '@/lib/musicapi';
+import { isNull, random } from '@/lib';
 
 async function pathToSrc(path: string) {
     try {
-        if (path.indexOf("http://") === -1 && path.indexOf("https://") === -1) {
+        if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1) {
             for (let i of SongType) {
                 if (path.indexOf(i) > -1) {
-                    let req = await readFile(path, {encoding: "base64"});
+                    let req = await readFile(path, { encoding: 'base64' });
                     if (req === 0) return null;
                     return `data:audio/${i};base64,` + req;
                 }
@@ -21,11 +21,13 @@ async function pathToSrc(path: string) {
 
 class Audios {
     public static instance: Audios;
+    public LastOrNext: number = null; //上一曲为负 下一曲为正
     public analyser: AnalyserNode = null; //音频的可视化
     private AudioContext: AudioContext = new AudioContext(); //音频api
     private currentAudio: HTMLAudioElement = new Audio(); //当前播放音源
     private sourceAudio: MediaElementAudioSourceNode = null; //音频的源
     private gainNode: GainNode = null; //控制节点
+
 
     static getInstance() {
         if (!Audios.instance) Audios.instance = new Audios();
@@ -33,7 +35,7 @@ class Audios {
     }
 
     constructor() {
-        this.currentAudio.crossOrigin = "anonymous"; //音源跨域
+        this.currentAudio.crossOrigin = 'anonymous'; //音源跨域
         this.gainNode = this.AudioContext.createGain(); //创建控制节点
         this.sourceAudio = this.AudioContext.createMediaElementSource(this.currentAudio); //挂在音乐源
         this.analyser = this.AudioContext.createAnalyser();
@@ -46,50 +48,49 @@ class Audios {
 
     onAudio() {
 
-        this.currentAudio.onerror = async () => {
-            console.log("歌曲源失效");
-            audioData.paused = 1;
-            audioData.cachedType = 0;
-            audioData.cachedTime = 0;
-            audioData.ingTime = 0;
-            await this.next();
-        }
+        this.currentAudio.onerror = () => {
+            console.log('错误');
+            this.skip();
+        };
 
-        this.currentAudio.oncanplay = async () => { //可以开始播放
-            await this.currentAudio.play();
-        }
+        this.currentAudio.oncanplay = () => { //可以开始播放
+            this.currentAudio.play().catch(() => {
+                console.log('错误');
+                this.skip();
+            });
+        };
 
         this.currentAudio.oncanplaythrough = () => { //当前歌曲缓存完毕
             this.cached();
-        }
+        };
 
         this.currentAudio.ondurationchange = () => { //可获得歌曲时长
             audioData.allTime = this.currentAudio.duration;
-        }
+        };
 
         this.currentAudio.onplay = () => {//开始播放
             this.gainNode.gain.value = 0;//设置音量为0
             this.currentTime(audioData.ingTime);//设置当前播放位置
             this.gainNode.gain.linearRampToValueAtTime(audioData.volume, this.AudioContext.currentTime + audioData.volumeGradualTime); //音量淡入
             audioData.paused = 0;
-        }
+        };
 
         this.currentAudio.ontimeupdate = () => {//更新播放位置
             audioData.ingTime = this.currentAudio.currentTime;
             if (audioData.cachedType !== 1) this.cached();
-        }
+        };
 
         this.currentAudio.onpause = () => {//播放暂停
             audioData.paused = 1;
-        }
+        };
 
-        this.currentAudio.onended = async () => {//播放完毕
+        this.currentAudio.onended = () => {//播放完毕
             audioData.paused = 1;
             audioData.cachedType = 0;
             audioData.cachedTime = 0;
             audioData.ingTime = 0;
-            await this.next();
-        }
+            this.next(1);
+        };
     }
 
     clear() {
@@ -106,7 +107,6 @@ class Audios {
             else {
                 let req = await getSongUrl(song.vendor, song.id);
                 if (req) song.path = req.url;
-                else await this.next();
             }
             if (audioData.songInfo && song.id === audioData.songInfo.id
                 && this.currentAudio.src) {
@@ -119,12 +119,11 @@ class Audios {
             this.currentAudio.load();
             if (isNull(audioPlayListData.value[`${song.vendor}|${song.id}`])) audioPlayListData.value[`${song.vendor}|${song.id}`] = song;
         } else if (this.currentAudio.src && audioData.paused === 1) {
-            this.currentAudio.play();
+            this.currentAudio.play().catch(console.log);
         } else if (!this.currentAudio.src && audioData.songInfo) {
             this.clear();
             let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id);
             if (req) audioData.songInfo.path = req.url;
-            else await this.next();
             this.currentAudio.src = audioData.songInfo.path;
             this.currentAudio.load();
         }
@@ -137,7 +136,7 @@ class Audios {
                 this.currentAudio.pause();
                 resolve(0);
             }, audioData.volumeGradualTime * 1000);
-        })
+        });
     }
 
     async load() {
@@ -145,44 +144,32 @@ class Audios {
         await this.play(audioPlayListData.value[SongList[0]]);
     }
 
-    async pre() {
-        let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
-        let SongList = Object.keys(audioPlayListData.value);
-        let num = SongList.indexOf(SongIng) - 1;
-        switch (audioData.playType) {
-            case PlayTypeOpt.single: //单曲循环
-                this.currentAudio.load();
-                break;
-            case PlayTypeOpt.list: //列表循环
-                if (SongList.length === 1) {
-                    this.currentAudio.load();
-                } else if (num < 0) {
-                    await this.play(audioPlayListData.value[SongList[SongList.length - 1]]);
-                } else {
-                    await this.play(audioPlayListData.value[SongList[num]]);
-                }
-                break;
-            case PlayTypeOpt.random: //随机播放
-                await this.play(audioPlayListData.value[SongList[random(0, SongList.length - 1)]]);
-                break;
-        }
+    //跳过无资源歌曲
+    skip() {
+        audioData.paused = 1;
+        audioData.cachedType = 0;
+        audioData.cachedTime = 0;
+        audioData.ingTime = 0;
+        this.next(this.LastOrNext || 1).catch(console.log);
     }
 
-    async next() {
+    async next(num: number) {
         let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
         let SongList = Object.keys(audioPlayListData.value);
-        let num = SongList.indexOf(SongIng) + 1;
+        let Index = SongList.indexOf(SongIng);
+        this.LastOrNext = num;
         switch (audioData.playType) {
             case PlayTypeOpt.single: //单曲循环
                 this.currentAudio.load();
                 break;
             case PlayTypeOpt.list: //列表循环
+                if (SongList.length === 0) return;
                 if (SongList.length === 1) {
                     this.currentAudio.load();
-                } else if (num > SongList.length - 1) {
+                } else if ((Index + num) > SongList.length - 1 || (Index + num) < 0) {
                     await this.play(audioPlayListData.value[SongList[0]]);
                 } else {
-                    await this.play(audioPlayListData.value[SongList[num]]);
+                    await this.play(audioPlayListData.value[SongList[Index + num]]);
                 }
                 break;
             case PlayTypeOpt.random: //随机播放
