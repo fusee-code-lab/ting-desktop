@@ -1,27 +1,29 @@
 <template>
   <div
-      class="enhanced-list"
-      :style="{
+    class="enhanced-list"
+    :style="{
       'padding-top': `${insets.top}px`,
       'padding-bottom': `${insets.bottom}px`,
       'padding-left': `${insets.left}px`,
-      'padding-right': `${insets.right}px`,
+      'padding-right': `${insets.right}px`
     }"
-      @scroll="onScroll"
+    @scroll="onScroll"
   >
     <div
-        class="enhanced-list-header"
-        v-if="hasHeaderSlot"
-        :class="{ fixed: fixedHeader }"
-        :ref="headerDom"
+      class="enhanced-list-header"
+      v-if="hasHeaderSlot"
+      :class="{ fixed: fixedHeader }"
+      :ref="headerDom"
+      :style="maxWidthStyle"
     >
       <!-- @slot 列表头 -->
       <slot name="header"></slot>
     </div>
     <div
-        class="enhanced-list-section"
-        v-for="(item, index) in data"
-        :key="index"
+      class="enhanced-list-section"
+      v-for="(item, index) in data"
+      :key="index"
+      :style="maxWidthStyle"
     >
       <!-- 
         @slot 分段头 
@@ -29,9 +31,9 @@
         @binding {Object} data of section header, typed EnhancedListSection's SectionData
       -->
       <div
-          class="enhanced-list-section-header"
-          :class="{ sticky: stickySectionHeader }"
-          :style="{ top: `${headerHeight}px` }"
+        class="enhanced-list-section-header"
+        :class="{ sticky: stickySectionHeader }"
+        :style="{ top: `${headerHeight}px` }"
       >
         <slot name="section-header" :index="index" :section="item.data"></slot>
       </div>
@@ -46,13 +48,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  PropType,
-  reactive,
-  ref,
-} from "vue";
+import { defineComponent, onMounted, PropType, reactive, ref } from 'vue';
 
 export interface EdgesInsets {
   top: Number;
@@ -61,13 +57,12 @@ export interface EdgesInsets {
   right: Number;
 }
 
-const defaultEdgesInsts: EdgesInsets = {top: 0, left: 0, bottom: 0, right: 0};
+const defaultEdgesInsts: EdgesInsets = { top: 0, left: 0, bottom: 0, right: 0 };
 
 /**
  * EnhancedList 的每一段的数据模型
  */
-export interface EnhancedListSection<SectionData = unknown,
-    ItemData = unknown> {
+export interface EnhancedListSection<SectionData = unknown, ItemData = unknown> {
   data: SectionData;
   item: ItemData;
 }
@@ -94,12 +89,12 @@ export interface EnhancedListSection<SectionData = unknown,
  * +--------------------+
  */
 export default defineComponent({
-  name: "EnhancedList",
+  name: 'EnhancedList',
   props: {
     data: {
       type: Array as PropType<Array<EnhancedListSection>>,
       required: true,
-      default: [],
+      default: []
     },
     /**
      * 列表四周的边距，其中 top 和 bottom 在用于控制内容距离列表边界的时候很有用
@@ -107,7 +102,7 @@ export default defineComponent({
     contentInsets: {
       type: Object as PropType<EdgesInsets>,
       required: false,
-      default: defaultEdgesInsts,
+      default: defaultEdgesInsts
     },
     /**
      * 是否固定列表头
@@ -115,7 +110,7 @@ export default defineComponent({
     fixedHeader: {
       type: Boolean,
       required: false,
-      default: false,
+      default: false
     },
     /**
      * 是否自动吸附段头到顶部
@@ -123,14 +118,21 @@ export default defineComponent({
     stickySectionHeader: {
       type: Boolean,
       required: false,
-      default: true,
+      default: true
     },
+    /**
+     * 最宽宽度，采用居中布局
+     */
+    maxWidth: {
+      type: Number,
+      required: false
+    }
   },
-  setup: (props, {slots}) => {
+  setup: (props, { slots }) => {
     const hasHeaderSlot = ref(!!slots.header);
     const edgesInsets = reactive<EdgesInsets>({
       ...defaultEdgesInsts,
-      ...props.contentInsets,
+      ...props.contentInsets
     });
 
     const headerHeight = ref(0);
@@ -140,13 +142,21 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      console.log("mounted", header.value.offsetHeight);
+      console.log('mounted', header.value.offsetHeight);
       headerHeight.value = header.value.offsetHeight;
     });
 
-    function onScroll(event: Event) {
-      console.log("嘿嘿", header.value.offsetHeight);
-    }
+    function onScroll(event: Event) {}
+
+    const maxWidthStyle = reactive(
+      !!props.maxWidth
+        ? {
+            maxWidth: `${props.maxWidth}px`,
+            margin: 'auto'
+          }
+        : {}
+    );
+    console.log(maxWidthStyle);
 
     return {
       hasHeaderSlot,
@@ -154,13 +164,14 @@ export default defineComponent({
       headerDom,
       onScroll,
       headerHeight,
+      maxWidthStyle
     };
-  },
+  }
 });
 </script>
 
 <style lang="scss" scoped>
-@import "~@/renderer/views/scss/mixin.scss";
+@import '~@/renderer/views/scss/mixin.scss';
 
 .enhanced-list {
   width: 100%;
@@ -169,7 +180,7 @@ export default defineComponent({
   overflow-y: overlay;
 
   > .enhanced-list-header {
-    z-index: z("enhanced.header");
+    z-index: z('enhanced.header');
   }
 
   > .enhanced-list-header.fixed {
@@ -178,7 +189,7 @@ export default defineComponent({
   }
 
   .enhanced-list-section-header {
-    z-index: z("enhanced.section");
+    z-index: z('enhanced.section');
   }
 
   .enhanced-list-section-header.sticky {

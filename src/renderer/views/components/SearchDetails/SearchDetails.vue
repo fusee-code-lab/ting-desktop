@@ -4,6 +4,7 @@
       :contentInsets="{ left: 20, right: 20, bottom: 10 }"
       :fixedHeader="true"
       :data="listData"
+      :maxWidth="980"
     >
       <template v-slot:header>
         <div :topInsets="40" class="header">
