@@ -112,12 +112,14 @@ export default defineComponent({
     @include text-overflow(1);
     color: var(--label);
     font: normal 14px/16px ping-fang;
+    margin-top: 5px;
   }
 
   > .subtitle {
     @include text-overflow(1);
     color: var(--tertiary-label);
     font: normal 12px/14px ping-fang;
+    margin-top: 1px;
   }
 }
 </style>
