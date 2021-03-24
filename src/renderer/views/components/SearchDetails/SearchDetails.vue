@@ -81,26 +81,64 @@ export default defineComponent({
       isSheetOfText: '加载更多'
     });
 
+    // TODO 或许移动到别处是更好的选择
+    function withTransition<Data>(promise: Promise<Data>, options: { timeoutMs: number }) {
+      async function startTransition(fn: () => void, clearFn: (data: Data) => void) {
+        const identifier = setTimeout(() => {
+          fn();
+        }, options.timeoutMs);
+
+        const data = await promise;
+
+        clearTimeout(identifier);
+
+        clearFn(data);
+      }
+      return startTransition;
+    }
+
     async function songOf() {
       searchData.singleData.offset += 1;
-      data.isSongOfText = '加载中...';
-      let req = (await searchSong(searchData.keyword, searchData.singleData.offset)) as any;
-      data.isSongOfText = '加载更多';
-      console.log('[songOf]', req);
-      if (req && req.status && req.data.songs.length > 0) {
-        searchData.singleData.songs.push(...req.data.songs);
-      } else data.isSongOf = false;
+
+      // 500ms 后没加载出来再呈现加载状态
+      const start = withTransition(searchSong(searchData.keyword, searchData.singleData.offset), {
+        timeoutMs: 500
+      });
+
+      start(
+        () => {
+          data.isSongOfText = '加载中...';
+        },
+        (res) => {
+          data.isSongOfText = '加载更多';
+          console.log('[songOf]', res);
+          if (res && res.status && res.data.songs.length > 0) {
+            searchData.singleData.songs.push(...res.data.songs);
+          } else data.isSongOf = false;
+        }
+      );
     }
 
     async function sheetOf() {
       searchData.sheetData.offset += 1;
-      data.isSheetOfText = '加载中...';
-      let req = (await searchSheet(searchData.keyword, searchData.sheetData.offset)) as any;
-      data.isSheetOfText = '加载更多';
-      console.log('[sheetOf]', req);
-      if (req && req.status && req.data.sheets.length > 0) {
-        searchData.sheetData.sheets.push(...req.data.sheets);
-      } else data.isSheetOf = false;
+
+      // 500ms 后没加载出来再呈现加载状态
+      const start = withTransition(searchSheet(searchData.keyword, searchData.sheetData.offset), {
+        timeoutMs: 500
+      });
+
+      start(
+        () => {
+          data.isSheetOfText = '加载中...';
+        },
+        (res) => {
+          data.isSheetOfText = '加载更多';
+          console.log('[sheetOf]', res);
+          if (res && res.status && res.data.sheets.length > 0) {
+            searchData.sheetData.sheets.push(...res.data.sheets);
+          } else data.isSheetOf = false;
+        }
+      );
     }
 
     async function play(item: any) {
