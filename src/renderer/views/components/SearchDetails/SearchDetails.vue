@@ -223,8 +223,7 @@ export default defineComponent({
 
     > .content {
       display: grid;
-      grid-template-columns: repeat(auto-fill, 120px);
-      grid-auto-rows: 150px;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       grid-gap: 22px 22px;
       width: 100%;
       height: 100%;

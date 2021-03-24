@@ -55,17 +55,17 @@ export default defineComponent({
 
 .song-item {
   > .cover {
-    width: 120px;
-    height: 120px;
-    border-radius: 2px;
+    width: 100%;
+    border-radius: 3px;
     transition: all 0.1s ease-in-out;
-    background-position: center;
-    background-size: 100%;
+    background-position: top left;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
 
     > .img-cover {
       width: 100%;
-      height: 100%;
-      position: relative;
+      // CSS trick: 使用 padding-bottom 来实现固定宽高比
+      padding-bottom: 100%;
       top: 0;
       left: 0;
       border-radius: 2px;
@@ -80,6 +80,9 @@ export default defineComponent({
         height: 20px;
         background-color: transparent;
         transition: all 0.1s ease-in-out;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
       }
     }
   }
