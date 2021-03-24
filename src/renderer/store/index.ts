@@ -1,6 +1,6 @@
-import {reactive, provide, inject, watch} from "vue";
-import {WindowOpt} from "@/lib/interface";
-import {isNull, swapArr} from "@/lib";
+import { reactive, provide, inject, watch } from 'vue';
+import { WindowOpt } from '@/lib/interface';
+import { isNull, swapArr } from '@/lib';
 
 /**
  * 组件页面配置
@@ -56,23 +56,23 @@ export const removeMessageData = (key: string) => {
  * 常驻消息key
  */
 export enum messageKeys {
-    Show = "show",
-    History = "history"
+    Show = 'show',
+    History = 'history'
 }
 
 /**
  * 控制组件显示隐藏
  */
 export enum componentShow {
-    SheetDetails = "SheetDetails",
-    SearchDetails = "SearchDetails"
+    SheetDetails = 'SheetDetails',
+    SearchDetails = 'SearchDetails'
 }
 
 /**
  * 组件显示历史
  */
 watch(() => messageData[messageKeys.Show], (n) => {
-    if(n === "null") {
+    if (n === 'null') {
         messageData[messageKeys.History] = [];
         return;
     }
@@ -81,4 +81,4 @@ watch(() => messageData[messageKeys.Show], (n) => {
     if (index !== -1) swapArr(messageData[messageKeys.History], index, 0);
     else messageData[messageKeys.History].unshift(n);
     if (messageData[messageKeys.History].length > 10) messageData[messageKeys.History].pop();
-})
+});

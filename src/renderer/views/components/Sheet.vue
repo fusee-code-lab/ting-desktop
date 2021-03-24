@@ -14,13 +14,12 @@
         创建歌单
       </div>
     </div>
-    <button @click="switchAudioType()">miniTest</button>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, watch, toRaw, onMounted} from "vue";
-import {switchAudioType, audioSheetListData} from "@/renderer/core";
+import {audioSheetListData} from "@/renderer/core";
 import {sheetList, sheetCreate} from "@/renderer/core/sheet";
 import {windowCreate} from "@/renderer/utils/window"
 import {argsData, messageData} from "@/renderer/store";
@@ -61,7 +60,6 @@ export default defineComponent({
 
     return {
       audioSheetListData,
-      switchAudioType,
       addSheet
     };
   }

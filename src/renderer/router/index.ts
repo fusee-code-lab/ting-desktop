@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 export default createRouter({
     history: createWebHashHistory(),
@@ -6,16 +6,16 @@ export default createRouter({
         {
             path: '/',
             name: 'Welcome',
-            component: () => import/* webpackChunkName: "welcome" */ ('../views/pages/Welcome.vue')
+            component: () => import(/* webpackChunkName: "welcome" */ '../views/pages/Welcome.vue')
         },
         {
-            path: "/home",
-            name: "Home",
-            component: () => import(/* webpackChunkName: "home" */ "../views/pages/Home.vue")
+            path: '/home',
+            name: 'Home',
+            component: () => import(/* webpackChunkName: "home" */ '../views/pages/Home.vue')
         },
         {
-            path: "/sheetCreate",
-            name: "SheetCreate",
-            component: () => import(/* webpackChunkName: "sheetCreate" */ "../views/dialogs/SheetCreate.vue")
+            path: '/sheetCreate',
+            name: 'SheetCreate',
+            component: () => import(/* webpackChunkName: "sheetCreate" */ '../views/dialogs/SheetCreate.vue')
         }]
 });
