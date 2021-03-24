@@ -1,6 +1,6 @@
 <template>
   <div class="song-item">
-    <div class="cover" :style="{ 'background-image': `url(${song.coverUrl})` }">
+    <div class="cover" :style="coverImageStyle">
       <div class="img-cover">
         <i class="play-symbol"></i>
       </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, onMounted, PropType, reactive } from 'vue';
 import { SearchResultSongItem } from './SearchDetails.vue';
 
 export default defineComponent({
@@ -23,7 +23,21 @@ export default defineComponent({
     }
   },
   setup(props) {
-    return {};
+    let coverImageStyle = reactive({
+      backgroundImage: 'transport',
+      opacity: 0
+    });
+
+    onMounted(() => {
+      const coverImage = new Image();
+      coverImage.src = props.song.coverUrl;
+      coverImage.onload = () => {
+        coverImageStyle.backgroundImage = `url(${coverImage.src})`;
+        coverImageStyle.opacity = 1;
+      };
+    });
+
+    return { coverImageStyle };
   }
 });
 </script>
@@ -57,10 +71,10 @@ export default defineComponent({
   > .cover {
     width: 100%;
     border-radius: 3px;
-    transition: all 0.1s ease-in-out;
     background-position: top left;
     background-size: 100% auto;
     background-repeat: no-repeat;
+    transition: opacity .5s;
 
     > .img-cover {
       width: 100%;
