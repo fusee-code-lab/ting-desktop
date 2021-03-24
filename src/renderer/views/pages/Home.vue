@@ -14,7 +14,6 @@
           @click="back()"
         >
           ←
-          <!-- TODO using icon -->
         </div>
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus />
