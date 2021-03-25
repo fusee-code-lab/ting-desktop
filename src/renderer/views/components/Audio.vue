@@ -25,8 +25,8 @@
       </div>
       <div class='audio-info-buts'>
         <div class='pre' @click='audio.next(-1)'></div>
-        <div v-if='co.paused===1' class='play' @click='play()'></div>
-        <div v-if='co.paused===0' class='pause' @click='pause()'></div>
+        <div v-if='isPaused===1' class='play' @click='play()'></div>
+        <div v-if='isPaused===0' class='pause' @click='pause()'></div>
         <div class='next' @click='audio.next(1)'></div>
         <div class='rules'>
           <div class='random' @click='rules(PlayTypeOpt.random)'></div>
@@ -65,8 +65,8 @@
         </div>
         <div class='buts no-drag'>
           <div class='pre' @click='audio.pre()'></div>
-          <div v-if='co.paused===1' class='play' @click='play()'></div>
-          <div v-if='co.paused===0' class='pause' @click='pause()'></div>
+          <div v-if='isPaused===1' class='play' @click='play()'></div>
+          <div v-if='isPaused===0' class='pause' @click='pause()'></div>
           <div class='next' @click='audio.next()'></div>
         </div>
       </div>
@@ -75,7 +75,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { switchAudioType, audioData, PlayTypeOpt } from '@/renderer/core';
 import { audio } from '@/renderer/core/audio';
 import { windowAlwaysOnTop } from '@/renderer/utils/window';
@@ -86,6 +86,7 @@ export default defineComponent({
   emits: ['show-lyrics'],
   setup(_, context) {
 
+    const isPaused = ref(1); //是否暂停
     const isProgress = ref(0); //是否正在拖动进度
     const speedProgress = ref(0); //拖动进度结果
 
@@ -98,10 +99,12 @@ export default defineComponent({
 
     function play() {
       audio.play();
+      isPaused.value = 0;
     }
 
     function pause() {
       audio.pause();
+      isPaused.value = 1;
     }
 
     function oProgress() {//拖动后延迟0.1秒后显示
@@ -118,8 +121,13 @@ export default defineComponent({
       audioData.playType = type;
     }
 
+    onMounted(() => {
+      isPaused.value = audioData.paused;
+    });
+
     return {
       co: audioData,
+      isPaused,
       audio,
       isProgress,
       speedProgress,
