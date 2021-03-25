@@ -48,7 +48,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, reactive, ref } from 'vue';
+import component from '*.vue';
+import { computed, defineComponent, onMounted, PropType, reactive, ref } from 'vue';
 
 export interface EdgesInsets {
   top: Number;
@@ -124,7 +125,7 @@ export default defineComponent({
      * 最宽宽度，采用居中布局
      */
     maxWidth: {
-      type: Number,
+      type: [Number, String],
       required: false
     }
   },
@@ -148,15 +149,15 @@ export default defineComponent({
 
     function onScroll(event: Event) {}
 
-    const maxWidthStyle = reactive(
-      !!props.maxWidth
+    const maxWidthStyle = computed(() => {
+      const maxWidth = typeof props.maxWidth === 'string' ? props.maxWidth : `${props.maxWidth}px`;
+      return !!props.maxWidth
         ? {
-            maxWidth: `${props.maxWidth}px`,
+            maxWidth,
             margin: 'auto'
           }
-        : {}
-    );
-    console.log(maxWidthStyle);
+        : {};
+    });
 
     return {
       hasHeaderSlot,
