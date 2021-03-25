@@ -1,26 +1,28 @@
 <template>
-  <div class="search-info">
-    <input placeholder="搜索" v-model.trim="searchData.keyword" @keydown.enter="search"/>
-    <button @click="search"></button>
+  <div class='search-info'>
+    <input placeholder='搜索' v-model.trim='keyword' @keydown.enter='search' />
+    <button @click='search'></button>
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-import {isNull} from "@/lib";
-import {audioSheetListData, searchData} from "@/renderer/core";
-import {searchSheet, searchSong} from "@/lib/musicapi";
-import {componentShow, messageKeys, messageData} from "@/renderer/store";
+<script lang='ts'>
+import { defineComponent, ref } from 'vue';
+import { isNull } from '@/lib';
+import { audioSheetListData, searchData } from '@/renderer/core';
+import { searchSheet, searchSong } from '@/lib/musicapi';
+import { componentShow, messageKeys, messageData } from '@/renderer/store';
 
 export default defineComponent({
-  name: "Search",
+  name: 'Search',
   setup() {
+    const keyword = ref('');
 
     async function search() {
-      if (isNull(searchData.keyword)) return;
+      if (isNull(keyword.value)) return;
       searchData.singleData.offset = 0;
       searchData.sheetData.offset = 0;
-      let reqs = await Promise.all([searchSong(searchData.keyword), searchSheet(searchData.keyword)]) as any;
+      let reqs = await Promise.all([searchSong(keyword.value), searchSheet(keyword.value)]) as any;
+      searchData.keyword = keyword.value;
       console.log(reqs);
       if (reqs[0] && reqs[0].status) {
         searchData.singleData.neteaseTotal = reqs[0].data.neteaseTotal;
@@ -36,14 +38,14 @@ export default defineComponent({
     }
 
     return {
-      searchData,
+      keyword,
       audioSheetListData,
       search
     };
   }
-})
+});
 </script>
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import "~@/renderer/views/scss/mixin.scss";
 
 .search-info {
