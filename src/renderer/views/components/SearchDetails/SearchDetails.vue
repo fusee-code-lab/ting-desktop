@@ -4,7 +4,6 @@
       :contentInsets="{ left: 20, right: 20, bottom: 10 }"
       :fixedHeader="true"
       :data="listData"
-      :maxWidth="980"
     >
       <template v-slot:header>
         <div :topInsets="40" class="header">
@@ -261,11 +260,15 @@ export default defineComponent({
 
     > .content {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       grid-gap: 22px 22px;
       width: 100%;
       height: 100%;
       padding: 20px 0 10px;
+
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      @media screen and (min-width: 1100px) {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
     }
 
     > .suffix {
