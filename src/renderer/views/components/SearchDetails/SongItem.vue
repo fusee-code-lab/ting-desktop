@@ -1,6 +1,6 @@
 <template>
   <div class="song-item">
-    <div class="cover" :style="{ 'background-image': `url(${song.coverUrl})` }">
+    <div class="cover" :style="coverImageStyle">
       <div class="img-cover">
         <i class="play-symbol"></i>
       </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, onMounted, PropType, reactive } from 'vue';
 import { SearchResultSongItem } from './SearchDetails.vue';
 
 export default defineComponent({
@@ -23,7 +23,21 @@ export default defineComponent({
     }
   },
   setup(props) {
-    return {};
+    let coverImageStyle = reactive({
+      backgroundImage: 'transport',
+      opacity: 0
+    });
+
+    onMounted(() => {
+      const coverImage = new Image();
+      coverImage.src = props.song.coverUrl;
+      coverImage.onload = () => {
+        coverImageStyle.backgroundImage = `url(${coverImage.src})`;
+        coverImageStyle.opacity = 1;
+      };
+    });
+
+    return { coverImageStyle };
   }
 });
 </script>
@@ -55,17 +69,17 @@ export default defineComponent({
 
 .song-item {
   > .cover {
-    width: 120px;
-    height: 120px;
-    border-radius: 2px;
-    transition: all 0.1s ease-in-out;
-    background-position: center;
-    background-size: 100%;
+    width: 100%;
+    border-radius: 3px;
+    background-position: top left;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    transition: opacity .5s;
 
     > .img-cover {
       width: 100%;
-      height: 100%;
-      position: relative;
+      // CSS trick: 使用 padding-bottom 来实现固定宽高比
+      padding-bottom: 100%;
       top: 0;
       left: 0;
       border-radius: 2px;
@@ -80,6 +94,9 @@ export default defineComponent({
         height: 20px;
         background-color: transparent;
         transition: all 0.1s ease-in-out;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
       }
     }
   }
@@ -95,12 +112,14 @@ export default defineComponent({
     @include text-overflow(1);
     color: var(--label);
     font: normal 14px/16px ping-fang;
+    margin-top: 5px;
   }
 
   > .subtitle {
     @include text-overflow(1);
     color: var(--tertiary-label);
     font: normal 12px/14px ping-fang;
+    margin-top: 1px;
   }
 }
 </style>
