@@ -1,45 +1,40 @@
 <template>
-  <div class='container' :class='platform' :style="{ '--accentColor': '#' + accentColor }">
+  <div class="container" :class="platform" :style="{ '--accentColor': '#' + accentColor }">
     <Head v-show="audioData.type === 'normal'" />
-    <div class='info' v-show="audioData.type === 'normal'">
-      <div class='left'>
+    <div class="info" v-show="audioData.type === 'normal'">
+      <div class="left">
         <Search></Search>
         <Sheet></Sheet>
-        <div class='setting-but bg-img'></div>
+        <div class="setting-but bg-img"></div>
       </div>
-      <div class='right'>
+      <div class="right">
         <div
-            class='back no-drag cursor-pointer'
-            v-if='
-                        messageData[messageKeys.History] &&
-                        messageData[messageKeys.History].length > 0
-                    '
-            @click='back()'
+          class="back no-drag cursor-pointer"
+          v-if="messageData[messageKeys.History] && messageData[messageKeys.History].length > 0"
+          @click="back()"
         >
           ←
         </div>
-        <SidePopup :shown='shownLyricsSidePopup' :position="'right'">
+        <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus />
         </SidePopup>
-        <component :is='messageData[messageKeys.Show]' />
+        <component :is="messageData[messageKeys.Show]" />
         <div
-            class='null'
-            v-if="
-                        !messageData[messageKeys.Show] || messageData[messageKeys.Show] === 'null'
-                    "
+          class="null"
+          v-if="!messageData[messageKeys.Show] || messageData[messageKeys.Show] === 'null'"
         >
           左边搜索~ (当前测试阶段)
         </div>
-        <Audio @show-lyrics='showLyricsSidePopup' />
+        <Audio @show-lyrics="showLyricsSidePopup" />
       </div>
     </div>
-    <div class='mini-info' v-if="audioData.type === 'mini'">
+    <div class="mini-info" v-if="audioData.type === 'mini'">
       <Audio />
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { messageData, messageKeys, componentShow, argsData } from '../../store';
 import Head from '../components/Head.vue';
@@ -99,8 +94,8 @@ export default defineComponent({
   }
 });
 </script>
-<style lang='scss' scoped>
-@import "~@/renderer/views/scss/mixin.scss";
+<style lang="scss" scoped>
+@import '~@/renderer/views/scss/mixin.scss';
 
 .info {
   height: 100%;
@@ -115,7 +110,7 @@ export default defineComponent({
     padding: 40px 10px 0;
 
     > .setting-but {
-      @include device-pixel("~@/renderer/assets/icons/setting_btn");
+      @include device-pixel('~@/renderer/assets/icons/setting_btn');
       position: absolute;
       width: 16px;
       height: 16px;

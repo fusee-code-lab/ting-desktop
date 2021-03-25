@@ -159,7 +159,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~@/renderer/views/scss/mixin.scss";
 
 .enhanced-list {
