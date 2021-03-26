@@ -75,7 +75,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { switchAudioType, audioData, PlayTypeOpt } from '@/renderer/core';
 import { audio } from '@/renderer/core/audio';
 import { windowAlwaysOnTop } from '@/renderer/utils/window';
@@ -91,6 +91,10 @@ export default defineComponent({
     const speedProgress = ref(0); //拖动进度结果
 
     let isAlwaysOnTop = false;
+
+    watch(() => audioData.paused, (n) => {
+      isPaused.value = n;
+    });
 
     function top() {
       windowAlwaysOnTop(argsData.window.id, !isAlwaysOnTop, 'pop-up-menu');
@@ -120,10 +124,6 @@ export default defineComponent({
     function rules(type: PlayTypeOpt) {
       audioData.playType = type;
     }
-
-    onMounted(() => {
-      isPaused.value = audioData.paused;
-    });
 
     return {
       co: audioData,
