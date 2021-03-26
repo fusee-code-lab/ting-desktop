@@ -32,7 +32,7 @@
           </div>
           <div
               v-if='searchRes.haveMore'
-              class='suffix cursor-pointer'
+              class='suffix'
               @click='searchRes.moreAction'
           >
             {{ searchRes.moreText }}

@@ -55,10 +55,6 @@ html, body {
   -webkit-app-region: no-drag;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-}
-
 .user-select-text {
   user-select: text;
 }
@@ -75,10 +71,6 @@ a:link {
 
 a:visited {
   color: #ffffff;
-}
-
-a, button, select {
-  cursor: pointer;
 }
 
 a, button, select, input {

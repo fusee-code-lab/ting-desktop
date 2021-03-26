@@ -30,14 +30,12 @@
     padding: 0;
     margin: 0;
     outline: 0;
-    cursor: pointer;
     -webkit-appearance: none !important;
 
     &::-webkit-slider-thumb {
       width: 6px;
       height: 6px;
       background-color: var(--theme-blue);
-      cursor: pointer;
       -webkit-appearance: none !important;
     }
 
@@ -117,7 +115,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
   }
 
   .play, .pause {
@@ -126,7 +123,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
   }
 
   .pre {
@@ -235,7 +231,6 @@
       margin: 0;
       padding: 0;
       outline: 0;
-      cursor: pointer;
       border-radius: 1px;
       -webkit-appearance: none !important;
 
@@ -244,7 +239,6 @@
         height: 8px;
         border-radius: 4px;
         background-color: var(--theme-blue);
-        cursor: pointer;
         -webkit-appearance: none !important;
       }
 
@@ -305,14 +299,12 @@
         width: 15px;
         height: 15px;
         background-color: var(--theme-blue);
-        cursor: pointer;
       }
 
       > .top {
         width: 15px;
         height: 15px;
         background-color: var(--theme-pink);
-        cursor: pointer;
       }
     }
 

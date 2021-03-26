@@ -11,7 +11,7 @@
                 <span>{{ title }}</span>
             </div>
             <div class='events'>
-                <div @click='close' class='event close no-drag cursor-pointer'></div>
+                <div @click='close' class='event close no-drag'></div>
             </div>
         </div>
     </div>

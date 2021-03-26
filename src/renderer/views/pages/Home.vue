@@ -9,7 +9,7 @@
       </div>
       <div class="right">
         <div
-          class="back no-drag cursor-pointer"
+          class="back no-drag"
           v-if="messageData[messageKeys.History] && messageData[messageKeys.History].length > 0"
           @click="back()"
         >
@@ -115,7 +115,6 @@ export default defineComponent({
       width: 16px;
       height: 16px;
       bottom: 12px;
-      cursor: pointer;
     }
   }
 

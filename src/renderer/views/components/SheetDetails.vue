@@ -14,7 +14,7 @@
           </div>
           <div class="desc">
             <div class="text" :class="{'hide':!data.isDesc,'show':data.isDesc}">{{ data.info.detail.desc }}</div>
-            <div v-if="!data.isDesc" @click="showHide()" class="more cursor-pointer">更多</div>
+            <div v-if="!data.isDesc" @click="showHide()" class="more">更多</div>
           </div>
           <div class="creat" :class="{'desc-show':data.isDesc}">
             <div class="icon bg-img" :class="{'qq':data.vendor === 'qq'}"></div>
