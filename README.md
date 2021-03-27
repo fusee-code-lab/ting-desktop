@@ -1,15 +1,5 @@
 # Ting(开发中)
-一个基于electron&vue3 制作的跨平台播放器
-
-## 调试
-#### 运行命令
-```shell
-npm/yarn run dev:all
-```
-#### 打包命令
-```shell
-npm/yarn run build
-```
+一个跨平台播放器
 
 ## 致谢
 #### 参考的开源模块
