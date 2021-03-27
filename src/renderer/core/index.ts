@@ -14,7 +14,7 @@ export enum PlayTypeOpt { //播放类型
 }
 
 export interface SongOpt {
-  id: number, //当前歌曲id
+  id: number; //当前歌曲id
   vendor: Vendors; //歌曲来源
   name: string; //歌曲名称
   cover: string; //歌曲图片
@@ -37,8 +37,8 @@ export interface TingAudioOpt {
   type: 'normal' | 'mini'; //播放器显示模式
   playType: PlayTypeOpt; //播放模式
   volume: number; //音量
-  volumeGradualTime: number;//音量渐进时间(秒)
-  paused: number;//音频是否暂停  0暂停 1未暂停
+  volumeGradualTime: number; //音量渐进时间(秒)
+  paused: number; //音频是否暂停  0暂停 1未暂停
   cachedType: number; //缓存进度 0-1  1为完成
   cachedTime: number; //已缓存时长
   ingTime: number; //当前播放时长
@@ -53,7 +53,7 @@ export interface TingCfgOpt {
 }
 
 export interface TingPlayListOpt {
-  [key: string]: SongOpt
+  [key: string]: SongOpt;
 }
 
 export interface TingSheetListOpt {
@@ -64,17 +64,12 @@ export interface TingSheetListOpt {
 /**
  * 歌曲类型
  */
-export const SongType: string[] = [
-  'mp3',
-  'wav',
-  'wma',
-  'midi'
-];
+export const SongType: string[] = ['mp3', 'wav', 'wma', 'midi'];
 
 /**
  * 歌单后缀
  */
-export const sheetSuffix: string = '.ting';//歌单后缀名
+export const sheetSuffix: string = '.ting'; //歌单后缀名
 
 let cfg: TingCfgOpt = {
   first: true, //是否第一次打开
@@ -84,9 +79,9 @@ let cfg: TingCfgOpt = {
 
 let audio: TingAudioOpt = {
   type: 'normal',
-  playType: PlayTypeOpt.list,//播放模式
+  playType: PlayTypeOpt.list, //播放模式
   volume: 1, //音量
-  volumeGradualTime: 0.7,//音量渐进时间(秒)
+  volumeGradualTime: 0.7, //音量渐进时间(秒)
   paused: 1, //音频是否暂停  0未暂停 1暂停
   cachedType: 0, //缓存进度 0-1  1为完成
   cachedTime: 0, //已缓存时长
@@ -105,7 +100,8 @@ let audioPlayList: TingPlayListOpt = {};
 try {
   if (getGlobal('setting')['cfg']) cfg = getGlobal('setting')['cfg'];
   if (getGlobal('setting')['audio']) audio = getGlobal('setting')['audio'];
-  if (!!audio.songInfo) audioPlayList[`${audio.songInfo.vendor}|${audio.songInfo.id}`] = audio.songInfo;
+  if (!!audio.songInfo)
+    audioPlayList[`${audio.songInfo.vendor}|${audio.songInfo.id}`] = audio.songInfo;
 } catch (e) {
   Log.error('[getSetting]', e);
 }
@@ -142,13 +138,15 @@ export const audioPlayListData = ref<TingPlayListOpt>(audioPlayList);
  */
 export const searchData = reactive({
   keyword: '', //搜索关键字
-  singleData: { //单曲列表
+  singleData: {
+    //单曲列表
     songs: [],
     qqTotal: 0,
     neteaseTotal: 0,
     offset: 0
   },
-  sheetData: { //歌单列表
+  sheetData: {
+    //歌单列表
     sheets: [],
     qqTotal: 0,
     neteaseTotal: 0,
@@ -197,11 +195,15 @@ function TingAudioWatch() {
     volumeGradualTime: audioData.volumeGradualTime,
     songInfo: audioData.songInfo
   };
-  writeFile(getAppPath('userData') + '/cfg/audio.json', JSON.stringify(audio)).then(e => console.log('[TingAudioWatch]', e));
+  writeFile(getAppPath('userData') + '/cfg/audio.json', JSON.stringify(audio)).then((e) =>
+    console.log('[TingAudioWatch]', e)
+  );
 }
 
-watch(() => [audioData.volume, audioData.playType, audioData.type, audioData.songInfo?.cover], debounce(TingAudioWatch, 3000));
-
+watch(
+  () => [audioData.volume, audioData.playType, audioData.type, audioData.songInfo?.cover],
+  debounce(TingAudioWatch, 3000)
+);
 
 /**
  * 监听 路径配置变化
@@ -212,7 +214,9 @@ function TingCfgWatch() {
     sheet: tingCfgData.sheet,
     down: tingCfgData.down
   };
-  writeFile(getAppPath('userData') + '/cfg/index.json', JSON.stringify(index)).then(e => console.log('[TingCfgWatch]', e));
+  writeFile(getAppPath('userData') + '/cfg/index.json', JSON.stringify(index)).then((e) =>
+    console.log('[TingCfgWatch]', e)
+  );
 }
 
 watch(() => [tingCfgData.first, tingCfgData.down, tingCfgData.sheet], debounce(TingCfgWatch, 1000));

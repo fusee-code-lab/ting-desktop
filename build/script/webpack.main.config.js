@@ -1,6 +1,6 @@
 const { resolve } = require('path');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
-const base = require('./webpack.base.config')
+const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
     ...base,
@@ -27,9 +27,7 @@ module.exports = (env) => {
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            'file-loader'
-          ]
+          use: ['file-loader']
         }
       ]
     },

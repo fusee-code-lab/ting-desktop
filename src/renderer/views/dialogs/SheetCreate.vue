@@ -1,12 +1,10 @@
 <template>
-  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+  <div class="container" :class="platform" :style="{ '--accentColor': '#' + accentColor }">
     <div class="info drag">
-      <div class="head">
-        创建歌单
-      </div>
+      <div class="head">创建歌单</div>
       <div class="content">
         <div class="title">起个响亮的名字</div>
-        <input v-model.trim="formData.name" placeholder="歌单名称"/>
+        <input v-model.trim="formData.name" placeholder="歌单名称" />
       </div>
       <div class="buts">
         <button @click="close()">取消</button>
@@ -17,33 +15,33 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, toRaw} from "vue";
-import {isNull} from "@/lib";
-import {messageSend} from "@/renderer/utils";
-import {IPC_MSG_TYPE} from "@/lib/interface";
-import {SheetOpt} from "@/renderer/core"
-import {argsData} from "@/renderer/store";
-import {windowClose, windowShow} from "@/renderer/utils/window";
+import { defineComponent, onMounted, reactive, toRaw } from 'vue';
+import { isNull } from '@/lib';
+import { messageSend } from '@/renderer/utils';
+import { IPC_MSG_TYPE } from '@/lib/interface';
+import { SheetOpt } from '@/renderer/core';
+import { argsData } from '@/renderer/store';
+import { windowClose, windowShow } from '@/renderer/utils/window';
 
 export default defineComponent({
-  name: "SheetCreate",
+  name: 'SheetCreate',
   setup() {
-
     // TODO  输入框部分未完成
 
     const formData = reactive<SheetOpt>({
-      name: ""
-    })
+      name: ''
+    });
 
     function close() {
       windowClose(argsData.window.id);
     }
 
-    function send() {//为主窗口发送消息
+    function send() {
+      //为主窗口发送消息
       if (isNull(formData.name)) return;
       messageSend({
         type: IPC_MSG_TYPE.WIN,
-        key: "sheet-create",
+        key: 'sheet-create',
         value: toRaw(formData)
       });
       close();
@@ -51,7 +49,7 @@ export default defineComponent({
 
     onMounted(() => {
       windowShow(argsData.window.id);
-    })
+    });
 
     return {
       platform: argsData.window.platform,
@@ -59,9 +57,9 @@ export default defineComponent({
       formData,
       close,
       send
-    }
+    };
   }
-})
+});
 </script>
 <style lang="scss" scoped>
 .info {

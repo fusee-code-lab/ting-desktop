@@ -1,40 +1,36 @@
 <template>
-  <div class='Search-details-info'>
+  <div class="Search-details-info">
     <EnhancedList
-        :contentInsets='{ left: 20, right: 20, bottom: 10 }'
-        :fixedHeader='true'
-        :data='listData'
+      :contentInsets="{ left: 20, right: 20, bottom: 10 }"
+      :fixedHeader="true"
+      :data="listData"
     >
       <template v-slot:header>
-        <div :topInsets='40' class='header'>
-          <div class='title'>
-            <div class='song-name'>“{{ searchData.keyword }}”</div>
-            <div class='suffix'>的搜索结果</div>
+        <div :topInsets="40" class="header">
+          <div class="title">
+            <div class="song-name">“{{ searchData.keyword }}”</div>
+            <div class="suffix">的搜索结果</div>
           </div>
         </div>
       </template>
-      <template v-slot:section-header='{ section }'>
-        <div class='section-header'>
-          <div class='title'>
-            <div class='text'>{{ section }}</div>
+      <template v-slot:section-header="{ section }">
+        <div class="section-header">
+          <div class="title">
+            <div class="text">{{ section }}</div>
           </div>
         </div>
       </template>
-      <template v-slot:item='{ item: searchRes }'>
-        <div class='section-body'>
-          <div class='content'>
+      <template v-slot:item="{ item: searchRes }">
+        <div class="section-body">
+          <div class="content">
             <SongItem
-                v-for='item in searchRes.items'
-                v-bind:key='item.id'
-                @click='searchRes.clickItemAction(item)'
-                :song='item'
+              v-for="item in searchRes.items"
+              v-bind:key="item.id"
+              @click="searchRes.clickItemAction(item)"
+              :song="item"
             />
           </div>
-          <div
-              v-if='searchRes.haveMore'
-              class='suffix'
-              @click='searchRes.moreAction'
-          >
+          <div v-if="searchRes.haveMore" class="suffix" @click="searchRes.moreAction">
             {{ searchRes.moreText }}
           </div>
         </div>
@@ -43,7 +39,7 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { computed, defineComponent, reactive } from 'vue';
 import { searchData, sheetData } from '@/renderer/core';
 import { getSongUrl, searchSheet, searchSong } from '@/lib/musicapi';
@@ -107,16 +103,16 @@ export default defineComponent({
       });
 
       start(
-          () => {
-            data.isSongOfText = '加载中...';
-          },
-          (res) => {
-            data.isSongOfText = '加载更多';
-            console.log('[songOf]', res);
-            if (res && res.status && res.data.songs.length > 0) {
-              searchData.singleData.songs.push(...res.data.songs);
-            } else data.isSongOf = false;
-          }
+        () => {
+          data.isSongOfText = '加载中...';
+        },
+        (res) => {
+          data.isSongOfText = '加载更多';
+          console.log('[songOf]', res);
+          if (res && res.status && res.data.songs.length > 0) {
+            searchData.singleData.songs.push(...res.data.songs);
+          } else data.isSongOf = false;
+        }
       );
     }
 
@@ -129,29 +125,32 @@ export default defineComponent({
       });
 
       start(
-          () => {
-            data.isSheetOfText = '加载中...';
-          },
-          (res) => {
-            data.isSheetOfText = '加载更多';
-            console.log('[sheetOf]', res);
-            if (res && res.status && res.data.sheets.length > 0) {
-              searchData.sheetData.sheets.push(...res.data.sheets);
-            } else data.isSheetOf = false;
-          }
+        () => {
+          data.isSheetOfText = '加载中...';
+        },
+        (res) => {
+          data.isSheetOfText = '加载更多';
+          console.log('[sheetOf]', res);
+          if (res && res.status && res.data.sheets.length > 0) {
+            searchData.sheetData.sheets.push(...res.data.sheets);
+          } else data.isSheetOf = false;
+        }
       );
     }
 
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
-      if (req) audio.play({
-        id: item.id,
-        vendor: item.vendor,
-        path: req.url,
-        name: item.name,
-        cover: item.album.cover,
-        singer: item.artists.map((e: any) => e.name).toString()
-      }).catch(console.log);
+      if (req)
+        audio
+          .play({
+            id: item.id,
+            vendor: item.vendor,
+            path: req.url,
+            name: item.name,
+            cover: item.album.cover,
+            singer: item.artists.map((e: any) => e.name).toString()
+          })
+          .catch(console.log);
     }
 
     async function sheet(item: any) {
@@ -170,7 +169,7 @@ export default defineComponent({
               ...i,
               id: i.id,
               coverUrl:
-                  i.vendor === 'netease' ? `${i?.album?.cover}?param=120y120` : `${i?.album?.cover}`,
+                i.vendor === 'netease' ? `${i?.album?.cover}?param=120y120` : `${i?.album?.cover}`,
               title: i.name,
               subtitle: i.artists.map((e: any) => e.name).join()
             })),
@@ -212,7 +211,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .Search-details-info {

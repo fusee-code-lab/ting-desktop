@@ -1,8 +1,8 @@
-@import "~@/renderer/views/scss/mixin.scss";
+@import '~@/renderer/views/scss/mixin.scss';
 
 .audio-info {
   position: absolute;
-  z-index: z("audio");
+  z-index: z('audio');
   height: 50px;
   left: 0;
   right: 0;
@@ -98,7 +98,7 @@
     }
 
     > .song-singer {
-      opacity: .6;
+      opacity: 0.6;
       color: var(--tertiary-label);
       font: 400 12px ping-fang;
     }
@@ -113,7 +113,8 @@
   justify-content: center;
   align-items: center;
 
-  .pre, .next {
+  .pre,
+  .next {
     > * {
       color: var(--primary-icon-gray);
       font-size: 21px;
@@ -152,11 +153,13 @@
       align-items: center;
     }
 
-    > .shuffle *, > .repeat * {
+    > .shuffle *,
+    > .repeat * {
       font-size: 20px;
     }
 
-    > .shuffle.active *, > .repeat.active * {
+    > .shuffle.active *,
+    > .repeat.active * {
       color: var(--theme-blue);
     }
   }
@@ -199,7 +202,6 @@
       }
     }
   }
-
 }
 
 .audio-info-menu {
@@ -218,11 +220,11 @@
     margin-left: 22px;
   }
 
-  > .lyrics-btn.active *, > .option-btn.active * {
+  > .lyrics-btn.active *,
+  > .option-btn.active * {
     color: var(--theme-blue);
   }
 }
-
 
 .audio-info.mini {
   height: 100%;
@@ -286,6 +288,5 @@
         justify-content: center;
       }
     }
-
   }
 }

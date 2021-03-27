@@ -1,11 +1,11 @@
 <template>
-  <div class='search-info'>
-    <input placeholder='搜索' v-model.trim='keyword' @keydown.enter='search' />
-    <button @click='search'></button>
+  <div class="search-info">
+    <input placeholder="搜索" v-model.trim="keyword" @keydown.enter="search" />
+    <button @click="search"></button>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { isNull } from '@/lib';
 import { audioSheetListData, searchData } from '@/renderer/core';
@@ -21,7 +21,10 @@ export default defineComponent({
       if (isNull(keyword.value)) return;
       searchData.singleData.offset = 0;
       searchData.sheetData.offset = 0;
-      let reqs = await Promise.all([searchSong(keyword.value), searchSheet(keyword.value)]) as any;
+      let reqs = (await Promise.all([
+        searchSong(keyword.value),
+        searchSheet(keyword.value)
+      ])) as any;
       searchData.keyword = keyword.value;
       console.log(reqs);
       if (reqs[0] && reqs[0].status) {
@@ -45,8 +48,8 @@ export default defineComponent({
   }
 });
 </script>
-<style lang='scss' scoped>
-@import "~@/renderer/views/scss/mixin.scss";
+<style lang="scss" scoped>
+@import '~@/renderer/views/scss/mixin.scss';
 
 .search-info {
   position: relative;
@@ -79,13 +82,14 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
 
-    &:hover, &:active {
+    &:hover,
+    &:active {
       background-image: none;
     }
 
     &:before {
-      @include device-pixel("~@/renderer/assets/icons/search_icon");
-      content: "";
+      @include device-pixel('~@/renderer/assets/icons/search_icon');
+      content: '';
       width: 15px;
       height: 15px;
       background-repeat: no-repeat;

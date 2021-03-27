@@ -1,22 +1,22 @@
 <template>
-  <div class='head-info drag'>
-    <div v-if="platform==='darwin'" :class='platform'>
-      <div @dblclick='maxMin' class='head-content'/>
+  <div class="head-info drag">
+    <div v-if="platform === 'darwin'" :class="platform">
+      <div @dblclick="maxMin" class="head-content" />
     </div>
-    <div v-else :class='platform'>
-      <div @dblclick='maxMin' class='head-content'>
-        <div class='title'>
+    <div v-else :class="platform">
+      <div @dblclick="maxMin" class="head-content">
+        <div class="title">
           <span>{{ title }}</span>
         </div>
       </div>
-      <div class='events'>
-        <div @click='minimize' class='event close no-drag'>
+      <div class="events">
+        <div @click="minimize" class="event close no-drag">
           <MinimizeIcon />
         </div>
-        <div @click='maximize' class='event close no-drag'>
+        <div @click="maximize" class="event close no-drag">
           <MaximizeIcon />
         </div>
-        <div @click='close' class='event close no-drag'>
+        <div @click="close" class="event close no-drag">
           <CloseIcon />
         </div>
       </div>
@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent } from 'vue';
 import { argsData } from '@/renderer/store';
 import { windowHide, windowMax, windowMaxMin, windowMin } from '@/renderer/utils/window';
@@ -41,7 +41,6 @@ export default defineComponent({
     MaximizeIcon
   },
   setup() {
-
     function close() {
       windowHide(argsData.window.id);
     }
@@ -70,8 +69,8 @@ export default defineComponent({
   }
 });
 </script>
-<style lang='scss'>
-@import "~@/renderer/views/scss/mixin.scss";
+<style lang="scss">
+@import '~@/renderer/views/scss/mixin.scss';
 
 .head-info {
   position: absolute;
@@ -79,12 +78,14 @@ export default defineComponent({
   left: 0;
   right: 0;
   height: 32px;
-  z-index: z("head");
+  z-index: z('head');
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  > .win32, .darwin, .linux {
+  > .win32,
+  .darwin,
+  .linux {
     padding: 0 10px;
     width: 100%;
     height: 100%;
@@ -102,10 +103,10 @@ export default defineComponent({
         font: normal 13px /13px ping-fang;
       }
     }
-
   }
 
-  > .win32, .linux {
+  > .win32,
+  .linux {
     > .events {
       display: flex;
       justify-content: space-between;
@@ -123,11 +124,11 @@ export default defineComponent({
       }
 
       > .event:hover {
-        opacity: .9;
+        opacity: 0.9;
       }
 
       > .event:active {
-        opacity: .7;
+        opacity: 0.7;
       }
 
       > .normal {
@@ -137,7 +138,6 @@ export default defineComponent({
       > .top {
         background-color: var(--theme-pink);
       }
-
     }
   }
 }

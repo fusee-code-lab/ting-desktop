@@ -9,13 +9,13 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "ting-font-icon-volumes2"
+  name: 'ting-font-icon-volumes2'
 });
 </script>
 
 <style scoped>
 .ting-font {
-  font-family: "ting-font" !important;
+  font-family: 'ting-font' !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -24,6 +24,6 @@ export default defineComponent({
 }
 
 .ting-font-volumes2:before {
-  content: "\e617";
+  content: '\e617';
 }
 </style>

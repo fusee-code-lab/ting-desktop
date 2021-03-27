@@ -1,17 +1,13 @@
 <template>
-  <div class="loading-info">
-    Loading
-  </div>
+  <div class="loading-info">Loading</div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "Loading",
-  setup() {
-
-  }
+  name: 'Loading',
+  setup() {}
 });
 </script>
 <style lang="scss" scoped>

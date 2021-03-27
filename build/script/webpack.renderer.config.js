@@ -42,14 +42,15 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: [{
-            loader: miniCssExtractPlugin.loader,
-            options: {
-              // you can specify a publicPath here
-              // by default it use publicPath in webpackOptions.output
-              publicPath: './'
-            }
-          },
+          use: [
+            {
+              loader: miniCssExtractPlugin.loader,
+              options: {
+                // you can specify a publicPath here
+                // by default it use publicPath in webpackOptions.output
+                publicPath: './'
+              }
+            },
             'css-loader'
           ]
         },
@@ -75,15 +76,11 @@ module.exports = (env) => {
         },
         {
           test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            'file-loader'
-          ]
+          use: ['file-loader']
         },
         {
           test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            'file-loader'
-          ]
+          use: ['file-loader']
         }
       ]
     },
@@ -100,8 +97,8 @@ module.exports = (env) => {
       }),
       new VueLoaderPlugin(),
       new webpack.DefinePlugin({
-        '__VUE_OPTIONS_API__': 'false',
-        '__VUE_PROD_DEVTOOLS__': 'false'
+        __VUE_OPTIONS_API__: 'false',
+        __VUE_PROD_DEVTOOLS__: 'false'
       })
     ],
     optimization: {

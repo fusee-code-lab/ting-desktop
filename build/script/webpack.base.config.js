@@ -9,7 +9,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      'dist': resolve('dist'),
+      dist: resolve('dist'),
       '@': resolve('src')
     }
   }

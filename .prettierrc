@@ -10,17 +10,13 @@
   "htmlWhitespaceSensitivity": "ignore",
   "overrides": [
     {
-      "files": [
-        "*.vue"
-      ],
+      "files": ["*.vue"],
       "options": {
         "parser": "vue"
       }
     },
     {
-      "files": [
-        "scss"
-      ],
+      "files": ["scss"],
       "options": {
         "parser": "scss"
       }

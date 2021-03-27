@@ -10,39 +10,38 @@
           </div>
         </div>
       </div>
-      <div class="add" @click="addSheet">
-        创建歌单
-      </div>
+      <div class="add" @click="addSheet">创建歌单</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, watch, toRaw, onMounted} from "vue";
-import {audioSheetListData} from "@/renderer/core";
-import {sheetList, sheetCreate} from "@/renderer/core/sheet";
-import {windowCreate} from "@/renderer/utils/window"
-import {argsData, messageData} from "@/renderer/store";
+import { defineComponent, watch, toRaw, onMounted } from 'vue';
+import { audioSheetListData } from '@/renderer/core';
+import { sheetList, sheetCreate } from '@/renderer/core/sheet';
+import { windowCreate } from '@/renderer/utils/window';
+import { argsData, messageData } from '@/renderer/store';
 
 export default defineComponent({
-  name: "Sheet",
+  name: 'Sheet',
   setup() {
-
-    watch(() => messageData["sheet-create"], async (n) => {
-      console.log(n);
-      try {
-        const data = toRaw(n);
-        let sheetNames = audioSheetListData.list.map(e => e.detail.name);
-        console.log(sheetNames.indexOf(data.name))
-        if (sheetNames.indexOf(data.name) === -1) {
-          await sheetCreate(data.name, data);
-          await sheetList();
+    watch(
+      () => messageData['sheet-create'],
+      async (n) => {
+        console.log(n);
+        try {
+          const data = toRaw(n);
+          let sheetNames = audioSheetListData.list.map((e) => e.detail.name);
+          console.log(sheetNames.indexOf(data.name));
+          if (sheetNames.indexOf(data.name) === -1) {
+            await sheetCreate(data.name, data);
+            await sheetList();
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
       }
-    });
-
+    );
 
     // TODO macos 下的 modal 高度有问题，目前仅仅加上 titleBar 的高度
     const isMacintosh = process.platform === 'darwin';
@@ -52,8 +51,8 @@ export default defineComponent({
 
     function addSheet() {
       windowCreate({
-        title: "歌单添加",
-        route: "/sheetCreate",
+        title: '歌单添加',
+        route: '/sheetCreate',
         parentId: argsData.window.id,
         width: 400,
         height: isMacintosh ? topTitleBarHeight + 180 : 180,
@@ -62,8 +61,8 @@ export default defineComponent({
     }
 
     onMounted(async () => {
-      await sheetList()
-    })
+      await sheetList();
+    });
 
     return {
       audioSheetListData,
@@ -73,7 +72,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import "~@/renderer/views/scss/mixin.scss";
+@import '~@/renderer/views/scss/mixin.scss';
 
 .sheet-info {
   > .items {
@@ -84,7 +83,6 @@ export default defineComponent({
     }
 
     > .content {
-
       > .item {
         position: relative;
         display: flex;
@@ -99,7 +97,7 @@ export default defineComponent({
           align-items: center;
 
           > .icon {
-            @include device-pixel("~@/renderer/assets/icons/play_list_icon");
+            @include device-pixel('~@/renderer/assets/icons/play_list_icon');
             width: 16px;
             height: 16px;
             margin-right: 12px;
@@ -120,7 +118,7 @@ export default defineComponent({
 
       > .item.act {
         &:before {
-          content: "";
+          content: '';
           position: absolute;
           left: -10px;
           height: 20px;
@@ -128,7 +126,6 @@ export default defineComponent({
           background-color: var(--theme-blue);
         }
       }
-
     }
 
     > .add {

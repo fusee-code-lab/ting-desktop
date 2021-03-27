@@ -1,16 +1,16 @@
 <template>
-  <transition name='slide'>
+  <transition name="slide">
     <div
-      class='side-popup'
-      :class="{ 'left': position === 'left', 'right': position === 'right' }"
-      v-if='shown'
+      class="side-popup"
+      :class="{ left: position === 'left', right: position === 'right' }"
+      v-if="shown"
     >
       <slot></slot>
     </div>
   </transition>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, toRefs, PropType } from 'vue';
 
 export default defineComponent({
@@ -33,12 +33,12 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
-@import "~@/renderer/views/scss/mixin.scss";
+<style lang="scss" scoped>
+@import '~@/renderer/views/scss/mixin.scss';
 
 .side-popup {
   position: absolute;
-  z-index: z("side-popup");
+  z-index: z('side-popup');
   top: 0;
   width: 298px;
   height: 100%;

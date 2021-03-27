@@ -74,7 +74,7 @@ export default defineComponent({
     background-position: top left;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    transition: opacity .5s;
+    transition: opacity 0.5s;
 
     > .img-cover {
       width: 100%;

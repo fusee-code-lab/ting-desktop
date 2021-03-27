@@ -6,6 +6,6 @@ import { windowLoad, messageBack } from './utils';
 
 messageBack();
 windowLoad().then((args) => {
-    argsData.window = args;
-    createApp(App).use(router).mount('#app');
+  argsData.window = args;
+  createApp(App).use(router).mount('#app');
 });
