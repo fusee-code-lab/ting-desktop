@@ -25,7 +25,7 @@
         >
           左边搜索~ (当前测试阶段)
         </div>
-        <Audio @show-lyrics='showLyricsSidePopup' />
+        <Audio v-model:showLyrics='shownLyricsSidePopup' />
       </div>
     </div>
     <div class='mini-info' v-if="audioData.type === 'mini'">
