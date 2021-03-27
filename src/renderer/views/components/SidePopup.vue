@@ -38,6 +38,7 @@
   .side-popup {
     position: absolute;
     z-index: z("side-popup");
+    top: 0;
     width: 298px;
     height: 100%;
     background-color: var(--blur-background);
