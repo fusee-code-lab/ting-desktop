@@ -9,19 +9,19 @@
       </div>
       <div class='right'>
         <div
-            class='back no-drag'
-            v-if='messageData[messageKeys.History] && messageData[messageKeys.History].length > 0'
-            @click='back()'
+          class='back no-drag'
+          v-if='messageData[messageKeys.History] && messageData[messageKeys.History].length > 0'
+          @click='back()'
         >
-          ←
+          <BackIcon />
         </div>
         <SidePopup :shown='shownLyricsSidePopup' :position="'right'">
           <SongStatus />
         </SidePopup>
         <component :is='messageData[messageKeys.Show]' />
         <div
-            class='null'
-            v-if="!messageData[messageKeys.Show] || messageData[messageKeys.Show] === 'null'"
+          class='null'
+          v-if="!messageData[messageKeys.Show] || messageData[messageKeys.Show] === 'null'"
         >
           左边搜索~ (当前测试阶段)
         </div>
@@ -47,6 +47,7 @@ import SidePopup from '../components/SidePopup.vue';
 import SongStatus from '../components/SongStatus.vue';
 import { windowShow } from '@/renderer/utils/window';
 import { audioData, switchAudioType } from '@/renderer/core';
+import BackIcon from '@/renderer/views/components/Icons/BackIcon.vue';
 
 export default defineComponent({
   components: {
@@ -57,7 +58,8 @@ export default defineComponent({
     Head,
     Audio,
     SidePopup,
-    SongStatus
+    SongStatus,
+    BackIcon
   },
   name: 'Home',
   setup() {
