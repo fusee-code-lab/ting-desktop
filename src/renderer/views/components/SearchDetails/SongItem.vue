@@ -73,6 +73,7 @@ export default defineComponent({
 
 .song-item {
   > .cover {
+    // TODO 当前运用 css "技巧"，去掉下一行并触发 hover 来看会有什么问题，或许有更好的解决方案
     transform: scale(1);
     width: 100%;
     border-radius: 3px;

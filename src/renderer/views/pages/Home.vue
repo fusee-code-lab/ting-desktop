@@ -16,7 +16,7 @@
           <BackIcon />
         </div>
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
-          <SongStatus />
+          <LyricsList />
         </SidePopup>
         <component :is="messageData[messageKeys.Show]" />
         <div
@@ -44,7 +44,7 @@ import SearchDetails from '../components/SearchDetails/SearchDetails.vue';
 import Search from '../components/Search.vue';
 import SheetDetails from '../components/SheetDetails.vue';
 import SidePopup from '../components/SidePopup.vue';
-import SongStatus from '../components/SongStatus.vue';
+import LyricsList from '../components/LyricsList.vue';
 import { windowShow } from '@/renderer/utils/window';
 import { audioData, switchAudioType } from '@/renderer/core';
 import BackIcon from '@/renderer/views/components/Icons/BackIcon.vue';
@@ -58,7 +58,7 @@ export default defineComponent({
     Head,
     Audio,
     SidePopup,
-    SongStatus,
+    LyricsList,
     BackIcon
   },
   name: 'Home',
