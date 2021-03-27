@@ -24,10 +24,16 @@
         </div>
       </div>
       <div class='audio-info-buts'>
-        <div class='pre' @click='audio.next(-1)'></div>
-        <div v-if='isPaused===1' class='play' @click='play()'></div>
-        <div v-if='isPaused===0' class='pause' @click='pause()'></div>
-        <div class='next' @click='audio.next(1)'></div>
+        <div class='pre' @click='audio.next(-1)'>
+          <PreviousIcon/>
+        </div>
+        <div class='play-pause' @click='playPause'>
+          <PauseStatusIcon v-if='isPaused === 1'/>
+          <PlayStatusIcon v-if='isPaused === 0'/>
+        </div>
+        <div class='next' @click='audio.next(1)'>
+          <NextIcon/>
+        </div>
         <div class='rules'>
           <div class='random' @click='rules(PlayTypeOpt.random)'></div>
           <div class='single' @click='rules(PlayTypeOpt.single)'></div>
@@ -41,7 +47,7 @@
       </div>
       <div class='audio-info-menu'>
         <div @click='onLyricsButtonClick'>
-          <LyricsIcon/>
+          <LyricsIcon />
         </div>
       </div>
     </div>
@@ -85,12 +91,20 @@ import { switchAudioType, audioData, PlayTypeOpt } from '@/renderer/core';
 import { audio } from '@/renderer/core/audio';
 import { windowAlwaysOnTop } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
-import LyricsIcon from "@/renderer/views/components/Icons/LyricsIcon.vue"
+import LyricsIcon from '@/renderer/views/components/Icons/LyricsIcon.vue';
+import PlayStatusIcon from '@/renderer/views/components/Icons/PlaystatusIcon.vue';
+import PauseStatusIcon from '@/renderer/views/components/Icons/PausestatusIcon.vue';
+import PreviousIcon from '@/renderer/views/components/Icons/PreviousIcon.vue';
+import NextIcon from '@/renderer/views/components/Icons/NextIcon.vue';
 
 export default defineComponent({
   name: 'Audio',
   components: {
-    LyricsIcon
+    LyricsIcon,
+    PlayStatusIcon,
+    PauseStatusIcon,
+    PreviousIcon,
+    NextIcon,
   },
   emits: ['show-lyrics'],
   setup(_, context) {
@@ -110,14 +124,14 @@ export default defineComponent({
       isAlwaysOnTop = !isAlwaysOnTop;
     }
 
-    function play() {
-      audio.play();
-      isPaused.value = 0;
-    }
-
-    function pause() {
-      audio.pause();
-      isPaused.value = 1;
+    function playPause() {
+      if (isPaused.value === 0) {
+        audio.pause();
+        isPaused.value = 1;
+      } else {
+        audio.play();
+        isPaused.value = 0;
+      }
     }
 
     function oProgress() {//拖动后延迟0.1秒后显示
@@ -143,8 +157,7 @@ export default defineComponent({
       PlayTypeOpt,
       top,
       switchAudioType,
-      play,
-      pause,
+      playPause,
       oProgress,
       onLyricsButtonClick,
       rules

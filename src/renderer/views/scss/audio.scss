@@ -114,6 +114,10 @@
   align-items: center;
 
   .pre, .next {
+    > * {
+      color: var(--primary-icon-gray);
+      font-size: 21px;
+    }
     position: relative;
     width: 55px;
     display: flex;
@@ -121,60 +125,16 @@
     align-items: center;
   }
 
-  .play, .pause {
+  .play-pause {
+    > * {
+      color: var(--primary-icon-gray);
+      font-size: 21px;
+    }
     position: relative;
     width: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .pre {
-    &:before {
-      @include device-pixel("~@/renderer/assets/icons/audio/pre_btn");
-      content: "";
-      width: 28px;
-      height: 15px;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-    }
-  }
-
-  .next {
-    &:before {
-      @include device-pixel("~@/renderer/assets/icons/audio/next_btn");
-      content: "";
-      width: 28px;
-      height: 15px;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-    }
-  }
-
-  .play {
-    &:before {
-      @include device-pixel("~@/renderer/assets/icons/audio/play_btn");
-      content: "";
-      width: 20px;
-      height: 20px;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-    }
-  }
-
-  .pause {
-    &:before {
-      @include device-pixel("~@/renderer/assets/icons/audio/pause_btn");
-      content: "";
-      width: 17px;
-      height: 20px;
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-    }
   }
 
   > .rules {
