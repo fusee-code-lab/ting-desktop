@@ -20,6 +20,7 @@ export default defineComponent({
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #000000;
 }
 
 .ting-font-close:before {

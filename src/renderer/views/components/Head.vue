@@ -1,106 +1,144 @@
 <template>
-    <div class='head-info drag'>
-        <div v-if="platform==='darwin'" :class='platform'>
-            <div></div>
-            <div class='title'>
-                <span>{{ title }}</span>
-            </div>
-        </div>
-        <div v-else :class='platform'>
-            <div class='title'>
-                <span>{{ title }}</span>
-            </div>
-            <div class='events'>
-                <div @click='close' class='event close no-drag'></div>
-            </div>
-        </div>
+  <div class='head-info drag'>
+    <div v-if="platform==='darwin'" :class='platform'>
+      <div @dblclick='maxMin' class='head-content'/>
     </div>
+    <div v-else :class='platform'>
+      <div @dblclick='maxMin' class='head-content'>
+        <div class='title'>
+          <span>{{ title }}</span>
+        </div>
+      </div>
+      <div class='events'>
+        <div @click='minimize' class='event close no-drag'>
+          <MinimizeIcon />
+        </div>
+        <div @click='maximize' class='event close no-drag'>
+          <MaximizeIcon />
+        </div>
+        <div @click='close' class='event close no-drag'>
+          <CloseIcon />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
 import { argsData } from '@/renderer/store';
-import { windowHide } from '@/renderer/utils/window';
+import { windowHide, windowMax, windowMaxMin, windowMin } from '@/renderer/utils/window';
 import { audioData } from '@/renderer/core';
+import CloseIcon from '@/renderer/views/components/Icons/CloseIcon.vue';
+import MinimizeIcon from '@/renderer/views/components/Icons/MinimizeIcon.vue';
+import MaximizeIcon from '@/renderer/views/components/Icons/MaximizeIcon.vue';
 
 export default defineComponent({
-    name: 'Head',
-    setup() {
+  name: 'Head',
+  components: {
+    CloseIcon,
+    MinimizeIcon,
+    MaximizeIcon
+  },
+  setup() {
 
-        function close() {
-            windowHide(argsData.window.id);
-        }
-
-        return {
-            close,
-            title: argsData.window.title || argsData.window.appInfo.name,
-            platform: argsData.window.platform,
-            audioData
-        };
+    function close() {
+      windowHide(argsData.window.id);
     }
+
+    function minimize() {
+      windowMin(argsData.window.id);
+    }
+
+    function maximize() {
+      windowMax(argsData.window.id);
+    }
+
+    function maxMin() {
+      windowMaxMin(argsData.window.id);
+    }
+
+    return {
+      close,
+      minimize,
+      maximize,
+      maxMin,
+      title: argsData.window.title || argsData.window.appInfo.name,
+      platform: argsData.window.platform,
+      audioData
+    };
+  }
 });
 </script>
 <style lang='scss'>
 @import "~@/renderer/views/scss/mixin.scss";
 
 .head-info {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 32px;
-    z-index: z("head");
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  z-index: z("head");
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  > .win32, .darwin, .linux {
+    padding: 0 10px;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    > .win32, .darwin, .linux {
-        padding: 0 10px;
-        width: 100%;
+    > .head-content {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+      > .title {
+        font: normal 13px /13px ping-fang;
+      }
+    }
+
+  }
+
+  > .win32, .linux {
+    > .events {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      > .event {
+        width: 40px;
         height: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        margin-left: 8px;
+        text-align: center;
 
-        > .title {
-            font: normal 13px /13px ping-fang;
+        > * {
+          font-size: 10px !important;
         }
+      }
+
+      > .event:hover {
+        opacity: .9;
+      }
+
+      > .event:active {
+        opacity: .7;
+      }
+
+      > .normal {
+        background-color: var(--theme-blue);
+      }
+
+      > .top {
+        background-color: var(--theme-pink);
+      }
+
     }
-
-    > .win32, .linux {
-        > .events {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            > .event {
-                clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-                width: 15px;
-                height: 15px;
-                margin-left: 4px;
-            }
-
-            > .event:hover {
-                opacity: .9;
-            }
-
-            > .event:active {
-                opacity: .7;
-            }
-
-            > .close {
-                background-color: var(--red);
-            }
-
-            > .normal {
-                background-color: var(--theme-blue);
-            }
-
-            > .top {
-                background-color: var(--theme-pink);
-            }
-
-        }
-    }
+  }
 }
 </style>
