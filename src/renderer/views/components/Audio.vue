@@ -40,7 +40,9 @@
         </div>
       </div>
       <div class='audio-info-menu'>
-        <div class='sheet' @click='onLyricsButtonClick'></div>
+        <div @click='onLyricsButtonClick'>
+          <LyricsIcon/>
+        </div>
       </div>
     </div>
     <div v-if="co.type==='mini'" class='audio-info-mini drag'>
@@ -83,9 +85,13 @@ import { switchAudioType, audioData, PlayTypeOpt } from '@/renderer/core';
 import { audio } from '@/renderer/core/audio';
 import { windowAlwaysOnTop } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
+import LyricsIcon from "@/renderer/views/components/Icons/LyricsIcon.vue"
 
 export default defineComponent({
   name: 'Audio',
+  components: {
+    LyricsIcon
+  },
   emits: ['show-lyrics'],
   setup(_, context) {
 

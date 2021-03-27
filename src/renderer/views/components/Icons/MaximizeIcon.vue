@@ -23,6 +23,6 @@ export default defineComponent({
 }
 
 .ting-font-maximize:before {
-  content: "\ue60b";
+  content: "\e60b";
 }
 </style>

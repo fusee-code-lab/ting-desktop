@@ -2,14 +2,14 @@
 <!-- view in github: https://github.com/fusee-code-lab/vue-icon-component-generator -->
 <!-- eslint-disable -->
 <template>
-  <span class="ting-font ting-font-maximize"></span>
+  <span class="ting-font ting-font-volumes3"></span>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "ting-font-icon-maximize"
+  name: "ting-font-icon-volumes3"
 });
 </script>
 
@@ -22,7 +22,7 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
 }
 
-.ting-font-maximize:before {
-  content: "\ue60b";
+.ting-font-volumes3:before {
+  content: "\e619";
 }
 </style>
