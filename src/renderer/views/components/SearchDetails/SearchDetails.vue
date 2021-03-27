@@ -219,7 +219,7 @@ export default defineComponent({
   height: calc(100% - 50px);
 
   .header {
-    padding-top: 40px;
+    //padding-top: 40px;
     background-color: var(--background);
 
     > .title {
