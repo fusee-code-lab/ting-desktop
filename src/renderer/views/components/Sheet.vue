@@ -43,13 +43,20 @@ export default defineComponent({
       }
     });
 
+
+    // TODO macos 下的 modal 高度有问题，目前仅仅加上 titleBar 的高度
+    const isMacintosh = process.platform === 'darwin';
+    const isBigSurOrLatter =
+      isMacintosh && parseInt(process.getSystemVersion().split('.')[0]) >= 11;
+    const topTitleBarHeight = isBigSurOrLatter ? 28 : 22;
+
     function addSheet() {
       windowCreate({
         title: "歌单添加",
         route: "/sheetCreate",
         parentId: argsData.window.id,
         width: 400,
-        height: 180,
+        height: isMacintosh ? topTitleBarHeight + 180 : 180,
         modal: true
       });
     }
