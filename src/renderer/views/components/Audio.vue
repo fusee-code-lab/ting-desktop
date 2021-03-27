@@ -72,6 +72,9 @@
       </div>
     </div>
   </div>
+  <div class='audio-info audio-null' v-else>
+    Ting ~
+  </div>
 </template>
 
 <script lang='ts'>
