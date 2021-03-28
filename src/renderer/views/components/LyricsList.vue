@@ -1,25 +1,25 @@
 <template>
-  <ul v-if='hasLyrics && hasSong' class='lyrics-list' :ref='lyricsListDom'>
+  <ul v-if="hasLyrics && hasSong" class="lyrics-list" :ref="lyricsListDom">
     <li
-      v-for='(item, idx) in lyrics.original'
-      class='lyrics-item'
-      :class='{ current: curLyricIdx === idx }'
-      :key='idx'
-      @click='seekAudioTimeWithLyricIdx(idx)'
-      @wheel='onWheel'
+      v-for="(item, idx) in lyrics.original"
+      class="lyrics-item"
+      :class="{ current: curLyricIdx === idx }"
+      :key="idx"
+      @click="seekAudioTimeWithLyricIdx(idx)"
+      @wheel="onWheel"
     >
-      <p class='original'>{{ item.content }}</p>
+      <p class="original">{{ item.content }}</p>
     </li>
   </ul>
-  <div v-else-if='!hasSong' class='empty-lyrics-list'>
-    <span class='empty-lyrics-list-label'>没有正在播放的歌曲</span>
+  <div v-else-if="!hasSong" class="empty-lyrics-list">
+    <span class="empty-lyrics-list-label">没有正在播放的歌曲</span>
   </div>
-  <div v-else-if='!hasLyrics' class='empty-lyrics-list'>
-    <span class='empty-lyrics-list-label'>该歌曲没有歌词</span>
+  <div v-else-if="!hasLyrics" class="empty-lyrics-list">
+    <span class="empty-lyrics-list-label">该歌曲没有歌词</span>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, ref, reactive, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 import { audioData } from '@/renderer/core';
 import { getLyric } from '@/lib/musicapi/api';
@@ -157,7 +157,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .lyrics-list {
   padding: 33px 20px 250px;
   overflow: auto;

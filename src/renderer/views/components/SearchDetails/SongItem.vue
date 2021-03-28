@@ -1,16 +1,16 @@
 <template>
-  <div class='song-item'>
-    <div class='cover' :style='coverImageStyle'>
-      <div class='img-cover'>
-        <PlayIcon class='play-symbol' />
+  <div class="song-item">
+    <div class="cover" :style="coverImageStyle">
+      <div class="img-cover">
+        <PlayIcon class="play-symbol" />
       </div>
     </div>
-    <div class='title'>{{ song.title }}</div>
-    <div class='subtitle'>{{ song.subtitle }}</div>
+    <div class="title">{{ song.title }}</div>
+    <div class="subtitle">{{ song.subtitle }}</div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted, PropType, reactive } from 'vue';
 import { SearchResultSongItem } from './SearchDetails.vue';
 import PlayIcon from '@/renderer/views/components/Icons/PausestatusIcon.vue';
@@ -46,7 +46,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .song-item:hover {
