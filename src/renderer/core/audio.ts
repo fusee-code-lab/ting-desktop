@@ -6,7 +6,7 @@ import {
   SongOpt,
   PlayTypeOpt
 } from '@/renderer/core/index';
-import { getSongUrl } from '@/lib/musicapi';
+import { getSongDetail, getSongUrl } from '@/lib/musicapi';
 import { isNull, random } from '@/lib';
 
 async function pathToSrc(path: string) {
@@ -122,6 +122,14 @@ class Audios {
         let req = await getSongUrl(song.vendor, song.id);
         if (req) song.path = req.url;
       }
+      if (!song.cover) {
+        let res = await getSongDetail(song.vendor, song.id);
+        if (res) {
+          song.cover = res.album.cover;
+          song.name = res.name;
+          song.singer = res.artists.map((e: any) => e.name).toString();
+        }
+      }
       if (audioData.songInfo && song.id === audioData.songInfo.id && this.currentAudio.src) {
         if (audioData.paused === 1) this.currentAudio.play().catch(console.log);
         return;
@@ -130,7 +138,7 @@ class Audios {
       audioData.songInfo = song;
       this.currentAudio.src = song.path;
       this.currentAudio.load();
-      if (isNull(audioPlayListData.value[`${song.vendor}|${song.id}`]))
+      if (isNull(audioPlayListData.value[`${song.vendor}|${song.id}`]) || isNull(audioPlayListData.value[`${song.vendor}|${song.id}`].cover))
         audioPlayListData.value[`${song.vendor}|${song.id}`] = song;
     } else if (this.currentAudio.src && audioData.paused === 1) {
       this.currentAudio.play().catch(console.log);

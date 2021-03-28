@@ -1,10 +1,15 @@
+export function pagination(pageNo: number, pageSize: number, array: any) {
+  let offset = (pageNo - 1) * pageSize;
+  return (offset + pageSize >= array.length) ? array.slice(offset, array.length) : array.slice(offset, offset + pageSize);
+}
+
 export function lyric_decode(str: string, needTranslate = false) {
   if (!str) {
     return needTranslate
       ? {
-          lyric: [],
-          translate: []
-        }
+        lyric: [],
+        translate: []
+      }
       : [];
   }
   let list = str.replace(/\<\d+\>/g, '').split('\n');
@@ -34,9 +39,9 @@ export function lyric_decode(str: string, needTranslate = false) {
   }
   return needTranslate
     ? {
-        lyric: lyric_arr.sort(),
-        translate: translate_lyric_arr.sort()
-      }
+      lyric: lyric_arr.sort(),
+      translate: translate_lyric_arr.sort()
+    }
     : lyric_arr.sort();
 }
 

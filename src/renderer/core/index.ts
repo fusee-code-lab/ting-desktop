@@ -16,9 +16,9 @@ export enum PlayTypeOpt { //播放类型
 export interface SongOpt {
   id: number; //当前歌曲id
   vendor: Vendors; //歌曲来源
-  name: string; //歌曲名称
-  cover: string; //歌曲图片
-  singer: string; //歌手
+  name?: string; //歌曲名称
+  cover?: string; //歌曲图片
+  singer?: string; //歌手
   path?: string; //歌曲链接
 }
 
