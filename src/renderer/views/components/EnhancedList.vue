@@ -25,8 +25,8 @@
       :key="index"
       :style="maxWidthStyle"
     >
-      <!-- 
-        @slot 分段头 
+      <!--
+        @slot 分段头
         @binding {Number} index of section
         @binding {Object} data of section header, typed EnhancedListSection's SectionData
       -->
@@ -37,7 +37,7 @@
       >
         <slot name="section-header" :index="index" :section="item.data"></slot>
       </div>
-      <!-- 
+      <!--
         @slot 列表中的每一项
         @binding {Number} index of section
         @binding {Object} data of section, typed EnhancedListSection's ItemData
@@ -58,7 +58,7 @@ export interface EdgesInsets {
   right: Number;
 }
 
-const defaultEdgesInsts: EdgesInsets = { top: 0, left: 0, bottom: 0, right: 0 };
+const defaultEdgesInsets: EdgesInsets = { top: 0, left: 0, bottom: 0, right: 0 };
 
 /**
  * EnhancedList 的每一段的数据模型
@@ -103,7 +103,7 @@ export default defineComponent({
     contentInsets: {
       type: Object as PropType<EdgesInsets>,
       required: false,
-      default: defaultEdgesInsts
+      default: defaultEdgesInsets
     },
     /**
      * 是否固定列表头
@@ -132,7 +132,7 @@ export default defineComponent({
   setup: (props, { slots }) => {
     const hasHeaderSlot = ref(!!slots.header);
     const edgesInsets = reactive<EdgesInsets>({
-      ...defaultEdgesInsts,
+      ...defaultEdgesInsets,
       ...props.contentInsets
     });
 
