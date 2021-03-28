@@ -8,7 +8,7 @@
         <div class='setting-but bg-img'></div>
       </div>
       <div class='right'>
-        <NavigationBar/>
+        <NavigationBar class='navigation-bar'/>
         <SidePopup :shown='shownLyricsSidePopup' :position="'right'">
           <LyricsList />
         </SidePopup>
@@ -83,6 +83,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
+
+
 .info {
   height: 100%;
   position: relative;
@@ -108,11 +110,9 @@ export default defineComponent({
     position: relative;
     width: calc(100% - 220px);
 
-    > .back {
+    > .navigation-bar {
       position: absolute;
       top: 0;
-      left: 12px;
-      font: 400 22px ping-fang;
       z-index: 1000;
     }
 
