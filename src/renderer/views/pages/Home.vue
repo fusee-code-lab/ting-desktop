@@ -121,7 +121,6 @@ export default defineComponent({
   > .right {
     position: relative;
     width: calc(100% - 220px);
-    padding-top: 40px;
 
     > .back {
       position: absolute;

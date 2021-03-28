@@ -149,7 +149,7 @@ export default defineComponent({
 @import '~@/renderer/views/scss/mixin.scss';
 
 .sheet-info {
-  padding: 0 50px 10px;
+  padding: 40px 50px 10px;
   height: calc(100% - 50px);
   overflow: hidden;
   overflow-y: overlay;
