@@ -8,13 +8,7 @@
         <div class="setting-but bg-img"></div>
       </div>
       <div class="right">
-        <div
-          class="back no-drag"
-          v-if="messageData[messageKeys.History] && messageData[messageKeys.History].length > 0"
-          @click="back()"
-        >
-          <BackIcon />
-        </div>
+        <NavigationBar/>
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <SongStatus />
         </SidePopup>
@@ -47,7 +41,7 @@ import SidePopup from '../components/SidePopup.vue';
 import SongStatus from '../components/SongStatus.vue';
 import { windowShow } from '@/renderer/utils/window';
 import { audioData, switchAudioType } from '@/renderer/core';
-import BackIcon from '@/renderer/views/components/Icons/BackIcon.vue';
+import NavigationBar from "@/renderer/views/components/NavigationBar.vue"
 
 export default defineComponent({
   components: {
@@ -59,7 +53,7 @@ export default defineComponent({
     Audio,
     SidePopup,
     SongStatus,
-    BackIcon
+    NavigationBar
   },
   name: 'Home',
   setup() {
@@ -69,13 +63,6 @@ export default defineComponent({
 
     function showLyricsSidePopup() {
       shownLyricsSidePopup.value = !shownLyricsSidePopup.value;
-    }
-
-    function back() {
-      messageData[messageKeys.History].shift();
-      if (messageData[messageKeys.History].length > 0)
-        messageData[messageKeys.Show] = messageData[messageKeys.History][0];
-      else messageData[messageKeys.Show] = 'null';
     }
 
     onMounted(() => {
@@ -91,7 +78,6 @@ export default defineComponent({
       componentShow,
       shownLyricsSidePopup,
       showLyricsSidePopup,
-      back
     };
   }
 });
