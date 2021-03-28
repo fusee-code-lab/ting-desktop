@@ -45,8 +45,8 @@ import { searchData, sheetData } from '@/renderer/core';
 import { getSongUrl, searchSheet, searchSong } from '@/lib/musicapi';
 import { audio } from '@/renderer/core/audio';
 import { componentShow, messageData, messageKeys } from '@/renderer/store';
-import EnhancedList, { EnhancedListSection as Section } from './EnhancedList.vue';
-import SongItem from './SongItem.vue';
+import EnhancedList, { EnhancedListSection as Section } from '../components/EnhancedList.vue';
+import SongItem from '../components/SongItem.vue';
 
 export interface SearchResultSongItem {
   id: string;
