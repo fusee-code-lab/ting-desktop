@@ -1,13 +1,13 @@
-import { lyric_decode, noSongsDetailMsg } from '../util';
+import { lyric_decode, noSongsDetailMsg, pagination } from '../util';
 import { random, isNull } from '@/lib';
 import { base, getMusicInfo, getMusicInfo2 } from './base';
 
 export async function searchSong({
-  keyword = '',
-  limit = 30,
-  offset = 0,
-  remoteplace = 'txt.yqq.song'
-}) {
+                                   keyword = '',
+                                   limit = 30,
+                                   offset = 0,
+                                   remoteplace = 'txt.yqq.song'
+                                 }) {
   let params: { [key: string]: any } = {
     p: offset + 1,
     n: limit,
@@ -273,6 +273,7 @@ export async function getPlaylistDetail(id: string | number, offset: number, lim
       platform: 'yqq'
     };
     const { cdlist } = await base('/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg', params);
+    let privileges = pagination(offset, limit, cdlist[0].songlist);
     return {
       status: true,
       data: {
@@ -282,9 +283,16 @@ export async function getPlaylistDetail(id: string | number, offset: number, lim
           cover: cdlist[0].logo,
           desc: cdlist[0].desc,
           tags: cdlist[0].tags.map((e: any) => e.name),
+          count: cdlist[0].songnum,
           creat_name: cdlist[0].nickname
         },
-        songs: cdlist[0].songlist.map((info: any) => getMusicInfo2(info))
+        songs: privileges.map((info: any) => getMusicInfo2(info)),
+        song_all: cdlist[0].songlist.map((e: any) => {
+          return {
+            id: e.songid,
+            vendor: 'qq'
+          };
+        })
       }
     };
   } catch (e) {

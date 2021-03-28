@@ -1,21 +1,25 @@
 <template>
-  <div class="song-item">
-    <div class="cover" :style="coverImageStyle">
-      <div class="img-cover">
-        <i class="play-symbol"></i>
+  <div class='song-item'>
+    <div class='cover' :style='coverImageStyle'>
+      <div class='img-cover'>
+        <PlayIcon class='play-symbol' />
       </div>
     </div>
-    <div class="title">{{ song.title }}</div>
-    <div class="subtitle">{{ song.subtitle }}</div>
+    <div class='title'>{{ song.title }}</div>
+    <div class='subtitle'>{{ song.subtitle }}</div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, onMounted, PropType, reactive } from 'vue';
 import { SearchResultSongItem } from './SearchDetails.vue';
+import PlayIcon from '@/renderer/views/components/Icons/PausestatusIcon.vue';
 
 export default defineComponent({
   name: 'SongITem',
+  components: {
+    PlayIcon
+  },
   props: {
     song: {
       type: Object as PropType<SearchResultSongItem>,
@@ -42,7 +46,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .song-item:hover {
@@ -56,19 +60,21 @@ export default defineComponent({
     background-color: rgba($color: #333333, $alpha: 0.7); // TODO 使用颜色变量
 
     > .play-symbol {
-      background-color: var(--white);
+      color: var(--contrast-label);
       transition: all 0.2s ease-in-out;
     }
   }
 }
 
 .song-item > .cover > .img-cover > .play-symbol:hover {
-  background-color: var(--theme-blue);
+  color: var(--theme-blue);
   transition: all 0.2s ease-in-out;
 }
 
 .song-item {
   > .cover {
+    // TODO 当前运用 css "技巧"，去掉下一行并触发 hover 来看会有什么问题，或许有更好的解决方案
+    transform: scale(1);
     width: 100%;
     border-radius: 3px;
     background-position: top left;
@@ -90,13 +96,12 @@ export default defineComponent({
       background-color: transparent;
 
       > .play-symbol {
-        width: 20px;
-        height: 20px;
-        background-color: transparent;
-        transition: all 0.1s ease-in-out;
+        color: transparent;
+        transition: color 0.1s ease-in-out;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+        font-size: 25px;
       }
     }
   }

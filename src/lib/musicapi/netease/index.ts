@@ -1,4 +1,4 @@
-import { lyric_decode, noSongsDetailMsg } from '../util';
+import { lyric_decode, noSongsDetailMsg, pagination } from '../util';
 import { isNull } from '@/lib';
 import { base, getMusicInfo, getMusicInfo2 } from './base';
 
@@ -230,7 +230,7 @@ export async function getTopList(id: number | string, limit = 1000) {
         // 达到限制 或 已是数组最后一个
         if (arr.length === limit || i + 1 === playlist.trackIds.length) {
           // 获取详情
-          const data = await this.getBatchSongDetail(arr);
+          const data = await getBatchSongDetail(arr);
           if (data.status) {
             songs = songs.concat(data.data);
           }
@@ -317,27 +317,23 @@ export async function getArtistSongs(id: number | string, offset: number, limit:
 
 export async function getPlaylistDetail(id: number | string, offset: number, limit: number) {
   try {
-    const { playlist, privileges } = await base(`/weapi/v3/playlist/detail`, 'POST', {
+    const { playlist } = await base(`/weapi/v3/playlist/detail`, 'POST', {
       id,
-      n: limit,
+      n: 100000,
       s: 8,
       csrf_token: ''
     });
     let songs: any = [];
-    if (playlist.trackIds.length > 1) {
+    let privileges = pagination(offset, limit, playlist.trackIds);
+    if (privileges.length > 1) {
       let arr = [];
-      const limit = 1000;
-      for (let i = 0; i < playlist.trackIds.length; i++) {
-        arr.push(playlist.trackIds[i].id);
-        // 达到限制 或 已是数组最后一个
-        if (arr.length === limit || i + 1 === playlist.trackIds.length) {
-          // 获取详情
-          const data = await this.getBatchSongDetail(arr);
+      for (let i = 0; i < privileges.length; i++) {
+        arr.push(privileges[i].id);
+        if (privileges.length - 1 === i) {
+          const data = await getBatchSongDetail(arr);
           if (data.status) {
             songs = songs.concat(data.data);
           }
-          // 重置待处理的数组
-          arr = [];
         }
       }
     }
@@ -350,9 +346,16 @@ export async function getPlaylistDetail(id: number | string, offset: number, lim
           cover: playlist.coverImgUrl,
           desc: playlist.description,
           tags: playlist.tags,
+          count: playlist.trackCount,
           creat_name: playlist.creator.nickname
         },
-        songs
+        songs,
+        song_all: playlist.trackIds.map((e: any) => {
+          return {
+            id: e.id,
+            vendor: 'netease'
+          };
+        })
       }
     };
   } catch (e) {

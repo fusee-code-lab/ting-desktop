@@ -6,8 +6,8 @@ import { isNull, swapArr } from '@/lib';
  * 组件页面配置
  * */
 export const keepAliveOpt = reactive({
-  include: [],
-  exclude: [],
+  include: [], //缓存页面
+  exclude: [], //不缓存页面
   max: 10
 });
 export const addInclude = (key: string) => {
