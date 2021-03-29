@@ -2,14 +2,14 @@
 <!-- view in github: https://github.com/fusee-code-lab/vue-icon-component-generator -->
 <!-- eslint-disable -->
 <template>
-  <span class="ting-font ting-font-volumes3"></span>
+  <span class="ting-font ting-font-check"></span>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "ting-font-icon-volumes3"
+  name: "ting-font-icon-check"
 });
 </script>
 
@@ -23,7 +23,7 @@ export default defineComponent({
   color: #000000;
 }
 
-.ting-font-volumes3:before {
-  content: "\e619";
+.ting-font-check:before {
+  content: "\e61c";
 }
 </style>
