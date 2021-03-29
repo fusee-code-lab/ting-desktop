@@ -1,8 +1,8 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { IPC_MSG_TYPE } from '@/lib/interface';
-import Log from '@/lib/log';
 import { readFile } from '@/lib/file';
+import { Log } from './modular/log';
 import { Window } from './modular/window';
 import { Session } from './modular/session';
 import { Platform } from './platform';
@@ -26,10 +26,12 @@ global.sharedObject = {
 };
 
 class Init {
+  private log = new Log();
   private window = new Window();
   private session = new Session();
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * 初始化并加载
@@ -69,7 +71,8 @@ class Init {
     //获得焦点时发出
     app.on('browser-window-focus', () => {
       //关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {});
+      globalShortcut.register('CommandOrControl+R', () => {
+      });
     });
     //失去焦点时发出
     app.on('browser-window-blur', () => {
@@ -105,7 +108,7 @@ class Init {
         audio: JSON.parse(req[1] as string)
       };
     } catch (e) {
-      Log.error('[setting]', e);
+      this.log.error('[setting]', e);
       global.sharedObject['setting'] = {};
     }
     Platform[global.sharedObject.platform]();
@@ -140,6 +143,7 @@ class Init {
     /**
      * 开启模块监听
      */
+    this.log.on();
     this.window.on();
     this.session.on();
   }

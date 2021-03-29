@@ -1,5 +1,4 @@
 import * as Api from './api';
-import Log from '../log';
 
 /**
  * 获取歌曲详情
@@ -12,7 +11,7 @@ export async function getSongDetail(vendor: Api.Vendors, id: number | string) {
     if (req.status && req.data) return req.data;
     return null;
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -28,7 +27,7 @@ export async function getBSongDetail(arr: Api.BSongArrayOpt[]) {
     if (req.status && req.data) return req.data;
     return null;
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -44,7 +43,7 @@ export async function getSongUrl(vendor: Api.Vendors, id: number | string) {
     if (req.status && req.data.url) return req.data;
     return null;
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -60,7 +59,7 @@ export async function getLyric(vendor: Api.Vendors, id: number | string) {
     if (req.status && req.data) return req.data;
     return null;
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -101,7 +100,7 @@ export async function searchSong(keyword: string, offset: number = 0, limit: num
       }
     };
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -139,7 +138,7 @@ export async function searchSheet(keyword: string, offset: number = 0, limit: nu
       }
     };
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -177,7 +176,7 @@ export async function searchAlbum(keyword: string, limit: number = 5, offset: nu
       }
     };
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -194,7 +193,7 @@ export async function getPlaylistDetail(
   try {
     return await Api.getPlaylistDetail(vendor, id, offset, limit);
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }
@@ -206,7 +205,7 @@ export async function getAlbumDetail(vendor: Api.Vendors, id: number | string) {
   try {
     return await Api.getAlbumDetail(vendor, id);
   } catch (e) {
-    Log.error(e.toString());
+    console.error(e.toString());
     return null;
   }
 }

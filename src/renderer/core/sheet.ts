@@ -9,7 +9,7 @@ import {
   SheetListOpt
 } from '@/renderer/core/index';
 import { readLine, writeFile, appendFile, findFileBySuffix } from '@/lib/file';
-import Log from '@/lib/log';
+import { logError } from '@/renderer/utils';
 
 /**
  * 当前歌单列表
@@ -43,9 +43,9 @@ async function sheetDetails(name: string) {
     data.shift();
     audioSheetListData.list[
       audioSheetListData.list.map((e) => e.detail.name).indexOf(name)
-    ].songs = data.map((e) => JSON.parse(e)) as SongOpt[];
+      ].songs = data.map((e) => JSON.parse(e)) as SongOpt[];
   } catch (e) {
-    Log.error(e);
+    logError(e);
   }
 }
 

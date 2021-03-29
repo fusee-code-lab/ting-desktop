@@ -1,9 +1,8 @@
 import { reactive, ref, watch } from 'vue';
-import Log from '@/lib/log';
 import { getGlobal, debounce, isNull } from '@/lib';
 import { Vendors } from '@/lib/musicapi/api';
 import { writeFile } from '@/lib/file';
-import { getAppPath } from '@/renderer/utils';
+import { getAppPath, logError } from '@/renderer/utils';
 import { windowSetSize } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
 
@@ -103,7 +102,7 @@ try {
   if (!!audio.songInfo)
     audioPlayList[`${audio.songInfo.vendor}|${audio.songInfo.id}`] = audio.songInfo;
 } catch (e) {
-  Log.error('[getSetting]', e);
+  logError('[getSetting]', e);
 }
 
 /**
