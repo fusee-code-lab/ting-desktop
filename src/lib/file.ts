@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { createInterface } from 'readline';
 import { resolve, dirname, extname } from 'path';
-import Log from '@/lib/log';
 import { isNull } from '@/lib';
 
 /**
@@ -69,13 +68,16 @@ export function access(path: string) {
  * @param path 文件路径
  * @param options 选项
  */
-export function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string }) {
+export function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string; }) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
-    fs.readFile(path, options, (err, data) => {
-      if (err) resolve(0);
-      resolve(data);
-    })
+    fs.readFile(
+      path,
+      options,
+      (err, data) => {
+        if (err) resolve(0);
+        resolve(data);
+      })
   );
 }
 
@@ -105,12 +107,8 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
         io.on('line', (line) => {
           indes++;
           if (index && indes === index) io.close();
-          try {
-            line = line.replace(/(^\s*)|(\s*$)/g, '');
-            if (!isNull(line)) data.push(line);
-          } catch (e) {
-            Log.error('[readLine]', e);
-          }
+          line = line.replace(/(^\s*)|(\s*$)/g, '');
+          if (!isNull(line)) data.push(line);
         });
         io.on('close', () => resolve(data));
     }
@@ -121,17 +119,12 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
  * 覆盖数据到文件
  * @return 0 失败 1 成功
  */
-export async function writeFile(
-  path: string,
-  data: string | Buffer,
-  options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
-) {
+export async function writeFile(path: string, data: string | Buffer, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if ((await access(path)) === 0) fs.mkdirSync(dirname(path), { recursive: true });
+  if (await access(path) === 0) fs.mkdirSync(dirname(path), { recursive: true });
   return new Promise((resolve) =>
     fs.writeFile(path, data, options, (err) => {
       if (err) {
-        Log.error('[writeFile]', err.message);
         resolve(0);
       }
       resolve(1);
@@ -143,17 +136,12 @@ export async function writeFile(
  * 追加数据到文件
  * @return 0 失败 1 成功
  */
-export async function appendFile(
-  path: string,
-  data: string | Uint8Array,
-  options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
-) {
+export async function appendFile(path: string, data: string | Uint8Array, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if ((await access(path)) === 0) fs.mkdirSync(dirname(path), { recursive: true });
+  if (await access(path) === 0) fs.mkdirSync(dirname(path), { recursive: true });
   return new Promise((resolve) =>
     fs.appendFile(path, data, options, (err) => {
       if (err) {
-        Log.error('[appendFile]', err.message);
         resolve(0);
       }
       resolve(1);

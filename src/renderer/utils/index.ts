@@ -40,3 +40,19 @@ export function getAppPath(key: string) {
 export function ipcSend(key: string, value?: unknown) {
   ipcRenderer.send(key, value);
 }
+
+/**
+ * 日志(info)
+ * @param args
+ */
+export function logInfo(...args: any) {
+  ipcRenderer.send('log-info', args);
+}
+
+/**
+ * 日志(error)
+ * @param args
+ */
+export function logError(...args: any) {
+  ipcRenderer.send('log-error', args);
+}
