@@ -4,7 +4,6 @@
     <div class="info" v-show="!isMini">
       <SideBar />
       <div class="content">
-        <NavigationBar class="navigation-bar" />
         <SidePopup :shown="shownLyricsSidePopup" :position="'right'">
           <LyricsList />
         </SidePopup>
@@ -19,18 +18,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
-import SideBar from '@/renderer/views/components/SideBar.vue';
-import { audioData, switchAudioType } from '@/renderer/core';
-import { argsData } from '@/renderer/store';
-import { windowShow } from '@/renderer/utils/window';
-import Head from '../components/Head.vue';
-import Audio from '../components/Audio.vue';
-import SearchDetails from './SearchDetails.vue';
-import SheetDetails from './SheetDetails.vue';
-import SidePopup from '../components/SidePopup.vue';
-import LyricsList from '../components/LyricsList.vue';
-import NavigationBar from '@/renderer/views/components/NavigationBar.vue';
+import { computed, defineComponent, onMounted, ref } from "vue";
+import SideBar from "@/renderer/views/components/SideBar.vue";
+import { audioData, switchAudioType } from "@/renderer/core";
+import { argsData } from "@/renderer/store";
+import { windowShow } from "@/renderer/utils/window";
+import Head from "../components/Head.vue";
+import Audio from "../components/Audio.vue";
+import SearchDetails from "./SearchDetails.vue";
+import SheetDetails from "./SheetDetails.vue";
+import SidePopup from "../components/SidePopup.vue";
+import LyricsList from "../components/LyricsList.vue";
 
 export default defineComponent({
   components: {
@@ -40,14 +38,13 @@ export default defineComponent({
     Head,
     Audio,
     SidePopup,
-    LyricsList,
-    NavigationBar
+    LyricsList
   },
-  name: 'Main',
+  name: "Main",
   setup() {
     switchAudioType(audioData.type);
 
-    const isMini = computed(() => audioData.type === 'mini');
+    const isMini = computed(() => audioData.type === "mini");
 
     const shownLyricsSidePopup = ref(false);
 
@@ -59,7 +56,7 @@ export default defineComponent({
       isMini,
       platform: argsData.window.platform,
       accentColor: argsData.window.appInfo.accentColor,
-      shownLyricsSidePopup,
+      shownLyricsSidePopup
     };
   }
 });
