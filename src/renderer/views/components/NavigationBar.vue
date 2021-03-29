@@ -2,7 +2,7 @@
   <div class="navigation-bar">
     <div class="navigation-bar-content">
       <HoverButton
-        v-if="messageData[messageKeys.History] && messageData[messageKeys.History].length > 0"
+        v-if="canBack"
         @click="back"
       >
         <BackIcon />
@@ -15,8 +15,9 @@
 import BackIcon from '@/renderer/views/components/Icons/BackIcon.vue';
 import HoverButton from '@/renderer/views/components/HoverButton.vue';
 
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { messageData, messageKeys } from '../../store';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'NavigationBar',
@@ -25,15 +26,22 @@ export default defineComponent({
     HoverButton
   },
   setup(props) {
+    const route = useRoute();
+    const router = useRouter();
+
+    const canBack = computed(() => {
+      const inMain = route.path.startsWith("/main");
+      const historyCount = window.history.length;
+      return inMain && historyCount > 1;
+    }); 
+
     function back() {
-      messageData[messageKeys.History].shift();
-      if (messageData[messageKeys.History].length > 0)
-        messageData[messageKeys.Show] = messageData[messageKeys.History][0];
-      else messageData[messageKeys.Show] = 'null';
+      router.back();
     }
 
     return {
       back,
+      canBack,
       messageData,
       messageKeys
     };

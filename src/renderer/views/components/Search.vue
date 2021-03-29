@@ -11,12 +11,14 @@ import { isNull } from '@/lib';
 import { audioSheetListData, searchData } from '@/renderer/core';
 import { searchSheet, searchSong } from '@/lib/musicapi';
 import { componentShow, messageKeys, messageData } from '@/renderer/store';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'Search',
   setup() {
     const keyword = ref('');
 
+    const router = useRouter();
     async function search() {
       if (isNull(keyword.value)) return;
       searchData.singleData.offset = 0;
@@ -37,7 +39,9 @@ export default defineComponent({
         searchData.sheetData.qqTotal = reqs[1].data.qqTotal;
         searchData.sheetData.sheets = reqs[1].data.sheets;
       }
-      messageData[messageKeys.Show] = componentShow.SearchDetails;
+      // messageData[messageKeys.Show] = componentShow.SearchDetails; // TODO
+
+      router.push("/main/search");
     }
 
     return {
