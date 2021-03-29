@@ -27,7 +27,7 @@ import { windowShow } from '@/renderer/utils/window';
 import Head from '../components/Head.vue';
 import Audio from '../components/Audio.vue';
 import SearchDetails from './SearchDetails.vue';
-import SheetDetails from '../components/SheetDetails.vue';
+import SheetDetails from './SheetDetails.vue';
 import SidePopup from '../components/SidePopup.vue';
 import LyricsList from '../components/LyricsList.vue';
 import NavigationBar from '@/renderer/views/components/NavigationBar.vue';

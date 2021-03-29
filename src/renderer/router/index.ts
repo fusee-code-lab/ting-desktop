@@ -25,6 +25,12 @@ export default createRouter({
           name: 'Search',
           component: () =>
             import(/* webpackChunkName: "search" */ '../views/pages/SearchDetails.vue')
+        },
+        {
+          path: 'sheet',
+          name: 'Sheet',
+          component: () =>
+            import(/* webpackChunkName: "sheet" */ '../views/pages/SheetDetails.vue')
         }
       ]
     },
