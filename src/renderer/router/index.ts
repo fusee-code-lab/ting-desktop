@@ -9,9 +9,30 @@ export default createRouter({
       component: () => import(/* webpackChunkName: "welcome" */ '../views/pages/Welcome.vue')
     },
     {
-      path: '/home',
-      name: 'Home',
-      component: () => import(/* webpackChunkName: "home" */ '../views/pages/Home.vue')
+      path: '/main',
+      name: 'Main',
+      redirect: '/main/home',
+      component: () => import(/* webpackChunkName: "main" */ '../views/pages/Main.vue'),
+      children: [
+        {
+          path: 'home',
+          name: 'Home',
+          component: () =>
+            import(/* webpackChunkName: "home" */ '../views/pages/Home.vue')
+        },
+        {
+          path: 'search',
+          name: 'Search',
+          component: () =>
+            import(/* webpackChunkName: "search" */ '../views/pages/SearchDetails.vue')
+        },
+        {
+          path: 'sheet',
+          name: 'Sheet',
+          component: () =>
+            import(/* webpackChunkName: "sheet" */ '../views/pages/SheetDetails.vue')
+        }
+      ]
     },
     {
       path: '/sheetCreate',

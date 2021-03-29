@@ -43,7 +43,7 @@ export default defineComponent({
       windowCreate({
         isMainWin: true,
         resizable: true,
-        route: '/home'
+        route: '/main'
       });
     };
 
