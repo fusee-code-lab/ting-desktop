@@ -1,23 +1,30 @@
 <template>
   <div class="head-info drag">
-    <div v-if="platform === 'darwin'" :class="platform">
-      <div @dblclick="maxMin" class="head-content" />
-    </div>
-    <div v-else :class="platform">
-      <div @dblclick="maxMin" class="head-content">
-        <div class="title">
-          <span>{{ title }}</span>
-        </div>
+    <div @dblclick="maxMin" class="head-content">
+      <div v-if="!isMacintosh" class="title">
+        <span>{{ title }}</span>
       </div>
-      <div class="events">
-        <div @click="minimize" class="event close no-drag">
-          <MinimizeIcon />
-        </div>
-        <div @click="maximize" class="event close no-drag">
-          <MaximizeIcon />
-        </div>
-        <div @click="close" class="event close no-drag">
-          <CloseIcon />
+    </div>
+    <div class="command-bar">
+      <div class="leading">
+        <HoverButton
+          v-if="canBack"
+          @click="back"
+        >
+          <BackIcon />
+        </HoverButton>
+      </div>
+      <div class="trailing">
+        <div v-if="!isMacintosh" class="events">
+          <div @click="minimize" class="event close no-drag">
+            <MinimizeIcon />
+          </div>
+          <div @click="maximize" class="event close no-drag">
+            <MaximizeIcon />
+          </div>
+          <div @click="close" class="event close no-drag">
+            <CloseIcon />
+          </div>
         </div>
       </div>
     </div>
@@ -25,20 +32,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { argsData } from '@/renderer/store';
-import { windowHide, windowMax, windowMaxMin, windowMin } from '@/renderer/utils/window';
-import { audioData } from '@/renderer/core';
-import CloseIcon from '@/renderer/views/components/Icons/CloseIcon.vue';
-import MinimizeIcon from '@/renderer/views/components/Icons/MinimizeIcon.vue';
-import MaximizeIcon from '@/renderer/views/components/Icons/MaximizeIcon.vue';
+import { computed, defineComponent } from "vue";
+import { argsData } from "@/renderer/store";
+import { windowHide, windowMax, windowMaxMin, windowMin } from "@/renderer/utils/window";
+import { audioData } from "@/renderer/core";
+import CloseIcon from "@/renderer/views/components/Icons/CloseIcon.vue";
+import MinimizeIcon from "@/renderer/views/components/Icons/MinimizeIcon.vue";
+import MaximizeIcon from "@/renderer/views/components/Icons/MaximizeIcon.vue";
+import BackIcon from "@/renderer/views/components/Icons/BackIcon.vue";
+import HoverButton from "@/renderer/views/components/HoverButton.vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
-  name: 'Head',
+  name: "Head",
   components: {
     CloseIcon,
     MinimizeIcon,
-    MaximizeIcon
+    MaximizeIcon,
+    HoverButton,
+    BackIcon
   },
   setup() {
     function close() {
@@ -57,18 +69,36 @@ export default defineComponent({
       windowMaxMin(argsData.window.id);
     }
 
+    const route = useRoute();
+    const router = useRouter();
+
+    const canBack = computed(() => {
+      const inMain = route.path.startsWith("/main");
+      const historyCount = window.history.length;
+      return inMain && historyCount > 1;
+    });
+
+    function back() {
+      router.back();
+    }
+
+    const isMacintosh = computed(() => argsData.window.platform === "darwin");
+
     return {
       close,
       minimize,
       maximize,
       maxMin,
+      canBack,
+      isMacintosh,
+      back,
       title: argsData.window.title || argsData.window.appInfo.name,
-      platform: argsData.window.platform,
       audioData
     };
   }
 });
 </script>
+
 <style lang="scss">
 @import '~@/renderer/views/scss/mixin.scss';
 @import '../scss/constants.scss';
@@ -84,31 +114,30 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
 
-  > .win32,
-  .darwin,
-  .linux {
-    padding: 0 10px;
-    width: 100%;
+  > .head-content {
     height: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    width: $sidebar-width;
+    padding-left: 15px;
 
-    > .head-content {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      align-items: center;
-
-      > .title {
-        font: normal 13px /13px ping-fang;
-      }
+    > .title {
+      font: normal 13px /13px ping-fang;
     }
   }
 
-  > .win32,
-  .linux {
-    > .events {
+  > .command-bar {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .leading {
+      padding-left: 10px;
+    }
+
+    .trailing > .events {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -141,5 +170,6 @@ export default defineComponent({
       }
     }
   }
+
 }
 </style>

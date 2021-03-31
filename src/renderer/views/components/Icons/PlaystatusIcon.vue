@@ -9,13 +9,13 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'ting-font-icon-playstatus'
+  name: "ting-font-icon-playstatus"
 });
 </script>
 
 <style scoped>
 .ting-font {
-  font-family: 'ting-font' !important;
+  font-family: "ting-font" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -24,6 +24,6 @@ export default defineComponent({
 }
 
 .ting-font-playstatus:before {
-  content: '\e610';
+  content: "\e610";
 }
 </style>

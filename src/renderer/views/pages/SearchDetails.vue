@@ -47,6 +47,7 @@ import { audio } from '@/renderer/core/audio';
 import { componentShow, messageData, messageKeys } from '@/renderer/store';
 import EnhancedList, { EnhancedListSection as Section } from '../components/EnhancedList.vue';
 import SongItem from '../components/SongItem.vue';
+import { useRoute, useRouter } from "vue-router";
 
 export interface SearchResultSongItem {
   id: string;
@@ -70,6 +71,8 @@ export default defineComponent({
   name: 'SearchDetails',
   components: { EnhancedList, SongItem },
   setup() {
+    const router = useRouter();
+
     const data = reactive({
       isSongOf: true,
       isSongOfText: '加载更多',
@@ -155,7 +158,8 @@ export default defineComponent({
 
     async function sheet(item: any) {
       sheetData.value = item;
-      messageData[messageKeys.Show] = componentShow.SheetDetails;
+      // messageData[messageKeys.Show] = componentShow.SheetDetails;
+      router.push("/main/sheet").then();
     }
 
     // TODO 有些没有 cover 的音乐 。。。

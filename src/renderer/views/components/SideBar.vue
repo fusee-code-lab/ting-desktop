@@ -23,11 +23,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
+@import '../scss/constants';
 
 .side-bar {
   position: relative;
   height: 100%;
-  width: 220px;
+  width: $sidebar-width;
   background-color: #e3e3e8;
   padding: 40px 10px 0;
 
