@@ -1,29 +1,10 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { IPC_MSG_TYPE } from '@/lib/interface';
-import { readFile } from '@/lib/file';
 import { Log } from './modular/log';
-import { Window } from './modular/window';
 import { Session } from './modular/session';
-import { Platform } from './platform';
-
-declare global {
-  namespace NodeJS {
-    interface Global {
-      sharedObject: { [key: string]: any };
-    }
-  }
-}
-
-global.sharedObject = {
-  isPackaged: app.isPackaged, //是否打包
-  platform: process.platform, //当前运行平台
-  appInfo: {
-    //应用信息
-    name: app.name,
-    version: app.getVersion()
-  }
-};
+import { Window } from './modular/window';
+import Global from './modular/global';
 
 class Init {
   private log = new Log();
@@ -41,9 +22,9 @@ class Init {
     let args = [];
     if (!app.isPackaged) args.push(resolve(process.argv[1]));
     args.push('--');
-    app.setAsDefaultProtocolClient(app.name, process.execPath, args);
+    if (!app.isDefaultProtocolClient(app.name, process.execPath, args)) app.setAsDefaultProtocolClient(app.name, process.execPath, args);
     app.allowRendererProcessReuse = true;
-
+    //重复启动
     if (!app.requestSingleInstanceLock()) {
       app.quit();
     } else {
@@ -55,19 +36,17 @@ class Init {
         }
       });
     }
-
+    //关闭所有窗口退出
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
         app.quit();
       }
     });
-
     app.on('activate', () => {
       if (this.window.getAllWindows().length === 0) {
         this.window.createWindow({ isMainWin: true });
       }
     });
-
     //获得焦点时发出
     app.on('browser-window-focus', () => {
       //关闭刷新
@@ -87,62 +66,27 @@ class Init {
     ipcMain.on('app-path-get', (event, args) => {
       event.returnValue = app.getPath(args.key);
     });
-
     //启动
-    await Promise.all([this.global(), app.whenReady()]);
-
-    //开启模块、创建窗口、托盘
+    await Promise.all([Global.init(), app.whenReady()]);
+    //模块、创建窗口、托盘
     this.modular();
     this.window.createWindow({ isMainWin: true });
     this.window.createTray();
   }
 
-  async global() {
-    try {
-      let req = await Promise.all([
-        readFile(app.getPath('userData') + '/cfg/index.json'),
-        readFile(app.getPath('userData') + '/cfg/audio.json')
-      ]);
-      global.sharedObject['setting'] = {
-        cfg: JSON.parse(req[0] as string),
-        audio: JSON.parse(req[1] as string)
-      };
-    } catch (e) {
-      this.log.error('[setting]', e);
-      global.sharedObject['setting'] = {};
-    }
-    Platform[global.sharedObject.platform]();
-
-    /**
-     * 全局变量赋值
-     * 返回1代表完成
-     */
-    ipcMain.on('global-sharedObject-set', (event, args) => {
-      global.sharedObject[args.key] = args.value;
-      event.returnValue = 1;
-    });
-    ipcMain.on('global-sharedObject-get', (event, args) => {
-      event.returnValue = global.sharedObject[args.key];
-    });
-  }
-
+  /**
+   * 模块
+   * */
   modular() {
-    /**
-     * 消息反馈(根据需要增加修改)
-     */
+    //消息反馈(根据需要增加修改)
     ipcMain.on('message-send', (event, args) => {
       switch (args.type) {
         case IPC_MSG_TYPE.WIN: //window模块
-          for (let i in this.window.group)
-            if (this.window.group[i])
-              this.window.getWindow(Number(i)).webContents.send('message-back', args);
+          for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send('message-back', args);
           break;
       }
     });
-
-    /**
-     * 开启模块监听
-     */
+    //开启模块监听
     this.log.on();
     this.window.on();
     this.session.on();

@@ -14,14 +14,18 @@
     {
       "from": "src/lib/inside",
       "to": "inside/",
-      "filter": ["**/*"]
+      "filter": [
+        "**/*"
+      ]
     }
   ],
   "extraResources": [
     {
       "from": "src/lib/extern",
       "to": "extern/",
-      "filter": ["**/*"]
+      "filter": [
+        "**/*"
+      ]
     }
   ],
   "nsis": {
@@ -65,7 +69,9 @@
     "target": [
       {
         "target": "nsis",
-        "arch": ["ia32"]
+        "arch": [
+          "ia32"
+        ]
       }
     ]
   },
