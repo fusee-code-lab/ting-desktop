@@ -5,10 +5,12 @@ import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
 import { Session } from './modular/session';
 import { Window } from './modular/window';
+import { Menus } from './modular/menu';
 import Global from './modular/global';
 import { musicApiOn } from '@/main/modular/musicapi';
 
 class Init {
+  private menus = new Menus();
   private window = new Window();
   private session = new Session();
 
@@ -91,6 +93,7 @@ class Init {
     logOn();
     fileOn();
     musicApiOn();
+    this.menus.on();
     this.window.on();
     this.session.on();
   }

@@ -21,7 +21,7 @@
             <div v-if='!data.isDesc' @click='showHide()' class='more'>更多</div>
           </div>
           <div class='creat' :class="{ 'desc-show': data.isDesc }">
-            <div class='icon bg-img' :class="{ qq: data.vendor === 'qq' }"></div>
+            <div class='icon bg-img' :class='data.vendor'></div>
             <a class='nickname' target='_blank' :href='data.info.detail.userLink'>@{{ data.info.detail.creat_name }}</a>
           </div>
           <div class='buts'>
@@ -251,10 +251,13 @@ export default defineComponent({
           align-items: center;
 
           > .icon {
-            @include device-pixel('~@/renderer/assets/icons/neteas_music');
             width: 14px;
             height: 14px;
             margin-right: 5px;
+          }
+
+          > .icon.netease {
+            @include device-pixel('~@/renderer/assets/icons/netease_music');
           }
 
           > .icon.qq {
