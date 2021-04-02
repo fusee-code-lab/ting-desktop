@@ -159,7 +159,7 @@ export default defineComponent({
     right: 0;
     height: 40px;
     content: "";
-    background-image: linear-gradient(#ffffff 60%, transparent 100%);
+    background-image: linear-gradient(var(--white) 60%, transparent 100%);
   }
 
   > .head {
