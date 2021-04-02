@@ -54,13 +54,6 @@ export async function searchSheet(keyword: string, offset: number = 0, limit: nu
 }
 
 /**
- * 搜索专辑
- */
-export async function searchAlbum(keyword: string, offset: number = 0, limit: number = 5) {
-  return await window.ipcFun.invoke('musicapi-searchalbum', { keyword, offset, limit });
-}
-
-/**
  * 获取歌单详情
  */
 export async function getPlaylistDetail(
@@ -70,6 +63,13 @@ export async function getPlaylistDetail(
   limit: number = 65535
 ) {
   return await window.ipcFun.invoke('musicapi-getplaylistdetail', { vendor, id, offset, limit });
+}
+
+/**
+ * 搜索专辑
+ */
+export async function searchAlbum(keyword: string, offset: number = 0, limit: number = 5) {
+  return await window.ipcFun.invoke('musicapi-searchalbum', { keyword, offset, limit });
 }
 
 /**

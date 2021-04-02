@@ -22,7 +22,7 @@
           </div>
           <div class='creat' :class="{ 'desc-show': data.isDesc }">
             <div class='icon bg-img' :class="{ qq: data.vendor === 'qq' }"></div>
-            <div class='nickname'>@{{ data.info.detail.creat_name }}</div>
+            <a class='nickname' target='_blank' :href='data.info.detail.userLink'>@{{ data.info.detail.creat_name }}</a>
           </div>
           <div class='buts'>
             <button class='all-play' @click='playAll()'>播放全部</button>
@@ -251,20 +251,21 @@ export default defineComponent({
           align-items: center;
 
           > .icon {
-            @include device-pixel('~@/renderer/assets/icons/neteasy music icon');
+            @include device-pixel('~@/renderer/assets/icons/neteas_music');
             width: 14px;
             height: 14px;
             margin-right: 5px;
           }
 
           > .icon.qq {
-            @include device-pixel('~@/renderer/assets/icons/qq music icon');
+            @include device-pixel('~@/renderer/assets/icons/qq_music');
           }
 
           > .nickname {
             font: normal 12px/14px segoe-ui;
             color: var(--theme-blue);
             text-decoration: underline;
+            cursor: default;
           }
         }
 

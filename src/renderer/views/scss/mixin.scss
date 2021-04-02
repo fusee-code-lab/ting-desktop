@@ -1,7 +1,7 @@
-@mixin device-pixel($url) {
-  background-image: url($url + '.png');
+@mixin device-pixel($url,$suffix:'.png') {
+  background-image: url($url + $suffix);
   @media (-webkit-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
-    background-image: url($url + '@2x.png');
+    background-image: url($url + '@2x' + $suffix);
   }
   //@media (-webkit-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
   //  background-image: url($url + "@3x.png");
@@ -18,15 +18,15 @@
 
 //层级管理
 $z-layers: (
-  'default': 1,
-  'below': -1,
-  'head': 100,
-  'audio': 70,
-  'enhanced': (
-    'header': 50,
-    'section': 40
-  ),
-  'side-popup': 60
+        'default': 1,
+        'below': -1,
+        'head': 100,
+        'audio': 70,
+        'enhanced': (
+                'header': 50,
+                'section': 40
+        ),
+        'side-popup': 60
 );
 
 //获取层级

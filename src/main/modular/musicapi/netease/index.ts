@@ -341,6 +341,7 @@ export async function getPlaylistDetail(id: number | string, offset: number, lim
       status: true,
       data: {
         detail: {
+          userLink: `https://music.163.com/#/user/home?id=${playlist.userId}`,
           id: playlist.id,
           name: playlist.name,
           cover: playlist.coverImgUrl,

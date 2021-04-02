@@ -278,6 +278,7 @@ export async function getPlaylistDetail(id: string | number, offset: number, lim
       status: true,
       data: {
         detail: {
+          userLink: `https://y.qq.com/portal/profile.html?uin=${cdlist[0].uin}`,
           id: cdlist[0].disstid,
           name: cdlist[0].dissname,
           cover: cdlist[0].logo,
