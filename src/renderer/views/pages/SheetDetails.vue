@@ -152,6 +152,16 @@ export default defineComponent({
   overflow: hidden;
   overflow-y: overlay;
 
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    content: "";
+    background-image: linear-gradient(#ffffff 60%, transparent 100%);
+  }
+
   > .head {
     display: flex;
 

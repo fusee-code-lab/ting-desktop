@@ -21,7 +21,6 @@ export class Session {
    * 拦截监听指定url请求并更换指定headers
    */
   webRequest() {
-    console.log(this.urls);
     session.defaultSession.webRequest.onBeforeSendHeaders(
       {
         urls: this.urls
