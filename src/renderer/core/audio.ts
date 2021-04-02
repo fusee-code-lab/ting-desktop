@@ -1,4 +1,4 @@
-import { readFile } from '@/lib/file';
+import { readFile } from '@/renderer/utils/file';
 import {
   SongType,
   audioPlayListData,
@@ -6,7 +6,7 @@ import {
   SongOpt,
   PlayTypeOpt
 } from '@/renderer/core/index';
-import { getSongDetail, getSongUrl } from '@/lib/musicapi';
+import { getSongDetail, getSongUrl } from './musicapi';
 import { isNull, random } from '@/lib';
 
 async function pathToSrc(path: string) {

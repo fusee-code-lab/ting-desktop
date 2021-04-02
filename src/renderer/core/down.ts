@@ -1,4 +1,4 @@
-import { writeFile } from '@/lib/file';
+import { writeFile } from '@/renderer/utils/file';
 import { tingCfgData, SongType } from '@/renderer/core/index';
 import { net, NET_RESPONSE_TYPE } from '@/lib/net';
 

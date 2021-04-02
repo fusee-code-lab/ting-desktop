@@ -1,4 +1,3 @@
-import { EOL } from 'os';
 import {
   tingCfgData,
   audioSheetListData,
@@ -8,14 +7,16 @@ import {
   SongOpt,
   SheetListOpt
 } from '@/renderer/core/index';
-import { readLine, writeFile, appendFile, findFileBySuffix } from '@/lib/file';
-import { logError } from '@/renderer/utils';
+import { readLine, writeFile, appendFile, fileBySuffix } from '@/renderer/utils/file';
+import { logError, getGlobal } from '@/renderer/utils';
+
+const EOL = getGlobal('EOL');
 
 /**
  * 当前歌单列表
  */
 export async function sheetList() {
-  let req = findFileBySuffix(tingCfgData.sheet, sheetSuffix);
+  let req = await fileBySuffix(tingCfgData.sheet, sheetSuffix);
   if (req) {
     let data: SheetListOpt[] = [];
     for (let i of req) {

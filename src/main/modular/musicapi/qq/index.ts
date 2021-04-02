@@ -186,8 +186,8 @@ export async function getLyric(songid: number | string) {
       return {
         status: true,
         data: {
-          lyric: lyric_decode(new Buffer(data.lyric, 'base64').toString()),
-          translate: lyric_decode(new Buffer(data.trans, 'base64').toString())
+          lyric: lyric_decode(Buffer.from(data.lyric, 'base64').toString()),
+          translate: lyric_decode(Buffer.from(data.trans, 'base64').toString())
         }
       };
     } else {

@@ -1,26 +1,27 @@
 <template>
-  <div class="sheet-info">
-    <div class="items">
-      <div class="title">歌单</div>
-      <div class="content">
-        <div class="item" v-for="(sheet, index) in audioSheetListData.list" :key="index">
-          <div class="left">
-            <div class="icon bg-img"></div>
-            <div class="text">{{ sheet.detail.name }}</div>
+  <div class='sheet-info'>
+    <div class='items'>
+      <div class='title'>歌单</div>
+      <div class='content'>
+        <div class='item' v-for='(sheet, index) in audioSheetListData.list' :key='index'>
+          <div class='left'>
+            <div class='icon bg-img'></div>
+            <div class='text'>{{ sheet.detail.name }}</div>
           </div>
         </div>
       </div>
-      <div class="add" @click="addSheet">创建歌单</div>
+      <div class='add' @click='addSheet'>创建歌单</div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, watch, toRaw, onMounted } from 'vue';
 import { audioSheetListData } from '@/renderer/core';
 import { sheetList, sheetCreate } from '@/renderer/core/sheet';
 import { windowCreate } from '@/renderer/utils/window';
 import { argsData, messageData } from '@/renderer/store';
+import { getGlobal } from '@/renderer/utils';
 
 export default defineComponent({
   name: 'Sheet',
@@ -44,9 +45,9 @@ export default defineComponent({
     );
 
     // TODO macos 下的 modal 高度有问题，目前仅仅加上 titleBar 的高度
-    const isMacintosh = process.platform === 'darwin';
+    const isMacintosh = argsData.window.platform === 'darwin';
     const isBigSurOrLatter =
-      isMacintosh && parseInt(process.getSystemVersion().split('.')[0]) >= 11;
+      isMacintosh && parseInt(getGlobal('systemVersion').split('.')[0]) >= 11;
     const topTitleBarHeight = isBigSurOrLatter ? 28 : 22;
 
     function addSheet() {
@@ -71,7 +72,7 @@ export default defineComponent({
   }
 });
 </script>
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .sheet-info {

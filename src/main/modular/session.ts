@@ -1,9 +1,4 @@
 import { ipcMain, session } from 'electron';
-import { qqHeaders } from '@/lib/musicapi/qq/base';
-import { neteaseHeaders } from '@/lib/musicapi/netease/base';
-
-const qq = qqHeaders();
-const netease = neteaseHeaders();
 
 /**
  * 监听
@@ -12,22 +7,21 @@ export class Session {
   /**
    * urls列表
    */
-  public urls: string[] = [...qq.url, ...netease.url];
+  public urls: string[] = [];
 
   /**
    * 头部 headers
    */
-  public urlHeaders: { [key: string]: { [key: string]: string } } = {
-    ...qq.headers,
-    ...netease.headers
-  };
+  public urlHeaders: { [key: string]: { [key: string]: string } } = {};
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * 拦截监听指定url请求并更换指定headers
    */
   webRequest() {
+    console.log(this.urls);
     session.defaultSession.webRequest.onBeforeSendHeaders(
       {
         urls: this.urls

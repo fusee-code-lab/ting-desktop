@@ -2,7 +2,7 @@ import fetch, { RequestInit } from 'node-fetch';
 import crypto from 'crypto';
 import querystring from 'querystring';
 import { isNull } from '@/lib';
-import { completeCookie, randomUserAgent } from '@/lib/musicapi/util';
+import { completeCookie, randomUserAgent } from '../util';
 
 const iv = Buffer.from('0102030405060708');
 const presetKey = Buffer.from('0CoJUm6Qyw8W8jud');
@@ -65,7 +65,11 @@ export async function base(
       Connection: 'keep-alive',
       // 'X-Real-IP': '223.74.158.213', // 此处加上可以解决海外请求的问题
       'Content-type': 'application/x-www-form-urlencoded',
-      'User-Agent': opt && opt.crypto
+      'User-Agent': opt && opt.crypto,
+      referer: 'http://music.163.com',
+      Host: 'music.163.com',
+      Cookie: completeCookie(),
+      'user-agent': randomUserAgent()
     },
     timeout: 5000
   };
@@ -143,19 +147,6 @@ function qA8s(fB4F: any) {
 
 function disable(song: any, privilege: any) {
   return getRestrictLevel(song, privilege) === 100 || qA8s(privilege) === 10;
-}
-
-export function neteaseHeaders() {
-  let url: string[] = [baseURL + '/*'];
-  let headers: { [key: string]: { [key: string]: string } } = {
-    'https://music.163.com': {
-      referer: 'http://music.163.com',
-      Host: 'music.163.com',
-      Cookie: completeCookie(),
-      'user-agent': randomUserAgent()
-    }
-  };
-  return { url, headers };
 }
 
 export function getMusicInfo(info: any, privilege?: any) {

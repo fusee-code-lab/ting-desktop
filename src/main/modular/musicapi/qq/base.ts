@@ -1,7 +1,7 @@
 import fetch, { RequestInit } from 'node-fetch';
 import { isNull } from '@/lib';
 import querystring from 'querystring';
-import { randomUserAgent } from '@/lib/musicapi/util';
+import { randomUserAgent } from '../util';
 
 const baseURL = 'https://c.y.qq.com';
 const newURL = 'https://u.y.qq.com';
@@ -21,7 +21,9 @@ export async function base(uri: string, data?: any, newApi: boolean = false) {
       notice: '0',
       platform: 'yqq',
       needNewCode: '0',
-      new_json: '1'
+      new_json: '1',
+      referer: 'https://y.qq.com/portal/player.html',
+      'user-agent': randomUserAgent()
     },
     timeout: 5000
   };
@@ -38,7 +40,8 @@ export async function base(uri: string, data?: any, newApi: boolean = false) {
   }
   try {
     req = JSON.parse(req);
-  } catch (e) {}
+  } catch (e) {
+  }
   if (req.code === 0) {
     return req;
   }
@@ -66,21 +69,6 @@ export async function base(uri: string, data?: any, newApi: boolean = false) {
     };
   }
   return req;
-}
-
-export function qqHeaders() {
-  let url: string[] = [baseURL + '/*', newURL + '/*'];
-  let headers: { [key: string]: { [key: string]: string } } = {
-    'https://c.y.qq.com': {
-      referer: 'https://y.qq.com/portal/player.html',
-      'user-agent': randomUserAgent()
-    },
-    'https://u.y.qq.com': {
-      referer: 'https://y.qq.com/portal/player.html',
-      'user-agent': randomUserAgent()
-    }
-  };
-  return { url, headers };
 }
 
 export function getMusicInfo(info: any) {

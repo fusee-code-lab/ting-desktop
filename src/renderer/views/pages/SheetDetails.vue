@@ -72,8 +72,7 @@
 
 <script lang='ts'>
 import { defineComponent, onMounted, reactive } from 'vue';
-import { Vendors } from '@/lib/musicapi/api';
-import { getPlaylistDetail, getSongUrl } from '@/lib/musicapi';
+import { getPlaylistDetail, getSongUrl, Vendors } from '@/renderer/core/musicapi';
 import { audio } from '@/renderer/core/audio';
 import { audioPlayListData, sheetData, TingPlayListOpt } from '@/renderer/core';
 

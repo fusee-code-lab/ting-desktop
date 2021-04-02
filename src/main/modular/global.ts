@@ -1,5 +1,6 @@
+import { EOL } from 'os';
 import { app, ipcMain } from 'electron';
-import { readFile } from '@/lib/file';
+import { readFile } from './file';
 import { Platform } from './platform';
 import { resolve } from 'path';
 
@@ -11,6 +12,8 @@ export class Global {
   private static instance: Global;
 
   public sharedObject: { [key: string]: any } = {
+    EOL,
+    systemVersion: process.getSystemVersion(),
     platform: process.platform, //当前运行平台
     appInfo: {
       //应用信息

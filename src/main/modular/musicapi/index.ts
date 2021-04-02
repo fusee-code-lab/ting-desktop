@@ -1,4 +1,5 @@
 import * as Api from './api';
+import { ipcMain } from 'electron';
 
 /**
  * 获取歌曲详情
@@ -146,7 +147,7 @@ export async function searchSheet(keyword: string, offset: number = 0, limit: nu
 /**
  * 搜索专辑
  */
-export async function searchAlbum(keyword: string, limit: number = 5, offset: number = 0) {
+export async function searchAlbum(keyword: string, offset: number = 0, limit: number = 5) {
   try {
     let gets = [
       Api.provider.netease.searchSong({ keyword, limit, offset, type: 10 }),
@@ -208,4 +209,20 @@ export async function getAlbumDetail(vendor: Api.Vendors, id: number | string) {
     console.error(e.toString());
     return null;
   }
+}
+
+
+/**
+ * 监听
+ */
+export function musicApiOn() {
+  ipcMain.handle('musicapi-getsongdetail', async (event, args) => getSongDetail(args.vendor, args.id));
+  ipcMain.handle('musicapi-getbsongdetail', async (event, args) => getBSongDetail(args.arr));
+  ipcMain.handle('musicapi-getsongurl', async (event, args) => getSongUrl(args.vendor, args.id));
+  ipcMain.handle('musicapi-getlyric', async (event, args) => getLyric(args.vendor, args.id));
+  ipcMain.handle('musicapi-searchsong', async (event, args) => searchSong(args.keyword, args.offset, args.limit));
+  ipcMain.handle('musicapi-searchsheet', async (event, args) => searchSheet(args.keyword, args.offset, args.limit));
+  ipcMain.handle('musicapi-searchalbum', async (event, args) => searchAlbum(args.keyword, args.offset, args.limit));
+  ipcMain.handle('musicapi-getplaylistdetail', async (event, args) => getPlaylistDetail(args.vendor, args.id, args.offset, args.limit));
+  ipcMain.handle('musicapi-getalbumdetail', async (event, args) => getAlbumDetail(args.vendor, args.id));
 }

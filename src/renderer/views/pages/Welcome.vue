@@ -23,7 +23,7 @@ import { windowSetSize, windowCreate, windowShow } from '@/renderer/utils/window
 import Head from '@/renderer/views/components/Head.vue';
 import { argsData } from '@/renderer/store';
 import { tingCfgData } from '@/renderer/core';
-import { writeFile } from '@/lib/file';
+import { writeFile } from '@/renderer/utils/file';
 import { getAppPath } from '@/renderer/utils';
 
 export default defineComponent({

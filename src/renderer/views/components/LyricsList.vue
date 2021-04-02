@@ -22,7 +22,7 @@
 <script lang='ts'>
 import { defineComponent, ref, reactive, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 import { audioData } from '@/renderer/core';
-import { getLyric } from '@/lib/musicapi/api';
+import { getLyric } from '@/renderer/core/musicapi';
 import { audio } from '@/renderer/core/audio';
 import { debounce } from '@/lib';
 import { WatchStopHandle } from '@vue/runtime-core';
@@ -89,7 +89,7 @@ export default defineComponent({
     async function updateLyricsData(info: typeof audioData.songInfo) {
       if (!!info) {
         const lyricsData = await getLyric(info.vendor, info.id);
-        lyrics.original = lyricsData.data.lyric.map((item: [string, string]) => ({
+        lyrics.original = lyricsData.lyric.map((item: [string, string]) => ({
           content: item[1],
           time: item[0],
           ms: (() => {

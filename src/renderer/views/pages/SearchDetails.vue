@@ -42,12 +42,11 @@
 <script lang='ts'>
 import { computed, defineComponent, reactive } from 'vue';
 import { searchData, sheetData } from '@/renderer/core';
-import { getSongUrl, searchSheet, searchSong } from '@/lib/musicapi';
+import { getSongUrl, searchSheet, searchSong } from '@/renderer/core/musicapi';
 import { audio } from '@/renderer/core/audio';
-import { componentShow, messageData, messageKeys } from '@/renderer/store';
 import EnhancedList, { EnhancedListSection as Section } from '../components/EnhancedList.vue';
 import SongItem from '../components/SongItem.vue';
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 
 export interface SearchResultSongItem {
   id: string;

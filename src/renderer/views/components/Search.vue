@@ -9,8 +9,7 @@
 import { defineComponent, ref } from 'vue';
 import { isNull } from '@/lib';
 import { audioSheetListData, searchData } from '@/renderer/core';
-import { searchSheet, searchSong } from '@/lib/musicapi';
-import { componentShow, messageKeys, messageData } from '@/renderer/store';
+import { searchSheet, searchSong } from '@/renderer/core/musicapi';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({

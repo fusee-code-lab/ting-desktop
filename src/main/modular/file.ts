@@ -2,13 +2,14 @@ import fs from 'fs';
 import { createInterface } from 'readline';
 import { resolve, dirname, extname } from 'path';
 import { isNull } from '@/lib';
+import { ipcMain } from 'electron';
 
 /**
  * 读取目录下指定后缀文件
  * @param path
  * @param fileName
  */
-export function findFileBySuffix(path: string, fileName: string) {
+export function fileBySuffix(path: string, fileName: string) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   try {
     let files: string[] = [];
@@ -17,7 +18,7 @@ export function findFileBySuffix(path: string, fileName: string) {
       let filePath = resolve(path, d);
       let stat = fs.statSync(filePath);
       if (stat.isDirectory()) {
-        files = files.concat(findFileBySuffix(filePath, fileName));
+        files = files.concat(fileBySuffix(filePath, fileName));
       }
       if (stat.isFile() && extname(filePath) === fileName) {
         files.push(filePath);
@@ -147,4 +148,17 @@ export async function appendFile(path: string, data: string | Uint8Array, option
       resolve(1);
     })
   );
+}
+
+/**
+ * 监听
+ */
+export function fileOn() {
+  ipcMain.handle('file-filebysuffix', async (event, args) => fileBySuffix(args.path, args.fileName));
+  ipcMain.handle('file-deldir', async (event, args) => delDir(args.path));
+  ipcMain.handle('file-access', async (event, args) => access(args.path));
+  ipcMain.handle('file-readfile', async (event, args) => readFile(args.path, args.options));
+  ipcMain.handle('file-readline', async (event, args) => readLine(args.path, args.index));
+  ipcMain.handle('file-writefile', async (event, args) => writeFile(args.path, args.data, args.options));
+  ipcMain.handle('file-appendfile', async (event, args) => appendFile(args.path, args.data, args.options));
 }

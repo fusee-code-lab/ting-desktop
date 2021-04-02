@@ -1,7 +1,7 @@
 import { reactive, ref, watch } from 'vue';
 import { debounce, isNull } from '@/lib';
-import { Vendors } from '@/lib/musicapi/api';
-import { writeFile } from '@/lib/file';
+import { Vendors } from './musicapi';
+import { writeFile } from '@/renderer/utils/file';
 import { getAppPath, getGlobal, logError } from '@/renderer/utils';
 import { windowSetSize } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
