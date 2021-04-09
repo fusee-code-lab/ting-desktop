@@ -17,8 +17,7 @@ export default createRouter({
         {
           path: 'home',
           name: 'Home',
-          component: () =>
-            import(/* webpackChunkName: "home" */ '../views/pages/Home.vue')
+          component: () => import(/* webpackChunkName: "home" */ '../views/pages/Home.vue')
         },
         {
           path: 'search',
@@ -29,10 +28,15 @@ export default createRouter({
         {
           path: 'sheet',
           name: 'Sheet',
-          component: () =>
-            import(/* webpackChunkName: "sheet" */ '../views/pages/SheetDetails.vue')
-        }
+          component: () => import(/* webpackChunkName: "sheet" */ '../views/pages/SheetDetails.vue')
+        },
       ]
+    },
+    {
+      path: '/contextEnv',
+      name: 'ContextEnv',
+      component: () =>
+        import(/* webpackChunkName: "ContextEnv" */ '../views/pages/ContextMenuEnv.vue')
     },
     {
       path: '/sheetCreate',

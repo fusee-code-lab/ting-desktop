@@ -1,5 +1,7 @@
 <template>
-  <div class="home" />
+  <div class="home">
+    <button @click="showContextMenu">show context menu</button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -8,7 +10,12 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'Home',
   setup() {
-    return {};
+
+    const showContextMenu = () => {
+
+    }
+
+    return { showContextMenu };
   }
 });
 </script>
@@ -24,5 +31,9 @@ export default defineComponent({
   background-repeat: no-repeat;
   background-position: center center;
   filter: grayscale(100%) hue-rotate(180deg) opacity(50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

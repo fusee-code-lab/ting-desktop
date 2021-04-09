@@ -1,5 +1,12 @@
 <template>
-  <div class="container" :class="platform" :style="{ '--accentColor': '#' + accentColor }">
+  <div
+    @contextmenu="rightClick"
+    @mousemove="mouseMove"
+    @click="leftClick"
+    class="container"
+    :class="platform"
+    :style="{ '--accentColor': '#' + accentColor }"
+  >
     <Head v-show="!isMini" />
     <div class="info" v-show="!isMini">
       <SideBar />
@@ -18,17 +25,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
-import SideBar from "@/renderer/views/components/SideBar.vue";
-import { audioData, switchAudioType } from "@/renderer/core";
-import { argsData } from "@/renderer/store";
-import { windowShow } from "@/renderer/utils/window";
-import Head from "../components/Head.vue";
-import Audio from "../components/Audio.vue";
-import SearchDetails from "./SearchDetails.vue";
-import SheetDetails from "./SheetDetails.vue";
-import SidePopup from "../components/SidePopup.vue";
-import LyricsList from "../components/LyricsList.vue";
+import { computed, defineComponent, onMounted, ref } from 'vue';
+import SideBar from '@/renderer/views/components/SideBar.vue';
+import { audioData, switchAudioType } from '@/renderer/core';
+import { argsData } from '@/renderer/store';
+import { windowShow } from '@/renderer/utils/window';
+import Head from '../components/Head.vue';
+import Audio from '../components/Audio.vue';
+import SearchDetails from './SearchDetails.vue';
+import SheetDetails from './SheetDetails.vue';
+import SidePopup from '../components/SidePopup.vue';
+import LyricsList from '../components/LyricsList.vue';
 
 export default defineComponent({
   components: {
@@ -40,11 +47,11 @@ export default defineComponent({
     SidePopup,
     LyricsList
   },
-  name: "Main",
+  name: 'Main',
   setup() {
     switchAudioType(audioData.type);
 
-    const isMini = computed(() => audioData.type === "mini");
+    const isMini = computed(() => audioData.type === 'mini');
 
     const shownLyricsSidePopup = ref(false);
 
@@ -52,11 +59,26 @@ export default defineComponent({
       windowShow(argsData.window.id);
     });
 
+    const rightClick = (e: MouseEvent) => {
+      window.ipcFun.send("mouse-right-click", { x: e.x, y: e.y })
+    };
+
+    const leftClick = (e: MouseEvent) => {
+      window.ipcFun.send("mouse-left-click", { x: e.x, y: e.y })
+    }
+
+    const mouseMove = (e: MouseEvent) => {
+      window.ipcFun.send("mouse-move", { x: e.x, y: e.y })
+    };
+
     return {
       isMini,
       platform: argsData.window.platform,
       accentColor: argsData.window.appInfo.accentColor,
-      shownLyricsSidePopup
+      shownLyricsSidePopup,
+      rightClick,
+      mouseMove,
+      leftClick
     };
   }
 });
