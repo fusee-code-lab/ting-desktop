@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const webpack = require('webpack');
 const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -36,8 +35,6 @@ module.exports = (env) => {
           use: [{
             loader: miniCssExtractPlugin.loader,
             options: {
-              // you can specify a publicPath here
-              // by default it use publicPath in webpackOptions.output
               publicPath: './'
             }
           },
@@ -45,14 +42,11 @@ module.exports = (env) => {
           ]
         },
         {
-          // scss
           test: /\.scss$/,
           use: [
             {
               loader: miniCssExtractPlugin.loader,
               options: {
-                // you can specify a publicPath here
-                // by default it use publicPath in webpackOptions.output
                 publicPath: './'
               }
             },
@@ -64,8 +58,6 @@ module.exports = (env) => {
     },
     plugins: [
       new miniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
         filename: '[name].css',
         chunkFilename: '[id].css'
       }),
@@ -73,11 +65,7 @@ module.exports = (env) => {
         title: name,
         template: './build/index.html'
       }),
-      new VueLoaderPlugin(),
-      new webpack.DefinePlugin({
-        '__VUE_OPTIONS_API__': 'false',
-        '__VUE_PROD_DEVTOOLS__': 'false'
-      })
+      new VueLoaderPlugin()
     ],
     optimization: {
       minimize: env === 'production',
