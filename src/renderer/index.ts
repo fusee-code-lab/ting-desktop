@@ -2,10 +2,11 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { argsData } from './store';
-import { windowLoad, messageBack } from './utils';
+import { load } from './utils';
 
-messageBack();
-windowLoad().then((args) => {
+load().then(args => {
   argsData.window = args;
-  createApp(App).use(router).mount('#app');
+  createApp(App)
+    .use(router)
+    .mount('#app');
 });
