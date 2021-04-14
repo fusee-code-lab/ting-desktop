@@ -1,6 +1,9 @@
 const { resolve } = require('path');
 
 module.exports = {
+  experiments: {
+    // topLevelAwait: true,
+  },
   node: {
     global: false,
     __dirname: false,
@@ -21,15 +24,11 @@ module.exports = {
         options: {
           loader: 'ts',
           target: 'esnext'
-          // appendTsSuffixTo: [/\.vue$/]
-        },
-        exclude: /node_modules/
+        }
       },
       {
         test: /\.(png|svg|jpg|gif|ico|woff|woff2|eot|ttf|otf)$/,
-        use: [
-          'file-loader'
-        ]
+        type: 'asset/resource'
       }
     ]
   }
