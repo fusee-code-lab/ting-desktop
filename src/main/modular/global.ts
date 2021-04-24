@@ -1,6 +1,7 @@
 import { app, ipcMain } from 'electron';
 import { Platform } from './platform';
 import { resolve } from 'path';
+import { EOL } from 'os';
 
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
@@ -14,6 +15,8 @@ export class Global {
   private static instance: Global;
 
   public sharedObject: { [key: string]: any } = {
+    EOL,
+    systemVersion: process.getSystemVersion(),
     platform: process.platform, //当前运行平台
     appInfo: {
       //应用信息

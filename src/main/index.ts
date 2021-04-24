@@ -7,7 +7,7 @@ import { Session } from './modular/session';
 import { Window } from './modular/window';
 import { Menus } from './modular/menu';
 import Global from './modular/global';
-import { musicApiOn } from '@/main/modular/musicapi';
+import { musicApiOn, appStartCfg } from '@/main/modular/musicapi';
 
 class Init {
   private menus = new Menus();
@@ -72,7 +72,7 @@ class Init {
     //启动
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
-    this.modular();
+    await this.modular();
     this.window.createWindow({ isMainWin: true });
     this.window.createTray();
   }
@@ -80,7 +80,7 @@ class Init {
   /**
    * 模块
    * */
-  modular() {
+  async modular() {
     //消息反馈(根据需要增加修改)
     ipcMain.on('message-send', (event, args) => {
       switch (args.type) {
@@ -92,10 +92,13 @@ class Init {
     //开启模块监听
     logOn();
     fileOn();
-    musicApiOn();
     this.menus.on();
     this.window.on();
     this.session.on();
+
+    //ting
+    musicApiOn();
+    await appStartCfg();
   }
 }
 

@@ -1,5 +1,8 @@
 import * as Api from './api';
-import { ipcMain } from 'electron';
+import { ipcMain, app } from 'electron';
+import { readFile } from '@/main/modular/file';
+import { logError } from '@/main/modular/log';
+import Global from '@/main/modular/global';
 
 /**
  * 获取歌曲详情
@@ -225,4 +228,26 @@ export function musicApiOn() {
   ipcMain.handle('musicapi-searchalbum', async (event, args) => searchAlbum(args.keyword, args.offset, args.limit));
   ipcMain.handle('musicapi-getplaylistdetail', async (event, args) => getPlaylistDetail(args.vendor, args.id, args.offset, args.limit));
   ipcMain.handle('musicapi-getalbumdetail', async (event, args) => getAlbumDetail(args.vendor, args.id));
+}
+
+
+/**
+ * 启动加载配置
+ */
+export async function appStartCfg() {
+  try {
+    let req = await Promise.all([
+      readFile(app.getPath('userData') + '/cfg/index.json', { encoding: 'utf-8' }),
+      readFile(app.getPath('userData') + '/cfg/audio.json', { encoding: 'utf-8' })
+    ]) as string[];
+    let cfg = JSON.parse(req[0]);
+    let audio = JSON.parse(req[1]);
+    Global.sharedObject['setting'] = {
+      cfg,
+      audio
+    };
+  } catch (e) {
+    Global.sharedObject['setting'] = {};
+    logError('[getSetting]', e);
+  }
 }
