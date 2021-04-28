@@ -56,7 +56,7 @@ async function sheetDetails(name: string) {
 export async function sheetCreate(name: string, data: SheetOpt) {
   return await writeFile(
     getSheetPath(name),
-    Buffer.from(JSON.stringify(data) + EOL).toString('binary'),
+    JSON.stringify(data) + EOL,
     { encoding: 'binary' }
   );
 }
@@ -66,7 +66,7 @@ export async function sheetCreate(name: string, data: SheetOpt) {
  */
 export async function sheetAddSong(path: string, data: SongOpt) {
   try {
-    return await appendFile(path, Buffer.from(JSON.stringify(data) + EOL).toString('binary'));
+    return await appendFile(path, JSON.stringify(data) + EOL);
   } catch (e) {
     return 0;
   }

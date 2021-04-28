@@ -17,8 +17,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, toRaw } from 'vue';
 import { isNull } from '@/lib';
-import { messageSend } from '@/renderer/utils';
-import { IPC_MSG_TYPE } from '@/lib/interface';
+import { windowMessageSend } from '@/renderer/utils/window';
 import { SheetOpt } from '@/renderer/core';
 import { argsData } from '@/renderer/store';
 import { windowClose, windowShow } from '@/renderer/utils/window';
@@ -39,8 +38,7 @@ export default defineComponent({
     function send() {
       //为主窗口发送消息
       if (isNull(formData.name)) return;
-      messageSend({
-        type: IPC_MSG_TYPE.WIN,
+      windowMessageSend({
         key: 'sheet-create',
         value: toRaw(formData)
       });

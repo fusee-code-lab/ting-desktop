@@ -51,37 +51,3 @@ export const setMessageData = (key: string, value: any) => {
 export const removeMessageData = (key: string) => {
   delete messageData[key];
 };
-
-/**
- * 常驻消息key
- */
-export enum messageKeys {
-  Show = 'show',
-  History = 'history'
-}
-
-/**
- * 控制组件显示隐藏
- */
-export enum componentShow {
-  SheetDetails = 'SheetDetails',
-  SearchDetails = 'SearchDetails'
-}
-
-/**
- * 组件显示历史
- */
-watch(
-  () => messageData[messageKeys.Show],
-  (n) => {
-    if (n === 'null') {
-      messageData[messageKeys.History] = [];
-      return;
-    }
-    if (isNull(messageData[messageKeys.History])) messageData[messageKeys.History] = [];
-    let index = messageData[messageKeys.History].indexOf(n);
-    if (index !== -1) swapArr(messageData[messageKeys.History], index, 0);
-    else messageData[messageKeys.History].unshift(n);
-    if (messageData[messageKeys.History].length > 10) messageData[messageKeys.History].pop();
-  }
-);
