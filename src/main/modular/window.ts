@@ -10,7 +10,7 @@ import {
   nativeImage,
   ipcMain
 } from 'electron';
-import { windowFunOpt, WindowOpt } from '@/lib/interface';
+import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import Global from './global';
 import ico from '../assets/tray.png';
 import { isNull } from '@/lib';
@@ -107,10 +107,7 @@ export class Window {
       isMultiWindow: args.isMultiWindow
     };
     if (args.isMainWin) { //是否主窗口
-      if (this.main) {
-        delete this.group[this.main.id];
-        this.main.close();
-      }
+      if (this.main&&!this.main.isDestroyed()) this.main.close();
       this.main = win;
     }
     args.id = win.id;
@@ -118,8 +115,11 @@ export class Window {
     args.appInfo = Global.sharedObject['appInfo'];
     //window加载完毕后显示 (放到vue生命周期执行)
     // win.once("ready-to-show", () => win.show());
-    //window关闭时黑底时设置透明
-    win.on('close', () => win.setOpacity(0));
+    //window关闭前黑底时设置透明并删除引用
+    win.on('close', () => {
+      delete this.group[win.id];
+      win.setOpacity(0);
+    });
     // 打开开发者工具
     if (!app.isPackaged) win.webContents.openDevTools();
     //注入初始化代码
@@ -164,7 +164,6 @@ export class Window {
       case 'close':
         if (!isNull(id)) {
           if (this.getWindow(id)) this.getWindow(id).close();
-          delete this.group[id];
           return;
         }
         for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).close();
@@ -226,6 +225,32 @@ export class Window {
   }
 
   /**
+   * 窗口状态
+   */
+  windowStatus(type: windowStatusOpt, id: number) {
+    if (isNull(id)) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    switch (type) {
+      case 'isMaximized':
+        return this.getWindow(id).isMaximized();
+      case 'isMinimized':
+        return this.getWindow(id).isMinimized();
+      case 'isFullScreen':
+        return this.getWindow(id).isFullScreen();
+      case 'isAlwaysOnTop':
+        return this.getWindow(id).isAlwaysOnTop();
+      case 'isVisible':
+        return this.getWindow(id).isVisible();
+      case 'isFocused':
+        return this.getWindow(id).isFocused();
+      case 'isModal':
+        return this.getWindow(id).isModal();
+    }
+  }
+
+  /**
    * 设置窗口最小大小
    */
   setMinSize(args: { id: number; size: number[] }) {
@@ -282,12 +307,14 @@ export class Window {
    * 开启监听
    */
   on() {
-    //窗口消息
-    ipcMain.on('window-fun', (event, args) => this.windowFun(args.type, args.id));
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, winId) => {
       if (winId) if (this.getWindow(winId).isMaximized()) this.getWindow(winId).unmaximize(); else this.getWindow(winId).maximize();
     });
+    //窗口消息
+    ipcMain.on('window-fun', (event, args) => this.windowFun(args.type, args.id));
+    //窗口状态
+    ipcMain.handle('window-status', (event, args) => this.windowStatus(args.type, args.id));
     //创建窗口
     ipcMain.on('window-new', (event, args) => this.createWindow(args));
     //设置窗口是否置顶
