@@ -1,59 +1,61 @@
 <template>
-  <div class='sheet-info'>
-    <div v-if='data.info' class='head'>
-      <div class='left'>
+  <div class="sheet-info">
+    <div v-if="data.info" class="head">
+      <div class="left">
         <div
-          class='icon bg-img'
+          class="icon bg-img"
           :style="{ 'background-image': 'url(' + data.info.detail.cover + ')' }"
         ></div>
       </div>
-      <div class='right'>
-        <div class='title'>
-          <div class='name'>{{ data.info.detail.name }}</div>
-          <div class='vice'>
+      <div class="right">
+        <div class="title">
+          <div class="name">{{ data.info.detail.name }}</div>
+          <div class="vice">
             <span>{{ data.info.detail.count }}个</span>
             <span>{{ data.info.detail.tags.join('/') }}</span>
           </div>
-          <div class='desc'>
-            <div class='text' :class='{ hide: !data.isDesc, show: data.isDesc }'>
+          <div class="desc">
+            <div class="text" :class="{ hide: !data.isDesc, show: data.isDesc }">
               {{ data.info.detail.desc }}
             </div>
-            <div v-if='!data.isDesc' @click='showHide()' class='more'>更多</div>
+            <div v-if="!data.isDesc" @click="showHide()" class="more">更多</div>
           </div>
-          <div class='creat' :class="{ 'desc-show': data.isDesc }">
-            <div class='icon bg-img' :class='data.vendor'></div>
-            <a class='nickname' target='_blank' :href='data.info.detail.userLink'>@{{ data.info.detail.creat_name }}</a>
+          <div class="creat" :class="{ 'desc-show': data.isDesc }">
+            <div class="icon bg-img" :class="data.vendor"></div>
+            <a class="nickname" @click="openUrl(data.info.detail.userLink)">
+              @{{ data.info.detail.creat_name }}
+            </a>
           </div>
-          <div class='buts'>
-            <button class='all-play' @click='playAll()'>播放全部</button>
-            <button class='add-sheet' @click='addSongAllSheet()'>添加</button>
+          <div class="buts">
+            <button class="all-play" @click="playAll()">播放全部</button>
+            <button class="add-sheet" @click="addSongAllSheet()">添加</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if='data.info' class='content'>
-      <div class='head'>
+    <div v-if="data.info" class="content">
+      <div class="head">
         <div>歌曲</div>
         <div>艺人</div>
         <div>专辑</div>
         <div>时长</div>
       </div>
 
-      <div class='songs'>
-        <div class='item' v-for='song in data.info.songs' v-bind:key='song.id' @click='play(song)'>
+      <div class="songs">
+        <div class="item" v-for="song in data.info.songs" v-bind:key="song.id" @click="play(song)">
           <div>
             <div
               v-if="data.vendor === 'netease'"
-              class='icon bg-img'
+              class="icon bg-img"
               :style="{ '--coverUrl': 'url(' + song.album.cover + '?param=28y28)' }"
             ></div>
             <div
               v-else
-              class='icon bg-img'
+              class="icon bg-img"
               :style="{ '--coverUrl': 'url(' + song.album.cover + ')' }"
             ></div>
-            <div class='name'>{{ song.name }}</div>
+            <div class="name">{{ song.name }}</div>
           </div>
           <div>{{ song.artists.map((e) => e.name).join() }}</div>
           <div>{{ song.album.name }}</div>
@@ -70,11 +72,12 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
 import { getPlaylistDetail, getSongUrl, Vendors } from '@/renderer/core/musicapi';
 import { audio } from '@/renderer/core/audio';
 import { audioPlayListData, sheetData, TingPlayListOpt } from '@/renderer/core';
+import { openUrl } from '@/renderer/utils';
 
 interface SheetDetailsOpt {
   info?: any;
@@ -121,10 +124,7 @@ export default defineComponent({
 
     async function playAll() {
       let songs: TingPlayListOpt = {};
-      data.info.song_all.forEach(
-        (e: any) =>
-          (songs[`${e.vendor}|${e.id}`] = e)
-      );
+      data.info.song_all.forEach((e: any) => (songs[`${e.vendor}|${e.id}`] = e));
       audioPlayListData.value = songs;
       await audio.load();
     }
@@ -138,12 +138,13 @@ export default defineComponent({
       showHide,
       play,
       playAll,
-      addSongAllSheet
+      addSongAllSheet,
+      openUrl
     };
   }
 });
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .sheet-info {
@@ -158,7 +159,7 @@ export default defineComponent({
     left: 0;
     right: 0;
     height: 40px;
-    content: "";
+    content: '';
     background-image: linear-gradient(var(--white) 60%, transparent 100%);
   }
 
