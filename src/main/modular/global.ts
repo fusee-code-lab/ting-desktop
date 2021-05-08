@@ -35,7 +35,6 @@ export class Global {
 
   async init() {
     Platform[this.sharedObject.platform](this);
-    this.on();
   }
 
   /**

@@ -7,9 +7,9 @@ import { ipcMain } from 'electron';
 /**
  * 读取目录下指定后缀文件
  * @param path
- * @param fileName
+ * @param suffix
  */
-export function fileBySuffix(path: string, fileName: string) {
+export function fileBySuffix(path: string, suffix: string) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   try {
     let files: string[] = [];
@@ -18,9 +18,9 @@ export function fileBySuffix(path: string, fileName: string) {
       let filePath = resolve(path, d);
       let stat = fs.statSync(filePath);
       if (stat.isDirectory()) {
-        files = files.concat(fileBySuffix(filePath, fileName));
+        files = files.concat(fileBySuffix(filePath, suffix));
       }
-      if (stat.isFile() && extname(filePath) === fileName) {
+      if (stat.isFile() && extname(filePath) === suffix) {
         files.push(filePath);
       }
     }
