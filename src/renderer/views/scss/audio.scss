@@ -1,4 +1,5 @@
 @import '~@/renderer/views/scss/mixin.scss';
+@import "constants";
 
 .audio-info {
   position: absolute;
@@ -26,7 +27,14 @@
   align-items: center;
   justify-content: space-between;
   font-size: 12px;
+  height: 5px;
 
+  &:hover > .progress-input::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    @include quick-transition;
+  }
   > .progress-input {
     background: var(--audio-progres);
     width: 100%;
@@ -35,10 +43,14 @@
     margin: 0;
     outline: 0;
     -webkit-appearance: none !important;
+    top: 0;
+    position: absolute;
 
     &::-webkit-slider-thumb {
-      width: 6px;
-      height: 6px;
+      @include quick-transition;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
       background-color: var(--theme-blue);
       -webkit-appearance: none !important;
     }
