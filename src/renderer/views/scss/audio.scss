@@ -125,8 +125,7 @@
   justify-content: center;
   align-items: center;
 
-  .pre,
-  .next {
+  .pre, .next {
     > * {
       color: var(--primary-icon-gray);
       font-size: 21px;
@@ -229,7 +228,7 @@
   }
 
   > *:not(:first-child) {
-    margin-left: 22px;
+    margin-left: 18px;
   }
 
   > .lyrics-btn.active *,

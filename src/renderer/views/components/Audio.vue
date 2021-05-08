@@ -48,23 +48,23 @@
         </div>
       </div>
       <div class="audio-info-buts">
-        <div class="pre" @click="audio.next(-1)">
+        <HoverButton variant="content" class="pre" @click="audio.next(-1)">
           <PreviousIcon />
-        </div>
-        <div class="play-pause" @click="playPause">
+        </HoverButton>
+        <HoverButton variant="content" class="play-pause" @click="playPause">
           <PauseStatusIcon v-if="isPaused === 1" />
           <PlayStatusIcon v-if="isPaused === 0" />
-        </div>
-        <div class="next" @click="audio.next(1)">
+        </HoverButton>
+        <HoverButton variant="content" class="next" @click="audio.next(1)">
           <NextIcon />
-        </div>
+        </HoverButton>
         <div class="rules">
-          <div class="shuffle" :class="{ active: isShuffle }" @click="switchShuffle">
+          <HoverButton class="shuffle" :class="{ active: isShuffle }" @click="switchShuffle">
             <ShuffleIcon />
-          </div>
-          <div class="repeat" :class="{ active: isRepeat }" @click="switchRepeat">
+          </HoverButton>
+          <HoverButton class="repeat" :class="{ active: isRepeat }" @click="switchRepeat">
             <RepeatIcon />
-          </div>
+          </HoverButton>
         </div>
         <div class="volume">
           <div class="volume-icon">
@@ -89,12 +89,12 @@
         </div>
       </div>
       <div class="audio-info-menu">
-        <div class="lyrics-btn" :class="{ active: isShowLyrics }" @click="onLyricsButtonClick">
+        <HoverButton class="lyrics-btn" :class="{ active: isShowLyrics }" @click="onLyricsButtonClick">
           <LyricsIcon />
-        </div>
-        <div class="option-btn">
+        </HoverButton>
+        <HoverButton class="option-btn">
           <MenuIcon />
-        </div>
+        </HoverButton>
       </div>
     </div>
     <div v-if="co.type === 'mini'" class="audio-info-mini drag">
@@ -148,10 +148,12 @@ import Volumes1Icon from '@/renderer/views/components/Icons/Volumes1Icon.vue';
 import Volumes2Icon from '@/renderer/views/components/Icons/Volumes2Icon.vue';
 import Volumes3Icon from '@/renderer/views/components/Icons/Volumes3Icon.vue';
 import MenuIcon from '@/renderer/views/components/Icons/MenuIcon.vue';
+import HoverButton from "@/renderer/views/components/HoverButton.vue";
 
 export default defineComponent({
   name: 'Audio',
   components: {
+    HoverButton,
     LyricsIcon,
     PlayStatusIcon,
     PauseStatusIcon,
