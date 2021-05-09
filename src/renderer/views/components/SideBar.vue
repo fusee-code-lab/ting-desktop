@@ -2,22 +2,32 @@
   <div class="side-bar">
     <Search></Search>
     <Sheet></Sheet>
-    <div class="setting-but bg-img"></div>
+    <div class="setting-but bg-img" @click="toSetting"></div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 import Sheet from '../components/Sheet.vue';
 import Search from '../components/Search.vue';
 
 export default defineComponent({
   components: {
     Search,
-    Sheet,
+    Sheet
   },
-  name: "SideBar",
-  setup() {}
+  name: 'SideBar',
+  setup() {
+    const router = useRouter();
+    function toSetting() {
+      router.replace('setting');
+    }
+
+    return {
+      toSetting
+    };
+  }
 });
 </script>
 

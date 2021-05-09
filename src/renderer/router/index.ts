@@ -6,39 +6,40 @@ export default createRouter({
     {
       path: '/',
       name: 'Welcome',
-      component: () => import(/* webpackChunkName: "welcome" */ '../views/pages/Welcome.vue')
+      component: () => import('../views/pages/Welcome.vue')
     },
     {
       path: '/main',
       name: 'Main',
       redirect: '/main/home',
-      component: () => import(/* webpackChunkName: "main" */ '../views/pages/Main.vue'),
+      component: () => import('../views/pages/Main.vue'),
       children: [
         {
           path: 'home',
           name: 'Home',
-          component: () =>
-            import(/* webpackChunkName: "home" */ '../views/pages/Home.vue')
+          component: () => import('../views/pages/Home.vue')
         },
         {
           path: 'search',
           name: 'Search',
-          component: () =>
-            import(/* webpackChunkName: "search" */ '../views/pages/SearchDetails.vue')
+          component: () => import('../views/pages/SearchDetails.vue')
         },
         {
           path: 'sheet',
           name: 'Sheet',
-          component: () =>
-            import(/* webpackChunkName: "sheet" */ '../views/pages/SheetDetails.vue')
+          component: () => import('../views/pages/SheetDetails.vue')
+        },
+        {
+          path: 'setting',
+          name: 'setting',
+          component: () => import('../views/pages/Setting.vue')
         }
       ]
     },
     {
       path: '/sheetCreate',
       name: 'SheetCreate',
-      component: () =>
-        import(/* webpackChunkName: "sheetCreate" */ '../views/dialogs/SheetCreate.vue')
+      component: () => import('../views/dialogs/SheetCreate.vue')
     }
   ]
 });

@@ -3,12 +3,14 @@ import { app, globalShortcut, ipcMain } from 'electron';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
 import { Session } from './modular/session';
-import Window from './modular/window';
 import { Menus } from './modular/menu';
+import { Dialog } from './modular/dialog';
+import Window from './modular/window';
 import Global from './modular/global';
 import { musicApiOn, appStartCfg } from '@/main/modular/musicapi';
 
 class Init {
+  private dialog = new Dialog();
   private menus = new Menus();
   private session = new Session();
 
@@ -79,6 +81,7 @@ class Init {
     fileOn();
     Global.on();
     Window.on();
+    this.dialog.on();
     this.menus.on();
     this.session.on();
 
