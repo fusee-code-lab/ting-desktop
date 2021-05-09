@@ -25,8 +25,8 @@ export async function getBSongDetail(arr: BSongArrayOpt[]) {
 /**
  * 获取歌曲播放链接
  */
-export async function getSongUrl(vendor: Vendors, id: number | string) {
-  return await window.ipcFun.invoke('musicapi-getsongurl', { vendor, id });
+export async function getSongUrl(vendor: Vendors, id: number | string, br: number) {
+  return await window.ipcFun.invoke('musicapi-getsongurl', { vendor, id, br });
 }
 
 /**

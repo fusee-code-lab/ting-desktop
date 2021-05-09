@@ -1,5 +1,6 @@
 import { readFile } from '@/renderer/utils/file';
 import {
+  tingCfgData,
   SongType,
   audioPlayListData,
   audioData,
@@ -119,7 +120,7 @@ class Audios {
     if (song) {
       if (song.path) song.path = await pathToSrc(song.path);
       else {
-        let req = await getSongUrl(song.vendor, song.id);
+        let req = await getSongUrl(song.vendor, song.id, tingCfgData.br);
         if (req) song.path = req.url;
       }
       if (!song.cover) {
@@ -138,13 +139,16 @@ class Audios {
       audioData.songInfo = song;
       this.currentAudio.src = song.path;
       this.currentAudio.load();
-      if (isNull(audioPlayListData.value[`${song.vendor}|${song.id}`]) || isNull(audioPlayListData.value[`${song.vendor}|${song.id}`].cover))
+      if (
+        isNull(audioPlayListData.value[`${song.vendor}|${song.id}`]) ||
+        isNull(audioPlayListData.value[`${song.vendor}|${song.id}`].cover)
+      )
         audioPlayListData.value[`${song.vendor}|${song.id}`] = song;
     } else if (this.currentAudio.src && audioData.paused === 1) {
       this.currentAudio.play().catch(console.log);
     } else if (!this.currentAudio.src && audioData.songInfo) {
       this.clear();
-      let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id);
+      let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id, tingCfgData.br);
       if (req) audioData.songInfo.path = req.url;
       this.currentAudio.src = audioData.songInfo.path;
       this.currentAudio.load();

@@ -3,11 +3,11 @@ import { random, isNull } from '@/lib';
 import { base, getMusicInfo, getMusicInfo2 } from './base';
 
 export async function searchSong({
-                                   keyword = '',
-                                   limit = 30,
-                                   offset = 0,
-                                   remoteplace = 'txt.yqq.song'
-                                 }) {
+  keyword = '',
+  limit = 30,
+  offset = 0,
+  remoteplace = 'txt.yqq.song'
+}) {
   let params: { [key: string]: any } = {
     p: offset + 1,
     n: limit,
@@ -101,12 +101,31 @@ export async function getMid(id: number | string) {
   return detailInfo.data.mid;
 }
 
-export async function getSongUrl(songid: string | number, br = 128000) {
-  const mid = await this.getMid(songid);
+export async function getSongUrl(songid: string | number, br = 192) {
+  const detailInfo = await this.getSongDetail(songid, true);
+  if (!detailInfo.status) {
+    throw new Error(detailInfo.msg);
+  }
   const guid = `${Math.floor(Math.random() * 1000000000)}`;
+  const { quality } = getMusicInfo(detailInfo.data);
   const uin = '0';
   let data;
   try {
+    const fileType: any = {
+      192: {
+        s: 'M500',
+        e: '.mp3'
+      },
+      320: {
+        s: 'M800',
+        e: '.mp3'
+      },
+      999: {
+        s: 'A000',
+        e: '.ape'
+      }
+    };
+    const fileInfo = fileType[128];
     const {
       req: {
         data: { freeflowsip }
@@ -131,14 +150,16 @@ export async function getSongUrl(songid: string | number, br = 128000) {
             module: 'vkey.GetVkeyServer',
             method: 'CgiGetVkey',
             param: {
+              filename: [`${fileInfo.s}${detailInfo.data.mid}${fileInfo.e}`],
               guid,
-              songmid: [mid],
+              songmid: [detailInfo.data.mid],
               songtype: [0],
               uin,
               loginflag: 1,
               platform: '20'
             }
           },
+          loginUin: uin,
           comm: { uin, format: 'json', ct: 24, cv: 0 }
         })
       },

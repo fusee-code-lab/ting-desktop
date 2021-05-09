@@ -47,6 +47,7 @@ export interface TingAudioOpt {
 
 export interface TingCfgOpt {
   first: boolean; //是否首次打开
+  br: number; //音频质量
   sheet: string; //歌单路径
   down: string; //下载歌曲存储路径
 }
@@ -72,6 +73,7 @@ export const sheetSuffix: string = '.ting'; //歌单后缀名
 
 let cfg: TingCfgOpt = {
   first: true, //是否第一次打开
+  br: 192, //音频质量（当前仅网易云适用）
   sheet: getAppPath('music') + '/ting/sheet', //默认歌单路径
   down: getAppPath('music') + '/ting/down' //默认下载歌曲存储路径
 };
@@ -210,6 +212,7 @@ watch(
 function TingCfgWatch() {
   const index = {
     first: tingCfgData.first,
+    br: tingCfgData.br,
     sheet: tingCfgData.sheet,
     down: tingCfgData.down
   };
@@ -218,4 +221,7 @@ function TingCfgWatch() {
   );
 }
 
-watch(() => [tingCfgData.first, tingCfgData.down, tingCfgData.sheet], debounce(TingCfgWatch, 1000));
+watch(
+  () => [tingCfgData.first, tingCfgData.br, tingCfgData.down, tingCfgData.sheet],
+  debounce(TingCfgWatch, 1000)
+);

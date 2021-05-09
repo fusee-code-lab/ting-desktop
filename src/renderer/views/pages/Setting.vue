@@ -21,9 +21,17 @@
       <div class="title">播放质量</div>
       <div class="content">
         <div class="buts">
-          <button class="but act">低</button>
-          <button class="but">中</button>
-          <button class="but">高</button>
+          <button class="but" :class="{ act: tingCfgData.br === 192 }" @click="setBr(192)">
+            低
+          </button>
+          <div class="separator"></div>
+          <button class="but" :class="{ act: tingCfgData.br === 320 }" @click="setBr(320)">
+            中
+          </button>
+          <div class="separator"></div>
+          <button class="but" :class="{ act: tingCfgData.br === 999 }" @click="setBr(999)">
+            高
+          </button>
         </div>
       </div>
     </div>
@@ -66,10 +74,15 @@ export default defineComponent({
       });
     }
 
+    function setBr(br: number) {
+      tingCfgData.br = br;
+    }
+
     return {
       version: argsData.window.appInfo.version,
       tingCfgData,
-      revise
+      revise,
+      setBr
     };
   }
 });
@@ -155,34 +168,24 @@ export default defineComponent({
         border-radius: 3px;
         background: rgba(0, 0, 0, 0.05);
         padding: 1px 4px;
+        display: flex;
+        align-items: center;
+        > .separator {
+          margin: 0 2px;
+          width: 1px;
+          height: 8px;
+          background-color: #8e8e93;
+        }
         > .but {
           position: relative;
           border-radius: 3px;
           font: normal 12px/12px ping-fang;
           width: 90px;
           height: 24px;
-          &::after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            right: 0;
-            width: 1px;
-            height: 8px;
-            background-color: #8e8e93;
-          }
-
-          &:last-child::after {
-            content: '';
-            background-color: transparent;
-          }
         }
         > .but.act {
           background-color: var(--theme-blue);
           color: var(--white);
-          &::after {
-            content: '';
-            background-color: transparent;
-          }
         }
       }
     }

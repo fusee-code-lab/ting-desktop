@@ -27,8 +27,8 @@ export async function getBatchSongDetail(vendor: Vendors, ids: number[]) {
 }
 
 //获取歌曲url
-export async function getSongUrl(vendor: Vendors, id: number | string) {
-  return await provider[vendor]['getSongUrl'](id);
+export async function getSongUrl(vendor: Vendors, id: number | string, br: number) {
+  return await provider[vendor]['getSongUrl'](id, br);
 }
 
 // 获取歌词

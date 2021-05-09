@@ -125,10 +125,10 @@ export async function getBatchSongDetail(ids: number[]) {
   }
 }
 
-export async function getSongUrl(id: number | string, br = 128000) {
+export async function getSongUrl(id: number | string, br = 192) {
   const params = {
     ids: [id],
-    br,
+    br: br * 1000,
     csrf_token: ''
   };
   try {

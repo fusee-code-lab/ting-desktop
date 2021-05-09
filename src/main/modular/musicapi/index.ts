@@ -39,9 +39,9 @@ export async function getBSongDetail(arr: Api.BSongArrayOpt[]) {
 /**
  * 获取歌曲播放链接
  */
-export async function getSongUrl(vendor: Api.Vendors, id: number | string) {
+export async function getSongUrl(vendor: Api.Vendors, id: number | string, br: number = 192) {
   try {
-    let req = await Api.getSongUrl(vendor, id).catch(() => {
+    let req = await Api.getSongUrl(vendor, id, br).catch(() => {
       return null;
     });
     if (req.status && req.data.url) return req.data;
@@ -214,32 +214,44 @@ export async function getAlbumDetail(vendor: Api.Vendors, id: number | string) {
   }
 }
 
-
 /**
  * 监听
  */
 export function musicApiOn() {
-  ipcMain.handle('musicapi-getsongdetail', async (event, args) => getSongDetail(args.vendor, args.id));
+  ipcMain.handle('musicapi-getsongdetail', async (event, args) =>
+    getSongDetail(args.vendor, args.id)
+  );
   ipcMain.handle('musicapi-getbsongdetail', async (event, args) => getBSongDetail(args.arr));
-  ipcMain.handle('musicapi-getsongurl', async (event, args) => getSongUrl(args.vendor, args.id));
+  ipcMain.handle('musicapi-getsongurl', async (event, args) =>
+    getSongUrl(args.vendor, args.id, args.br)
+  );
   ipcMain.handle('musicapi-getlyric', async (event, args) => getLyric(args.vendor, args.id));
-  ipcMain.handle('musicapi-searchsong', async (event, args) => searchSong(args.keyword, args.offset, args.limit));
-  ipcMain.handle('musicapi-searchsheet', async (event, args) => searchSheet(args.keyword, args.offset, args.limit));
-  ipcMain.handle('musicapi-searchalbum', async (event, args) => searchAlbum(args.keyword, args.offset, args.limit));
-  ipcMain.handle('musicapi-getplaylistdetail', async (event, args) => getPlaylistDetail(args.vendor, args.id, args.offset, args.limit));
-  ipcMain.handle('musicapi-getalbumdetail', async (event, args) => getAlbumDetail(args.vendor, args.id));
+  ipcMain.handle('musicapi-searchsong', async (event, args) =>
+    searchSong(args.keyword, args.offset, args.limit)
+  );
+  ipcMain.handle('musicapi-searchsheet', async (event, args) =>
+    searchSheet(args.keyword, args.offset, args.limit)
+  );
+  ipcMain.handle('musicapi-searchalbum', async (event, args) =>
+    searchAlbum(args.keyword, args.offset, args.limit)
+  );
+  ipcMain.handle('musicapi-getplaylistdetail', async (event, args) =>
+    getPlaylistDetail(args.vendor, args.id, args.offset, args.limit)
+  );
+  ipcMain.handle('musicapi-getalbumdetail', async (event, args) =>
+    getAlbumDetail(args.vendor, args.id)
+  );
 }
-
 
 /**
  * 启动加载配置
  */
 export async function appStartCfg() {
   try {
-    let req = await Promise.all([
+    let req = (await Promise.all([
       readFile(app.getPath('userData') + '/cfg/index.json', { encoding: 'utf-8' }),
       readFile(app.getPath('userData') + '/cfg/audio.json', { encoding: 'utf-8' })
-    ]) as string[];
+    ])) as string[];
     let cfg = JSON.parse(req[0]);
     let audio = JSON.parse(req[1]);
     Global.sharedObject['setting'] = {
