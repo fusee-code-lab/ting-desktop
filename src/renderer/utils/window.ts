@@ -1,6 +1,6 @@
 import { windowAlwaysOnTopOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import { argsData, setMessageData } from '@/renderer/store';
-import { domCssPropertyLoad } from './dom';
+import { domPropertyLoad } from './dom';
 
 /**
  * 窗口初始化 (i)
@@ -10,7 +10,7 @@ export async function windowLoad() {
   return new Promise((resolve) =>
     window.ipcFun.once('window-load', async (event, args: WindowOpt) => {
       argsData.window = args;
-      domCssPropertyLoad();
+      domPropertyLoad();
       resolve(true);
     })
   );

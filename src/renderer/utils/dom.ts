@@ -5,7 +5,7 @@ import { getGlobal } from './';
  * @param key
  * @param value
  */
-export function domCssPropertyLoad() {
+export function domPropertyLoad() {
   let accent = getGlobal('app.dom');
   for (let i in accent) {
     if (i === 'class') {
