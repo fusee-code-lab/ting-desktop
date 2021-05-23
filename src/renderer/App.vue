@@ -1,6 +1,10 @@
 <template>
   <router-view v-slot="{ Component }">
-    <keep-alive :include="keepAliveOpt.include" :exclude="keepAliveOpt.exclude" :max="keepAliveOpt.max">
+    <keep-alive
+      :include="keepAliveOpt.include"
+      :exclude="keepAliveOpt.exclude"
+      :max="keepAliveOpt.max"
+    >
       <component :is="Component" />
     </keep-alive>
   </router-view>

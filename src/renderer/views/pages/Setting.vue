@@ -59,6 +59,7 @@ import { defineComponent } from 'vue';
 import { tingCfgData } from '@/renderer/core/index';
 import { openDialog } from '@/renderer/utils/dialog';
 import { argsData } from '@/renderer/store';
+import { getGlobal } from '@/renderer/utils';
 export default defineComponent({
   name: 'Setting',
   setup() {
@@ -79,7 +80,7 @@ export default defineComponent({
     }
 
     return {
-      version: argsData.window.appInfo.version,
+      version: getGlobal('app.version'),
       tingCfgData,
       revise,
       setBr

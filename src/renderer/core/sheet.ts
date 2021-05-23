@@ -10,7 +10,7 @@ import {
 import { readLine, writeFile, appendFile, fileBySuffix } from '@/renderer/utils/file';
 import { logError, getGlobal } from '@/renderer/utils';
 
-const EOL = getGlobal('EOL');
+const EOL = getGlobal('system.EOL');
 
 /**
  * 当前歌单列表

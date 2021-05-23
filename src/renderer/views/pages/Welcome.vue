@@ -1,11 +1,7 @@
 <template>
-  <div
-    class="container bg-img drag"
-    :class="platform"
-    :style="{ '--accentColor': '#' + accentColor }"
-  >
+  <div class="container bg-img drag">
     <Head />
-    <div class="main" :class="platform">
+    <div class="main">
       <div class="content">
         <img src="https://img.shuaxinjs.cn/favicon-16x16-next.png" alt="logo" />
         <div class="title">
@@ -17,6 +13,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { defineComponent, onMounted, toRaw } from 'vue';
 import { windowSetSize, windowCreate, windowShow } from '@/renderer/utils/window';
@@ -52,14 +49,43 @@ export default defineComponent({
     });
 
     return {
-      handleJumpHome,
-      platform: argsData.window.platform,
-      accentColor: argsData.window.appInfo.accentColor
+      handleJumpHome
     };
   }
 });
 </script>
 <style lang="scss" scoped>
+.win32,
+.linux {
+  .container > .main {
+    right: 0;
+
+    > .content {
+      align-items: flex-end;
+      padding-right: 60px;
+
+      > .title {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.darwin {
+  .container > .main {
+    left: 0;
+
+    > .content {
+      align-items: flex-start;
+      padding-left: 60px;
+
+      > .title {
+        text-align: left;
+      }
+    }
+  }
+}
+
 .container {
   position: relative;
   background-image: url('https://img.shuaxinjs.cn/apple.jpg');
@@ -100,33 +126,6 @@ export default defineComponent({
         outline: none;
         color: var(--white);
         font: 600 17px/32px segoe-ui;
-      }
-    }
-  }
-
-  > .win32,
-  .linux {
-    right: 0;
-
-    > .content {
-      align-items: flex-end;
-      padding-right: 60px;
-
-      > .title {
-        text-align: right;
-      }
-    }
-  }
-
-  > .darwin {
-    left: 0;
-
-    > .content {
-      align-items: flex-start;
-      padding-left: 60px;
-
-      > .title {
-        text-align: left;
       }
     }
   }

@@ -1,17 +1,16 @@
 import { systemPreferences } from 'electron';
-import { Global } from './global';
+import Global from './global';
 
-export function win32(global: Global) {
-  global.sharedObject['appInfo']['accentColor'] = systemPreferences.getAccentColor();
+export function win32() {
+  Global.sharedObject['app']['dom']['css']['--platform-theme-color'] =
+    '#' + systemPreferences.getAccentColor();
 }
 
-export function linux(global: Global) {
-  global.sharedObject['appInfo']['accentColor'] = '000000';
+export function linux() {
+  Global.sharedObject['app']['dom']['css']['--platform-theme-color'] = '#000000';
 }
 
-export function darwin() {
-
-}
+export function darwin() {}
 
 export const Platform: { [key: string]: Function } = {
   win32,

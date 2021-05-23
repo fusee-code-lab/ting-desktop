@@ -7,10 +7,7 @@
     </div>
     <div class="command-bar">
       <div class="leading">
-        <HoverButton
-          v-if="canBack"
-          @click="back"
-        >
+        <HoverButton v-if="canBack" @click="back">
           <BackIcon />
         </HoverButton>
       </div>
@@ -32,19 +29,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
-import { argsData } from "@/renderer/store";
-import { windowHide, windowMax, windowMaxMin, windowMin } from "@/renderer/utils/window";
-import { audioData } from "@/renderer/core";
-import CloseIcon from "@/renderer/views/components/Icons/CloseIcon.vue";
-import MinimizeIcon from "@/renderer/views/components/Icons/MinimizeIcon.vue";
-import MaximizeIcon from "@/renderer/views/components/Icons/MaximizeIcon.vue";
-import BackIcon from "@/renderer/views/components/Icons/BackIcon.vue";
-import HoverButton from "@/renderer/views/components/HoverButton.vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, defineComponent } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { getGlobal } from '@/renderer/utils';
+import { argsData } from '@/renderer/store';
+import { windowHide, windowMax, windowMaxMin, windowMin } from '@/renderer/utils/window';
+import { audioData } from '@/renderer/core';
+import CloseIcon from '@/renderer/views/components/Icons/CloseIcon.vue';
+import MinimizeIcon from '@/renderer/views/components/Icons/MinimizeIcon.vue';
+import MaximizeIcon from '@/renderer/views/components/Icons/MaximizeIcon.vue';
+import BackIcon from '@/renderer/views/components/Icons/BackIcon.vue';
+import HoverButton from '@/renderer/views/components/HoverButton.vue';
 
 export default defineComponent({
-  name: "Head",
+  name: 'Head',
   components: {
     CloseIcon,
     MinimizeIcon,
@@ -73,7 +71,7 @@ export default defineComponent({
     const router = useRouter();
 
     const canBack = computed(() => {
-      const inMain = route.path.startsWith("/main");
+      const inMain = route.path.startsWith('/main');
       const historyCount = window.history.length;
       return inMain && historyCount > 1;
     });
@@ -82,7 +80,7 @@ export default defineComponent({
       router.back();
     }
 
-    const isMacintosh = computed(() => argsData.window.platform === "darwin");
+    const isMacintosh = computed(() => getGlobal('system.platform') === 'darwin');
 
     return {
       close,
@@ -92,7 +90,7 @@ export default defineComponent({
       canBack,
       isMacintosh,
       back,
-      title: argsData.window.title || argsData.window.appInfo.name,
+      title: argsData.window.title || getGlobal('app.name'),
       audioData
     };
   }
@@ -170,6 +168,5 @@ export default defineComponent({
       }
     }
   }
-
 }
 </style>

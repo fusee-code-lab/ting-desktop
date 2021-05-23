@@ -144,8 +144,9 @@ button {
   background-color: var(--white);
   color: var(--black);
 }
-
-.container.win32,
-.container.linux {
-  border: 1px solid var(--accentColor);
+.win32,
+.linux {
+  .container {
+    border: 1px solid var(--platform-theme-color);
+  }
 }

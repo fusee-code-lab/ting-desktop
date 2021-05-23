@@ -11,17 +11,24 @@ type Obj<Value> = {} & {
  * Global
  */
 export class Global {
-
   private static instance: Global;
 
   public sharedObject: { [key: string]: any } = {
-    EOL,
-    systemVersion: process.getSystemVersion(),
-    platform: process.platform, //当前运行平台
-    appInfo: {
+    system: {
+      //系统信息
+      EOL,
+      version: process.getSystemVersion(),
+      platform: process.platform
+    },
+    app: {
       //应用信息
       name: app.name,
-      version: app.getVersion()
+      version: app.getVersion(),
+      dom: {
+        //dom常量集
+        class: [process.platform],
+        css: {}
+      }
     }
   };
 
@@ -30,11 +37,10 @@ export class Global {
     return Global.instance;
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   async init() {
-    Platform[this.sharedObject.platform](this);
+    Platform[process.platform]();
   }
 
   /**
@@ -82,13 +88,13 @@ export class Global {
     let cur = this.sharedObject;
     for (const level of levels) {
       if (Object.prototype.hasOwnProperty.call(cur, level)) {
-        cur = (cur[level] as unknown) as Obj<Value>;
+        cur = cur[level] as unknown as Obj<Value>;
       } else {
         return;
       }
     }
 
-    return (cur as unknown) as Value;
+    return cur as unknown as Value;
   }
 
   sendGlobal<Value>(key: string, value: Value): void {
@@ -112,17 +118,13 @@ export class Global {
       if (Object.prototype.hasOwnProperty.call(cur, level)) {
         cur = cur[level];
       } else {
-        console.error(
-          `Cannot set value because the key ${key} is not exists on obj.`
-        );
+        console.error(`Cannot set value because the key ${key} is not exists on obj.`);
         return;
       }
     }
 
     if (typeof cur !== 'object') {
-      console.error(
-        `Invalid key ${key} because the value of this key is not a object.`
-      );
+      console.error(`Invalid key ${key} because the value of this key is not a object.`);
       return;
     }
     if (Object.prototype.hasOwnProperty.call(cur, lastKey)) {
@@ -136,7 +138,9 @@ export class Global {
    * @param path lib/inside为起点的相对路径
    * */
   getInsidePath(path: string): string {
-    return app.isPackaged ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
+    return app.isPackaged
+      ? resolve(__dirname, '../inside/' + path)
+      : resolve('./src/lib/inside/' + path);
   }
 
   /**
@@ -144,9 +148,10 @@ export class Global {
    * @param path lib/extern为起点的相对路径
    * */
   getExternPath(path: string): string {
-    return app.isPackaged ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
+    return app.isPackaged
+      ? resolve(__dirname, '../../extern/' + path)
+      : resolve('./src/lib/extern/' + path);
   }
-
 }
 
 export default Global.getInstance();

@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="platform" :style="{ '--accentColor': '#' + accentColor }">
+  <div class="container">
     <div class="info drag">
       <div class="head">创建歌单</div>
       <div class="content">
@@ -50,8 +50,6 @@ export default defineComponent({
     });
 
     return {
-      platform: argsData.window.platform,
-      accentColor: argsData.window.appInfo.accentColor,
       formData,
       close,
       send
