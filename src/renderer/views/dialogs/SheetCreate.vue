@@ -38,8 +38,7 @@ export default defineComponent({
     function send() {
       //为主窗口发送消息
       if (isNull(formData.name)) return;
-      windowMessageSend({
-        key: 'sheet-create',
+      windowMessageSend('sheet-create', {
         value: toRaw(formData)
       });
       close();

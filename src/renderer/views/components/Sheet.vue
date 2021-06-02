@@ -16,33 +16,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, toRaw, onMounted } from 'vue';
+import { IpcRendererEvent } from 'electron';
+import { defineComponent, toRaw, onMounted, onUnmounted } from 'vue';
 import { audioSheetListData } from '@/renderer/core';
 import { sheetList, sheetCreate } from '@/renderer/core/sheet';
-import { windowCreate } from '@/renderer/utils/window';
-import { argsData, messageData } from '@/renderer/store';
+import { windowCreate, windowMessageOn, windowMessageRemove } from '@/renderer/utils/window';
+import { argsData } from '@/renderer/store';
 import { getGlobal } from '@/renderer/utils';
 
 export default defineComponent({
   name: 'Sheet',
   setup() {
-    watch(
-      () => messageData['sheet-create'],
-      async (n) => {
-        console.log(n);
-        try {
-          const data = toRaw(n);
-          let sheetNames = audioSheetListData.list.map((e) => e.detail.name);
-          console.log(sheetNames.indexOf(data.name));
-          if (sheetNames.indexOf(data.name) === -1) {
-            await sheetCreate(data.name, data);
-            await sheetList();
-          }
-        } catch (e) {
-          console.log(e);
+    windowMessageOn('sheet-create', async (event: IpcRendererEvent, args: any) => {
+      try {
+        const data = toRaw(args.value);
+        let sheetNames = audioSheetListData.list.map((e) => e.detail.name);
+        console.log(sheetNames.indexOf(data.name));
+        if (sheetNames.indexOf(data.name) === -1) {
+          await sheetCreate(data.name, data);
+          await sheetList();
         }
+      } catch (e) {
+        console.log(e);
       }
-    );
+    });
 
     // TODO macos 下的 modal 高度有问题，目前仅仅加上 titleBar 的高度
     const isMacintosh = getGlobal('system.platform') === 'darwin';
@@ -63,6 +60,10 @@ export default defineComponent({
 
     onMounted(async () => {
       await sheetList();
+    });
+
+    onUnmounted(() => {
+      windowMessageRemove('sheet-create');
     });
 
     return {

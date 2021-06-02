@@ -1,9 +1,9 @@
 <template>
   <router-view v-slot="{ Component }">
     <keep-alive
-      :include="keepAliveOpt.include"
-      :exclude="keepAliveOpt.exclude"
-      :max="keepAliveOpt.max"
+      :include="keepAliveData.include"
+      :exclude="keepAliveData.exclude"
+      :max="keepAliveData.max"
     >
       <component :is="Component" />
     </keep-alive>
@@ -11,14 +11,14 @@
 </template>
 <script lang="ts">
 import { useRouter } from 'vue-router';
-import { argsData, keepAliveOpt } from './store';
+import { argsData, keepAliveData } from './store';
 import { tingCfgData } from '@/renderer/core';
 
 export default {
   setup() {
     if (argsData.window.route) useRouter().replace(argsData.window.route);
     else if (!tingCfgData.first) useRouter().replace('/main');
-    return { keepAliveOpt };
+    return { keepAliveData };
   }
 };
 </script>

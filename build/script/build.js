@@ -1,36 +1,43 @@
 const fs = require('fs');
 const { name } = require('../../package.json');
 const config = require('../cfg/build.json');
+const appConfig = require('../../src/cfg/index.json');
 const webpack = require('webpack');
 const path = require('path');
 const main = require('./webpack.main.config'); //主进程
 const renderer = require('./webpack.renderer.config'); //子进程
 
 /**  config配置  **/
+const updateCfg = {
+  //更新配置
+  provider: 'generic',
+  url: 'http://127.0.0.1:3000/', //程序更新地址
+  fileUrl: 'http://127.0.0.1:3000/public/', //更新文件地址
+  name: `${name.toLowerCase()}-updater` //本地更新文件佳名称
+};
 config.productName = name;
 config.appId = `org.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
 config.asar = true; //是否asar打包
-let nConf = {
-  appW: 980, //app默认宽
-  appH: 700, //app默认高
-  appBackgroundColor: '#ffffff', //app默认背景色
-  appUrl: 'http://127.0.0.1:3000/', //程序主访问地址
-  socketUrl: 'http://127.0.0.1:3000/', // 程序socket访问地址
-  updateFileUrl: 'http://127.0.0.1:3000/public/', //更新文件地址
-  updaterCacheDirName: `${name.toLowerCase()}-updater` //更新文件名称
-};
+config.publish = [
+  {
+    provider: updateCfg.provider,
+    url: updateCfg.url
+  }
+];
+appConfig.updateFileUrl = updateCfg.fileUrl;
+appConfig.updaterCacheDirName = updateCfg.name;
 
 /** win配置 */
 config.nsis.displayLanguageSelector = false; //安装包语言提示
 config.nsis.menuCategory = false; //是否创建开始菜单目录
-config.nsis.shortcutName = 'Ting'; //快捷方式名称(可中文)
+config.nsis.shortcutName = name; //快捷方式名称(可中文)
 config.nsis.allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ['asInvoker', 'highestAvailable'][0]; //应用权限
 config.win.target = [];
 // config.win.target.push({ //单文件
-//     "target": "portable",
-//     "arch": ["x64"]
+//     "target": "portable"
+//     // "arch": ["x64"]
 // });
 config.win.target.push({
   //nsis打包
@@ -93,7 +100,7 @@ config.linux.executableName = name;
 
 fs.writeFileSync('./build/cfg/build.json', JSON.stringify(config, null, 2));
 fs.writeFileSync('./build/cfg/installer.nsh', nsh);
-fs.writeFileSync('./src/cfg/config.json', JSON.stringify(nConf, null, 2));
+fs.writeFileSync('./src/cfg/index.json', JSON.stringify(appConfig, null, 2));
 
 function deleteFolderRecursive(url) {
   let files = [];

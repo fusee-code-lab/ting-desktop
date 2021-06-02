@@ -11,11 +11,10 @@ import {
   ipcMain
 } from 'electron';
 import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
-import Global from './global';
 import ico from '../assets/tray.png';
 import { isNull } from '@/lib';
 
-const config = require('@/cfg/config.json');
+const config = require('@/cfg/index.json');
 
 export class Window {
   private static instance: Window;
@@ -380,9 +379,25 @@ export class Window {
     //设置窗口背景颜色
     ipcMain.on('window-bg-color-set', (event, args) => this.setBackgroundColor(args));
     //窗口消息
-    ipcMain.on('window-message-send', (event, args) =>
-      this.windowSend('window-message-back', args)
-    );
+    ipcMain.on('window-message-send', (event, args) => {
+      let channel = `window-message-${args.channel}-back`;
+      if (!isNull(args.acceptId)) {
+        if (this.getWindow(Number(args.acceptId)))
+          this.getWindow(Number(args.acceptId)).webContents.send(channel, args.value);
+        return;
+      }
+      if (args.isback) {
+        for (let i in this.group) {
+          if (this.getWindow(Number(i)))
+            this.getWindow(Number(i)).webContents.send(channel, args.value);
+        }
+      } else {
+        for (let i in this.group) {
+          if (this.getWindow(Number(i)) && Number(i) !== args.id)
+            this.getWindow(Number(i)).webContents.send(channel, args.value);
+        }
+      }
+    });
   }
 }
 
