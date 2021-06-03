@@ -13,6 +13,7 @@ import {
 import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import ico from '../assets/tray.png';
 import { isNull } from '@/lib';
+import Global from './global';
 
 const config = require('@/cfg/index.json');
 
@@ -181,6 +182,9 @@ export class Window {
     this.tray.setContextMenu(contextMenu);
     this.tray.setToolTip(app.name);
     this.tray.on('double-click', () => this.windowFun('show'));
+    if (Global.sharedObject['system']['platform'] === 'linux') {
+      this.tray.on('click', () => this.windowFun('show'));
+    }
   }
 
   /**

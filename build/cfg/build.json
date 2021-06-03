@@ -40,7 +40,7 @@
     "uninstallerSidebar": "build/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "Ting",
+    "shortcutName": "ting",
     "include": "build/cfg/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
@@ -80,5 +80,11 @@
     "target": "AppImage",
     "executableName": "ting"
   },
-  "npmRebuild": true
+  "npmRebuild": true,
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "http://127.0.0.1:3000/"
+    }
+  ]
 }
