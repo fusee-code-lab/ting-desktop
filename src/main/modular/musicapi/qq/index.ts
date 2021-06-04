@@ -102,30 +102,11 @@ export async function getMid(id: number | string) {
 }
 
 export async function getSongUrl(songid: string | number, br = 192) {
-  const detailInfo = await this.getSongDetail(songid, true);
-  if (!detailInfo.status) {
-    throw new Error(detailInfo.msg);
-  }
+  const mid = await this.getMid(songid);
   const guid = `${Math.floor(Math.random() * 1000000000)}`;
-  const { quality } = getMusicInfo(detailInfo.data);
   const uin = '0';
   let data;
   try {
-    const fileType: any = {
-      192: {
-        s: 'M500',
-        e: '.mp3'
-      },
-      320: {
-        s: 'M800',
-        e: '.mp3'
-      },
-      999: {
-        s: 'A000',
-        e: '.ape'
-      }
-    };
-    const fileInfo = fileType[128];
     const {
       req: {
         data: { freeflowsip }
@@ -150,16 +131,14 @@ export async function getSongUrl(songid: string | number, br = 192) {
             module: 'vkey.GetVkeyServer',
             method: 'CgiGetVkey',
             param: {
-              filename: [`${fileInfo.s}${detailInfo.data.mid}${fileInfo.e}`],
               guid,
-              songmid: [detailInfo.data.mid],
+              songmid: [mid],
               songtype: [0],
               uin,
               loginflag: 1,
               platform: '20'
             }
           },
-          loginUin: uin,
           comm: { uin, format: 'json', ct: 24, cv: 0 }
         })
       },
