@@ -7,7 +7,7 @@ import { Menus } from './modular/menu';
 import { Dialog } from './modular/dialog';
 import Window from './modular/window';
 import Global from './modular/global';
-import { musicApiOn, appStartCfg } from '@/main/modular/musicapi';
+import { musicApiOn, appStartCfg } from './modular/musicapi';
 
 class Init {
   private dialog = new Dialog();

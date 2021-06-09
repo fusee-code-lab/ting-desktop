@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "node-abort-controller": "^2.0.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "music-api":"git://github.com/fusee-code-lab/node_music_api.git#0.0.1"
   }
 }
