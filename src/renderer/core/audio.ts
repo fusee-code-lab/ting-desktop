@@ -11,7 +11,7 @@ import { isNull, random } from '@/lib';
 async function pathToSrc(path: string) {
   try {
     if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1)
-      return `file:///${path.replace(/\\/g, '/')}`;
+      return `file:///${path.replace(/\\/g, '/')}`.replace('file:////', 'file:///');
     else return path;
   } catch (e) {
     return null;
