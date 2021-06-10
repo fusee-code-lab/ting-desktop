@@ -16,8 +16,8 @@ import { tingCfgData } from '@/renderer/core';
 
 export default {
   setup() {
-    if (argsData.window.route) useRouter().replace(argsData.window.route);
-    else if (!tingCfgData.first) useRouter().replace('/main');
+    if (!tingCfgData.first) useRouter().replace('/main');
+    else useRouter().replace(argsData.window.route);
     return { keepAliveData };
   }
 };

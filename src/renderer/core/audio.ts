@@ -1,7 +1,5 @@
-import { readFile } from '@/renderer/utils/file';
 import {
   tingCfgData,
-  SongType,
   audioPlayListData,
   audioData,
   SongOpt,
@@ -12,15 +10,9 @@ import { isNull, random } from '@/lib';
 
 async function pathToSrc(path: string) {
   try {
-    if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1) {
-      for (let i of SongType) {
-        if (path.indexOf(i) > -1) {
-          let req = await readFile(path, { encoding: 'base64' });
-          if (req === 0) return null;
-          return `data:audio/${i};base64,` + req;
-        }
-      }
-    } else return path;
+    if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1)
+      return `file:///${path.replace(/\\/g, '/')}`;
+    else return path;
   } catch (e) {
     return null;
   }
@@ -147,11 +139,29 @@ class Audios {
     } else if (this.currentAudio.src && audioData.paused === 1) {
       this.currentAudio.play().catch(console.log);
     } else if (!this.currentAudio.src && audioData.songInfo) {
+      console.log(audioData.songInfo);
       this.clear();
-      let req = await getSongUrl(audioData.songInfo.vendor, audioData.songInfo.id, tingCfgData.br);
-      if (req) audioData.songInfo.path = req.url;
-      this.currentAudio.src = audioData.songInfo.path;
-      this.currentAudio.load();
+      if (
+        audioData.songInfo.path.indexOf('http://') > -1 &&
+        audioData.songInfo.path.indexOf('https://') > -1
+      ) {
+        let req = await getSongUrl(
+          audioData.songInfo.vendor,
+          audioData.songInfo.id,
+          tingCfgData.br
+        );
+        if (req) {
+          audioData.songInfo.path = req.url;
+          this.currentAudio.src = audioData.songInfo.path;
+          this.currentAudio.load();
+        }
+      } else {
+        let url = await pathToSrc(audioData.songInfo.path);
+        if (url) {
+          this.currentAudio.src = url;
+          this.currentAudio.load();
+        }
+      }
     }
   }
 

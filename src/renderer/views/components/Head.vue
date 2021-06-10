@@ -33,7 +33,13 @@ import { computed, defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getGlobal } from '@/renderer/utils';
 import { argsData } from '@/renderer/store';
-import { windowHide, windowMax, windowMaxMin, windowMin } from '@/renderer/utils/window';
+import {
+  windowClose,
+  windowHide,
+  windowMax,
+  windowMaxMin,
+  windowMin
+} from '@/renderer/utils/window';
 import { audioData } from '@/renderer/core';
 import CloseIcon from '@/renderer/views/components/Icons/CloseIcon.vue';
 import MinimizeIcon from '@/renderer/views/components/Icons/MinimizeIcon.vue';
@@ -52,7 +58,8 @@ export default defineComponent({
   },
   setup() {
     function close() {
-      windowHide(argsData.window.id);
+      if (argsData.window.route === '/') windowClose(argsData.window.id);
+      else windowHide(argsData.window.id);
     }
 
     function minimize() {
