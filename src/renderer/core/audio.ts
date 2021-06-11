@@ -7,12 +7,17 @@ import {
 } from '@/renderer/core/index';
 import { getSongDetail, getSongUrl } from './musicapi';
 import { isNull, random } from '@/lib';
+import { getGlobal } from '@/renderer/utils';
+import { normalize } from '@/renderer/utils/path';
 
 async function pathToSrc(path: string) {
   try {
-    if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1)
-      return `file:///${path.replace(/\\/g, '/')}`.replace('file:////', 'file:///');
-    else return path;
+    if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1) {
+      path = await normalize(path);
+      return `${getGlobal('system.platform') === 'win32' ? 'file:///' : 'file://'}${path
+        .split('\\')
+        .join('/')}`;
+    } else return path;
   } catch (e) {
     return null;
   }

@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
+import { pathOn } from './modular/path';
 import { Session } from './modular/session';
 import { Menus } from './modular/menu';
 import { Dialog } from './modular/dialog';
@@ -79,6 +80,7 @@ class Init {
     //开启模块监听
     logOn();
     fileOn();
+    pathOn();
     Global.on();
     Window.on();
     this.dialog.on();

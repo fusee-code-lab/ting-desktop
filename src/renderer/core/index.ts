@@ -2,6 +2,7 @@ import { reactive, ref, watch } from 'vue';
 import { debounce, isNull } from '@/lib';
 import { Vendors } from './musicapi';
 import { writeFile } from '@/renderer/utils/file';
+import { normalize } from '@/renderer/utils/path';
 import { getAppPath, getGlobal, logError } from '@/renderer/utils';
 import { windowSetSize } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
@@ -74,8 +75,8 @@ export const sheetSuffix: string = '.ting'; //歌单后缀名
 let cfg: TingCfgOpt = {
   first: true, //是否第一次打开
   br: 192, //音频质量（当前仅网易云适用）
-  sheet: getAppPath('music') + '/ting/sheet', //默认歌单路径
-  down: getAppPath('music') + '/ting/down' //默认下载歌曲存储路径
+  sheet: await normalize(getAppPath('music') + '/ting/sheet'), //默认歌单路径
+  down: await normalize(getAppPath('music') + '/ting/down') //默认下载歌曲存储路径
 };
 
 let audio: TingAudioOpt = {

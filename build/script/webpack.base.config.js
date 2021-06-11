@@ -2,7 +2,7 @@ const { resolve } = require('path');
 
 module.exports = {
   experiments: {
-    // topLevelAwait: true,
+    topLevelAwait: true,
   },
   node: {
     global: false,
