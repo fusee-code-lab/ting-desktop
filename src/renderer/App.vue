@@ -17,7 +17,6 @@ import { tingCfgData } from '@/renderer/core';
 export default {
   setup() {
     const router = useRouter();
-    console.log(argsData, tingCfgData);
     if (!tingCfgData.first) {
       router.replace(argsData.window.route || '/main');
     } else router.replace('/');
