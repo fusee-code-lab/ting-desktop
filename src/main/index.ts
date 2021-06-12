@@ -48,7 +48,7 @@ class Init {
     });
     app.on('activate', () => {
       if (Window.getAllWindows().length === 0) {
-        Window.createWindow({ isMainWin: true, route: '/' });
+        Window.createWindow({ isMainWin: true });
       }
     });
     //获得焦点时发出
@@ -69,7 +69,7 @@ class Init {
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
     await this.modular();
-    Window.createWindow({ isMainWin: true, route: '/' });
+    Window.createWindow({ isMainWin: true });
     Window.createTray();
   }
 

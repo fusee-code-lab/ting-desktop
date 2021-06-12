@@ -42,7 +42,7 @@ config.win.target = [];
 config.win.target.push({
   //nsis打包
   target: 'nsis',
-  arch: ['ia32']
+  arch: ['x64']
 });
 let nsh = '';
 if (config.nsis.allowToChangeInstallationDirectory) {

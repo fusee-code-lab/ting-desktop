@@ -21,7 +21,7 @@ import Head from '@/renderer/views/components/Head.vue';
 import { argsData } from '@/renderer/store';
 import { tingCfgData } from '@/renderer/core';
 import { writeFile } from '@/renderer/utils/file';
-import { getAppPath } from '@/renderer/utils';
+import { sendGlobal, getAppPath } from '@/renderer/utils';
 
 export default defineComponent({
   name: 'Welcome',
@@ -32,15 +32,15 @@ export default defineComponent({
     windowSetSize(argsData.window.id, [800, 600]);
 
     const handleJumpHome = async () => {
-      tingCfgData.first = false;
-      await writeFile(
-        getAppPath('userData') + '/cfg/index.json',
-        JSON.stringify(toRaw(tingCfgData))
-      );
-      windowCreate({
-        isMainWin: true,
-        resizable: true,
-        route: '/main'
+      let cfgData = toRaw(tingCfgData);
+      cfgData.first = false;
+      sendGlobal('setting.cfg', cfgData);
+      writeFile(getAppPath('userData') + '/cfg/index.json', JSON.stringify(cfgData)).then(() => {
+        windowCreate({
+          isMainWin: true,
+          resizable: true,
+          route: '/main'
+        });
       });
     };
 

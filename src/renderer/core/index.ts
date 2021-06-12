@@ -75,8 +75,8 @@ export const sheetSuffix: string = '.ting'; //歌单后缀名
 let cfg: TingCfgOpt = {
   first: true, //是否第一次打开
   br: 192, //音频质量（当前仅网易云适用）
-  sheet: await normalize(getAppPath('music') + '/ting/sheet'), //默认歌单路径
-  down: await normalize(getAppPath('music') + '/ting/down') //默认下载歌曲存储路径
+  sheet: getAppPath('music') + '/ting/sheet', //默认歌单路径
+  down: getAppPath('music') + '/ting/down' //默认下载歌曲存储路径
 };
 
 let audio: TingAudioOpt = {
@@ -100,8 +100,10 @@ let audioSheetList: TingSheetListOpt = {
 let audioPlayList: TingPlayListOpt = {};
 
 try {
-  if (getGlobal('setting')['cfg']) cfg = getGlobal('setting')['cfg'];
-  if (getGlobal('setting')['audio']) audio = getGlobal('setting')['audio'];
+  let settingCfg = getGlobal('setting.cfg');
+  let settingAudio = getGlobal('setting.audio');
+  if (settingCfg) cfg = settingCfg;
+  if (settingAudio) audio = settingAudio;
   if (!!audio.songInfo)
     audioPlayList[`${audio.songInfo.vendor}|${audio.songInfo.id}`] = audio.songInfo;
 } catch (e) {

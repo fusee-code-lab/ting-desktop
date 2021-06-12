@@ -16,8 +16,11 @@ import { tingCfgData } from '@/renderer/core';
 
 export default {
   setup() {
-    if (!tingCfgData.first) useRouter().replace('/main');
-    else useRouter().replace(argsData.window.route);
+    const router = useRouter();
+    console.log(argsData, tingCfgData);
+    if (!tingCfgData.first) {
+      router.replace(argsData.window.route || '/main');
+    } else router.replace('/');
     return { keepAliveData };
   }
 };
