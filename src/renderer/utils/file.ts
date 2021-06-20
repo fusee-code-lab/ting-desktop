@@ -1,3 +1,5 @@
+import { MakeDirectoryOptions } from 'fs';
+
 /**
  * 读取目录下指定后缀文件
  * @param path
@@ -5,6 +7,13 @@
  */
 export async function fileBySuffix(path: string, fileName: string) {
   return await window.ipcFun.invoke('file-filebysuffix', { path, fileName });
+}
+
+/**
+ * 创建目录和内部文件
+ * */
+export async function mkdir(path: string, options?: MakeDirectoryOptions) {
+  return await window.ipcFun.invoke('file-mkdir', { path, options });
 }
 
 /**
@@ -23,11 +32,22 @@ export async function access(path: string) {
 }
 
 /**
+ * 文件重命名
+ * @return 0 失败 1 成功
+ */
+export async function rename(path: string, newPath: string) {
+  return await window.ipcFun.invoke('file-rename', { path, newPath });
+}
+
+/**
  * 读取整个文件
  * @param path 文件路径
  * @param options 选项
  */
-export async function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string; }) {
+export async function readFile(
+  path: string,
+  options?: { encoding?: BufferEncoding; flag?: string }
+) {
   return await window.ipcFun.invoke('file-readfile', { path, options });
 }
 
@@ -44,7 +64,11 @@ export async function readLine(path: string, index?: number): Promise<string | a
  * 覆盖数据到文件
  * @return 0 失败 1 成功
  */
-export async function writeFile(path: string, data: string | Buffer, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
+export async function writeFile(
+  path: string,
+  data: string | Buffer,
+  options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
+) {
   return await window.ipcFun.invoke('file-writefile', { path, data, options });
 }
 
@@ -52,6 +76,10 @@ export async function writeFile(path: string, data: string | Buffer, options?: {
  * 追加数据到文件
  * @return 0 失败 1 成功
  */
-export async function appendFile(path: string, data: string | Uint8Array, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
+export async function appendFile(
+  path: string,
+  data: string | Uint8Array,
+  options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
+) {
   return await window.ipcFun.invoke('file-appendfile', { path, data, options });
 }

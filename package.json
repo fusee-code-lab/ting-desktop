@@ -10,11 +10,12 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "node build/script/dev.js",
+    "dev": "node build/script/cfg.js && node build/script/dev.js",
     "rebuild": "electron-rebuild -f",
-    "build:win": "node build/script/build.js && electron-builder -c build/cfg/build.json --win",
-    "build:linux": "node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
-    "build:mac": "node build/script/build.js && electron-builder -c build/cfg/build.json --mac",
+    "updcfg": "node build/script/cfg.js",
+    "build:win": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --win",
+    "build:linux": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
+    "build:mac": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --mac",
     "postinstall": "electron-builder install-app-deps",
     "test": "jest -c build/cfg/jest.json"
   },

@@ -1,6 +1,4 @@
 {
-  "updateFileUrl": "http://127.0.0.1:3000/public/",
-  "updaterCacheDirName": "ting-updater",
   "appW": 980,
   "appH": 700,
   "appBackgroundColor": "#ffffff",

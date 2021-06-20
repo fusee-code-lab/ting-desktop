@@ -76,15 +76,9 @@
     ]
   },
   "linux": {
-    "icon": "build/icons/icon.png",
+    "icon": "build/icons",
     "target": "AppImage",
     "executableName": "ting"
   },
-  "npmRebuild": true,
-  "publish": [
-    {
-      "provider": "generic",
-      "url": "http://127.0.0.1:3000/"
-    }
-  ]
+  "npmRebuild": true
 }

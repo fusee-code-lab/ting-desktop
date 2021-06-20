@@ -1,26 +1,26 @@
 <template>
-  <div class="container bg-img drag">
+  <div class='container bg-img drag'>
     <Head />
-    <div class="main">
-      <div class="content">
-        <img src="~@/renderer/assets/logo.png" alt="logo" />
-        <div class="title">
+    <div class='main'>
+      <div class='content'>
+        <img src='~@/renderer/assets/logo.png' alt='logo' />
+        <div class='title'>
           欢迎来到
-          <span style="margin-left: 10px">Ting</span>
+          <span style='margin-left: 10px'>Ting</span>
         </div>
-        <button class="but" @click="handleJumpHome()">开始</button>
+        <button class='but' @click='handleJumpHome()'>开始</button>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, onMounted, toRaw } from 'vue';
 import { windowSetSize, windowCreate, windowShow } from '@/renderer/utils/window';
 import Head from '@/renderer/views/components/Head.vue';
 import { argsData } from '@/renderer/store';
 import { tingCfgData } from '@/renderer/core';
-import { writeFile } from '@/renderer/utils/file';
+import { writeFile, access, mkdir } from '@/renderer/utils/file';
 import { sendGlobal, getAppPath } from '@/renderer/utils';
 
 export default defineComponent({
@@ -32,9 +32,11 @@ export default defineComponent({
     windowSetSize(argsData.window.id, [800, 600]);
 
     const handleJumpHome = async () => {
+      let path = getAppPath('userData') + '/cfg/index.json';
       let cfgData = toRaw(tingCfgData);
       cfgData.first = false;
       sendGlobal('setting.cfg', cfgData);
+      if (!await access(path)) await mkdir(path);
       writeFile(getAppPath('userData') + '/cfg/index.json', JSON.stringify(cfgData)).then(() => {
         windowCreate({
           isMainWin: true,
@@ -54,7 +56,7 @@ export default defineComponent({
   }
 });
 </script>
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .win32,
 .linux {
   .container > .main {
