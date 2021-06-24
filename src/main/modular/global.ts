@@ -24,6 +24,7 @@ export class Global {
       //应用信息
       name: app.name,
       version: app.getVersion(),
+      argv: process.argv,
       dom: {
         //dom常量集
         class: [process.platform],

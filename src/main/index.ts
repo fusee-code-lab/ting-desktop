@@ -9,13 +9,20 @@ import { Dialog } from './modular/dialog';
 import Window from './modular/window';
 import Global from './modular/global';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
+import { WindowOpt } from '@/lib/interface';
 
 class Init {
   private dialog = new Dialog();
   private menus = new Menus();
   private session = new Session();
 
-  constructor() {}
+  private initWindowOpt: WindowOpt = { //初始化创建窗口参数
+    isMainWin: true,
+    route: '/main'
+  };
+
+  constructor() {
+  }
 
   /**
    * 初始化并加载
@@ -47,14 +54,15 @@ class Init {
       }
     });
     app.on('activate', () => {
-      if (Window.getAllWindows().length === 0) {
-        Window.createWindow({ isMainWin: true });
+      if (Window.windowsAllGet().length === 0) {
+        Window.windowCreate(this.initWindowOpt);
       }
     });
     //获得焦点时发出
     app.on('browser-window-focus', () => {
       //关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {});
+      globalShortcut.register('CommandOrControl+R', () => {
+      });
     });
     //失去焦点时发出
     app.on('browser-window-blur', () => {
@@ -69,8 +77,8 @@ class Init {
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
     await this.modular();
-    Window.createWindow({ isMainWin: true });
-    Window.createTray();
+    Window.windowCreate(this.initWindowOpt);
+    Window.trayCreate();
   }
 
   /**

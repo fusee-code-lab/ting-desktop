@@ -3,7 +3,7 @@
     <Head />
     <div class='main'>
       <div class='content'>
-        <img src='~@/renderer/assets/logo.png' alt='logo' />
+        <img src='~@/lib/assets/logo.png' alt='logo' />
         <div class='title'>
           欢迎来到
           <span style='margin-left: 10px'>Ting</span>
@@ -90,7 +90,7 @@ export default defineComponent({
 
 .container {
   position: relative;
-  background-image: url('~@/renderer/assets/rocket.png');
+  background-image: url('~@/lib/assets/rocket.png');
 
   > .main {
     position: absolute;

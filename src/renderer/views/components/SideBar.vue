@@ -43,7 +43,7 @@ export default defineComponent({
   padding: 40px 10px 0;
 
   > .setting-but {
-    @include device-pixel('~@/renderer/assets/icons/setting_btn');
+    @include device-pixel('~@/lib/assets/icons/setting_btn');
     position: absolute;
     width: 16px;
     height: 16px;

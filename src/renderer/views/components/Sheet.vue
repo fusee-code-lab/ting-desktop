@@ -99,7 +99,7 @@ export default defineComponent({
           align-items: center;
 
           > .icon {
-            @include device-pixel('~@/renderer/assets/icons/play_list_icon');
+            @include device-pixel('~@/lib/assets/icons/play_list_icon');
             width: 16px;
             height: 16px;
             margin-right: 12px;

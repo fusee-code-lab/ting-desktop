@@ -91,7 +91,7 @@ export default defineComponent({
     }
 
     &:before {
-      @include device-pixel('~@/renderer/assets/icons/search_icon');
+      @include device-pixel('~@/lib/assets/icons/search_icon');
       content: '';
       width: 15px;
       height: 15px;

@@ -258,11 +258,11 @@ export default defineComponent({
           }
 
           > .icon.netease {
-            @include device-pixel('~@/renderer/assets/icons/netease_music');
+            @include device-pixel('~@/lib/assets/icons/netease_music');
           }
 
           > .icon.qq {
-            @include device-pixel('~@/renderer/assets/icons/qq_music');
+            @include device-pixel('~@/lib/assets/icons/qq_music');
           }
 
           > .nickname {

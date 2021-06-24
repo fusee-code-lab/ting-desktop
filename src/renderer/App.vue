@@ -1,15 +1,15 @@
 <template>
-  <router-view v-slot="{ Component }">
+  <router-view v-slot='{ Component }'>
     <keep-alive
-      :include="keepAliveData.include"
-      :exclude="keepAliveData.exclude"
-      :max="keepAliveData.max"
+      :include='keepAliveData.include'
+      :exclude='keepAliveData.exclude'
+      :max='keepAliveData.max'
     >
-      <component :is="Component" />
+      <component :is='Component' />
     </keep-alive>
   </router-view>
 </template>
-<script lang="ts">
+<script lang='ts'>
 import { useRouter } from 'vue-router';
 import { argsData, keepAliveData } from './store';
 import { tingCfgData } from '@/renderer/core';
@@ -17,14 +17,13 @@ import { tingCfgData } from '@/renderer/core';
 export default {
   setup() {
     const router = useRouter();
-    if (!tingCfgData.first) {
-      router.replace(argsData.window.route || '/main');
-    } else router.replace('/');
+    if (tingCfgData.first) router.replace('/'); //首次加载
+    else router.replace(argsData.window.route);
     return { keepAliveData };
   }
 };
 </script>
-<style lang="scss">
+<style lang='scss'>
 @import 'views/scss/color';
 @import 'views/scss/main';
 </style>
