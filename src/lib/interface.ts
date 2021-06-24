@@ -4,6 +4,8 @@ export interface WindowOpt {
   currentWidth?: number; //父类窗口宽度
   currentHeight?: number; //父类窗口高度
   currentMaximized?: boolean; //父类窗口是否全屏
+  minWidth?: number;
+  minHeight?: number;
   width?: number;
   height?: number;
   route?: string; // 页面路由

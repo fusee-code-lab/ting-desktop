@@ -77,8 +77,10 @@ class Init {
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
     await this.modular();
-    Window.windowCreate(this.initWindowOpt);
-    Window.trayCreate();
+    setTimeout(() => {
+      Window.windowCreate(this.initWindowOpt);
+      Window.trayCreate();
+    }, process.platform === 'linux' ? 1000 : 0);
   }
 
   /**
