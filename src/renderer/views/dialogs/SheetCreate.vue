@@ -62,6 +62,7 @@ export default defineComponent({
   height: 180px;
   position: relative;
   padding: 20px;
+  background-color: var(--white);
 
   > .head {
     height: 24px;
