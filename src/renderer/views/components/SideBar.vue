@@ -39,7 +39,7 @@ export default defineComponent({
   position: relative;
   height: 100%;
   width: $sidebar-width;
-  background-color: #e3e3e8;
+  background-color: rgba(255,255,255,.55);
   padding: 40px 10px 0;
 
   > .setting-but {

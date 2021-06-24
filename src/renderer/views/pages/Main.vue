@@ -71,6 +71,7 @@ export default defineComponent({
     > .content {
       position: relative;
       width: calc(100% - 220px);
+      background-color: var(--white);
 
       > .navigation-bar {
         position: absolute;

@@ -3,7 +3,10 @@ const { resolve } = require('path');
 module.exports = {
   devtool: 'eval-cheap-source-map',
   experiments: {
-    topLevelAwait: true
+    topLevelAwait: false
+  },
+  externals: {
+    glasstron: 'require("glasstron")'
   },
   node: {
     global: false,
