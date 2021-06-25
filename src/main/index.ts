@@ -3,18 +3,12 @@ import { app, globalShortcut, ipcMain } from 'electron';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
 import { pathOn } from './modular/path';
-import { Session } from './modular/session';
-import { Menus } from './modular/menu';
-import { Dialog } from './modular/dialog';
 import Window from './modular/window';
 import Global from './modular/global';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
 import { WindowOpt } from '@/lib/interface';
 
 class Init {
-  private dialog = new Dialog();
-  private menus = new Menus();
-  private session = new Session();
 
   private initWindowOpt: WindowOpt = { //初始化创建窗口参数
     isMainWin: true,
@@ -93,13 +87,16 @@ class Init {
     pathOn();
     Global.on();
     Window.on();
-    this.dialog.on();
-    this.menus.on();
-    this.session.on();
+
+    //自定义模块
+    import('./modular/dialog').then(({ Dialog }) => new Dialog().on());
+    import('./modular/menu').then(({ Menus }) => new Menus().on());
+    import('./modular/session').then(({ Session }) => new Session().on());
 
     //ting
     musicApiOn();
     await appStartCfg();
+
   }
 }
 
