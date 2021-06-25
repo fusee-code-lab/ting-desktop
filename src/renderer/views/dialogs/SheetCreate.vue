@@ -59,7 +59,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .info {
   width: 100%;
-  height: 180px;
+  height: 100%;
   position: relative;
   padding: 20px;
   background-color: var(--white);
