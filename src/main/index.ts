@@ -1,18 +1,19 @@
 import { resolve } from 'path';
-import { app, globalShortcut, ipcMain } from 'electron';
+import { app, globalShortcut, ipcMain, BrowserWindowConstructorOptions } from 'electron';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
 import { pathOn } from './modular/path';
 import Window from './modular/window';
 import Global from './modular/global';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
-import { WindowOpt } from '@/lib/interface';
 
 class Init {
 
-  private initWindowOpt: WindowOpt = { //初始化创建窗口参数
-    isMainWin: true,
-    route: '/main'
+  private initWindowOpt: BrowserWindowConstructorOptions = { //初始化创建窗口参数
+    customize: {
+      isMainWin: true,
+      route: '/main'
+    }
   };
 
   constructor() {

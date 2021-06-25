@@ -1,21 +1,21 @@
 <template>
-  <div class="sheet-info">
-    <div class="items">
-      <div class="title">歌单</div>
-      <div class="content">
-        <div class="item" v-for="(sheet, index) in audioSheetListData.list" :key="index">
-          <div class="left">
-            <div class="icon bg-img"></div>
-            <div class="text">{{ sheet.detail.name }}</div>
+  <div class='sheet-info'>
+    <div class='items'>
+      <div class='title'>歌单</div>
+      <div class='content'>
+        <div class='item' v-for='(sheet, index) in audioSheetListData.list' :key='index'>
+          <div class='left'>
+            <div class='icon bg-img'></div>
+            <div class='text'>{{ sheet.detail.name }}</div>
           </div>
         </div>
       </div>
-      <div class="add" @click="addSheet">创建歌单</div>
+      <div class='add' @click='addSheet'>创建歌单</div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { IpcRendererEvent } from 'electron';
 import { defineComponent, toRaw, onMounted, onUnmounted } from 'vue';
 import { audioSheetListData } from '@/renderer/core';
@@ -49,9 +49,11 @@ export default defineComponent({
 
     function addSheet() {
       windowCreate({
-        title: '歌单添加',
-        route: '/sheetCreate',
-        parentId: argsData.window.id,
+        customize: {
+          title: '歌单添加',
+          route: '/sheetCreate',
+          parentId: argsData.window.id
+        },
         width: 400,
         height: isMacintosh ? topTitleBarHeight + 180 : 180,
         modal: true
@@ -73,7 +75,7 @@ export default defineComponent({
   }
 });
 </script>
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .sheet-info {

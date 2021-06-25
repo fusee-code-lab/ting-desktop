@@ -39,9 +39,11 @@ export default defineComponent({
       if (!await access(path)) await mkdir(path);
       writeFile(getAppPath('userData') + '/cfg/index.json', JSON.stringify(cfgData)).then(() => {
         windowCreate({
-          isMainWin: true,
-          resizable: true,
-          route: '/main'
+          customize: {
+            isMainWin: true,
+            route: '/main'
+          },
+          resizable: true
         });
       });
     };
