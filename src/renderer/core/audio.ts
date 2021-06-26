@@ -13,7 +13,7 @@ import { normalize } from '@/renderer/utils/path';
 async function pathToSrc(path: string) {
   try {
     if (path.indexOf('http://') === -1 && path.indexOf('https://') === -1) {
-      path = await normalize(path);
+      path = normalize(path);
       return `${getGlobal('system.platform') === 'win32' ? 'file:///' : 'file://'}${path
         .split('\\')
         .join('/')}`;

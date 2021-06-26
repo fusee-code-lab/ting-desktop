@@ -20,6 +20,7 @@ import { windowSetSize, windowCreate, windowShow } from '@/renderer/utils/window
 import Head from '@/renderer/views/components/Head.vue';
 import { argsData } from '@/renderer/store';
 import { tingCfgData } from '@/renderer/core';
+import { dirname } from '@/renderer/utils/path';
 import { writeFile, access, mkdir } from '@/renderer/utils/file';
 import { sendGlobal, getAppPath } from '@/renderer/utils';
 
@@ -32,12 +33,13 @@ export default defineComponent({
     windowSetSize(argsData.window.id, [800, 600]);
 
     const handleJumpHome = async () => {
-      let path = getAppPath('userData') + '/cfg/index.json';
+      const filePath = getAppPath('userData') + '/cfg/index.json';
+      const dirPath = dirname(filePath);
       let cfgData = toRaw(tingCfgData);
       cfgData.first = false;
       sendGlobal('setting.cfg', cfgData);
-      if (!await access(path)) await mkdir(path);
-      writeFile(getAppPath('userData') + '/cfg/index.json', JSON.stringify(cfgData)).then(() => {
+      if (!await access(dirPath)) await mkdir(dirPath);
+      writeFile(filePath, JSON.stringify(cfgData)).then(() => {
         windowCreate({
           customize: {
             isMainWin: true,
