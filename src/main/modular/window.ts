@@ -23,6 +23,7 @@ const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
  */
 export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptions {
   let opt: BrowserWindowConstructorOptions = {
+    vibrancy: "appearance-based", // only for macOS
     minWidth: args.minWidth || args.width || appW,
     minHeight: args.minHeight || args.height || appH,
     width: args.width || appW,
@@ -70,10 +71,16 @@ export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptio
     }
   } else if (Window.getInstance().main) {
     opt.x = parseInt(
-      (Window.getInstance().main.getPosition()[0] + (Window.getInstance().main.getBounds().width - opt.width) / 2).toString()
+      (
+        Window.getInstance().main.getPosition()[0] +
+        (Window.getInstance().main.getBounds().width - opt.width) / 2
+      ).toString()
     );
     opt.y = parseInt(
-      (Window.getInstance().main.getPosition()[1] + (Window.getInstance().main.getBounds().height - opt.height) / 2).toString()
+      (
+        Window.getInstance().main.getPosition()[1] +
+        (Window.getInstance().main.getBounds().height - opt.height) / 2
+      ).toString()
     );
   }
   if (!isNull(args.modal)) opt.modal = args.modal;
@@ -94,8 +101,7 @@ export class Window {
     return Window.instance;
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 获取窗口
@@ -147,8 +153,12 @@ export class Window {
       delete this.group[win.id];
       win.setOpacity(0);
     });
+
     // 打开开发者工具
-    if (!app.isPackaged) win.webContents.openDevTools();
+    if (!app.isPackaged) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
+
     //注入初始化代码
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('window-load', args);
@@ -411,7 +421,7 @@ export class Window {
         for (let i in this.group) {
           if (this.group[i].route === args.route) winIds.push(Number(i));
         }
-      } else winIds = Object.keys(this.group).map(e => Number(e));
+      } else winIds = Object.keys(this.group).map((e) => Number(e));
       event.returnValue = winIds;
     });
   }
