@@ -26,6 +26,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   args.width = args.width || appW;
   args.height = args.height || appH;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
+    vibrancy: "appearance-based", // only for macOS
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
     minimizable: true,
