@@ -52,14 +52,14 @@ class Audios {
   onAudio() {
     this.currentAudio.onerror = () => {
       console.log('错误');
-      this.skip();
+      if (Object.keys(audioPlayListData.value).length > 1) this.skip();
     };
 
     this.currentAudio.oncanplay = () => {
       //可以开始播放
       this.currentAudio.play().catch(() => {
         console.log('错误');
-        this.skip();
+        if (Object.keys(audioPlayListData.value).length > 1) this.skip();
       });
     };
 
