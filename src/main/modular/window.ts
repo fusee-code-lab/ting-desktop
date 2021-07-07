@@ -120,7 +120,7 @@ export class Window {
         i.customize.route === args.customize.route &&
         !i.customize.isMultiWindow
       ) {
-        this.get(Number(i)).focus();
+        i.focus();
         return;
       }
     }
