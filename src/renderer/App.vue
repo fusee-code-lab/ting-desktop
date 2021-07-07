@@ -18,7 +18,7 @@ export default {
   setup() {
     const router = useRouter();
     if (tingCfgData.first) router.replace('/'); //首次加载
-    else router.replace(argsData.window.route);
+    else router.replace(argsData.window.route||'/main');
     return { keepAliveData };
   }
 };
