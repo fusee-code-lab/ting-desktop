@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { argsData } from '@/renderer/store';
+import { windowUpdate } from '@/renderer/utils/window';
 
-export default createRouter({
+const Router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
@@ -43,3 +45,13 @@ export default createRouter({
     }
   ]
 });
+
+Router.beforeEach((to, from) => {
+  if (to.path !== argsData.window.route) {
+    //更新窗口路由
+    argsData.window.route = to.path;
+    windowUpdate();
+  }
+});
+
+export default Router;

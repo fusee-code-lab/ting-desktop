@@ -1,17 +1,9 @@
 import { join } from 'path';
 import { readFileSync } from 'fs';
-import {
-  app,
-  screen,
-  BrowserWindow,
-  ipcMain,
-  BrowserWindowConstructorOptions
-} from 'electron';
+import { app, screen, BrowserWindow, ipcMain, BrowserWindowConstructorOptions } from 'electron';
 import { isNull } from '@/lib';
 
-const glasstron = require('glasstron');
 const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
-
 
 /**
  * 窗口配置
@@ -23,7 +15,6 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   args.width = args.width || appW;
   args.height = args.height || appH;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
-    vibrancy: "appearance-based", // only for macOS
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
     minimizable: true,
@@ -66,15 +57,19 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
     }
   } else if (Window.getInstance().main) {
     opt.x = parseInt(
-      (Window.getInstance().main.getPosition()[0] + (Window.getInstance().main.getBounds().width - opt.width) / 2).toString()
+      (
+        Window.getInstance().main.getPosition()[0] +
+        (Window.getInstance().main.getBounds().width - opt.width) / 2
+      ).toString()
     );
     opt.y = parseInt(
-      (Window.getInstance().main.getPosition()[1] + (Window.getInstance().main.getBounds().height - opt.height) / 2).toString()
+      (
+        Window.getInstance().main.getPosition()[1] +
+        (Window.getInstance().main.getBounds().height - opt.height) / 2
+      ).toString()
     );
   }
-  const win = new glasstron.BrowserWindow(opt);
-  win.blurType = 'acrylic';
-  win.setBlur(true);
+  const win = new BrowserWindow(opt);
   win.customize = {
     id: win.id,
     ...opt.customize
@@ -92,8 +87,7 @@ export class Window {
     return Window.instance;
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 获取窗口
@@ -116,10 +110,7 @@ export class Window {
    * */
   create(args: BrowserWindowConstructorOptions) {
     for (const i of this.getAll()) {
-      if (i &&
-        i.customize.route === args.customize.route &&
-        !i.customize.isMultiWindow
-      ) {
+      if (i && i.customize.route === args.customize.route && !i.customize.isMultiWindow) {
         i.focus();
         return;
       }
@@ -130,10 +121,6 @@ export class Window {
       if (this.main && !this.main.isDestroyed()) this.main.close();
       this.main = win;
     }
-    //window关闭前黑底时设置透明并删除引用
-    win.on('close', () => {
-      win.setOpacity(0);
-    });
     // 打开开发者工具
     if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
     //注入初始化代码
@@ -185,24 +172,21 @@ export class Window {
           if (this.get(id)) this.get(id).minimize();
           return;
         }
-        for (const i of this.getAll())
-          if (i) i.minimize();
+        for (const i of this.getAll()) if (i) i.minimize();
         break;
       case 'maximize':
         if (!isNull(id)) {
           if (this.get(id)) this.get(id).maximize();
           return;
         }
-        for (const i of this.getAll())
-          if (i) i.maximize();
+        for (const i of this.getAll()) if (i) i.maximize();
         break;
       case 'restore':
         if (!isNull(id)) {
           if (this.get(id)) this.get(id).restore();
           return;
         }
-        for (const i of this.getAll())
-          if (i) i.restore();
+        for (const i of this.getAll()) if (i) i.restore();
         break;
       case 'reload':
         if (!isNull(id)) {
@@ -222,8 +206,7 @@ export class Window {
       this.get(id).webContents.send(key, value);
       return;
     }
-    for (const i of this.getAll())
-      if (i) i.webContents.send(key, value);
+    for (const i of this.getAll()) if (i) i.webContents.send(key, value);
   }
 
   /**
@@ -307,11 +290,7 @@ export class Window {
   /**
    * 设置窗口是否置顶
    */
-  setAlwaysOnTop(args: {
-    id: number;
-    is: boolean;
-    type?: windowAlwaysOnTopOpt;
-  }) {
+  setAlwaysOnTop(args: { id: number; is: boolean; type?: windowAlwaysOnTopOpt }) {
     this.get(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
   }
 
@@ -319,9 +298,13 @@ export class Window {
    * 开启监听
    */
   on() {
+    //窗口数据更新
+    ipcMain.on('window-update', (event, args) => {
+      if (args && !isNull(args.id)) this.get(args.id).customize = args;
+    });
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
-      if (id)
+      if (!isNull(id))
         if (this.get(id).isMaximized()) this.get(id).unmaximize();
         else this.get(id).maximize();
     });
@@ -346,15 +329,13 @@ export class Window {
       let channel = `window-message-${args.channel}-back`;
       if (!isNull(args.acceptIds) && args.acceptIds.length > 0) {
         for (let i of args.acceptIds) {
-          if (this.get(Number(i)))
-            this.get(Number(i)).webContents.send(channel, args.value);
+          if (this.get(Number(i))) this.get(Number(i)).webContents.send(channel, args.value);
         }
         return;
       }
       if (args.isback) {
         for (const i of this.getAll()) {
-          if (this.get(Number(i)))
-            this.get(Number(i)).webContents.send(channel, args.value);
+          if (this.get(Number(i))) this.get(Number(i)).webContents.send(channel, args.value);
         }
       } else {
         for (const i of this.getAll()) {
@@ -370,7 +351,7 @@ export class Window {
         for (const i of this.getAll()) {
           if (i && i.customize.route === args.route) winIds.push(i.id);
         }
-      } else winIds = this.getAll().map(win => win.id);
+      } else winIds = this.getAll().map((win) => win.id);
       event.returnValue = winIds;
     });
   }
