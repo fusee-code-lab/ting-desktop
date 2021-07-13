@@ -21,7 +21,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     function toSetting() {
-      router.replace('setting');
+      router.push('/main/setting');
     }
 
     return {
