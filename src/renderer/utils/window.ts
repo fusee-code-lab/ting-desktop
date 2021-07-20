@@ -14,7 +14,6 @@ export async function windowLoad() {
         path: '/',
         redirect: args.route
       });
-      console.log(router.getRoutes());
       argsData.window = args;
       domPropertyLoad();
       resolve(true);
