@@ -1,6 +1,7 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { toRaw } from 'vue';
 import { argsData } from '@/renderer/store';
+import router from '@/renderer/router';
 import { domPropertyLoad } from './dom';
 
 /**
@@ -9,6 +10,11 @@ import { domPropertyLoad } from './dom';
 export async function windowLoad() {
   return new Promise((resolve) =>
     window.ipcFun.once('window-load', async (event, args: Customize) => {
+      router.addRoute({
+        path: '/',
+        redirect: args.route
+      });
+      console.log(router.getRoutes());
       argsData.window = args;
       domPropertyLoad();
       resolve(true);
@@ -21,6 +27,20 @@ export async function windowLoad() {
  */
 export function windowUpdate() {
   window.ipcFun.send('window-update', toRaw(argsData.window));
+}
+
+/**
+ * 窗口聚焦失焦监听
+ */
+export function windowBlurFocus(listener: (event: IpcRendererEvent, args: any) => void) {
+  window.ipcFun.on('window-blur-focus', listener);
+}
+
+/**
+ * 关闭窗口聚焦失焦监听
+ */
+export function windowBlurFocusRemove() {
+  window.ipcFun.removeAllListeners('window-blur-focus');
 }
 
 /**

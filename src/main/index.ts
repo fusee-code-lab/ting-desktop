@@ -10,16 +10,15 @@ import Tray from './modular/tray';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
 
 class Init {
-
-  private initWindowOpt: BrowserWindowConstructorOptions = { //初始化创建窗口参数
+  private initWindowOpt: BrowserWindowConstructorOptions = {
+    //初始化创建窗口参数
     customize: {
       isMainWin: true,
       route: null
     }
   };
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 初始化并加载
@@ -58,8 +57,7 @@ class Init {
     //获得焦点时发出
     app.on('browser-window-focus', () => {
       //关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {
-      });
+      globalShortcut.register('CommandOrControl+R', () => {});
     });
     //失去焦点时发出
     app.on('browser-window-blur', () => {
@@ -75,10 +73,13 @@ class Init {
     await Platforms[process.platform]();
     //模块、创建窗口、托盘
     await this.modular();
-    setTimeout(() => {
-      Window.create(this.initWindowOpt);
-      Tray.create();
-    }, process.platform === 'linux' ? 1000 : 0);
+    setTimeout(
+      () => {
+        Window.create(this.initWindowOpt);
+        Tray.create();
+      },
+      process.platform === 'linux' ? 1000 : 0
+    );
   }
 
   /**
@@ -101,7 +102,9 @@ class Init {
     //ting
     musicApiOn();
     await appStartCfg();
-
+    if (Global.getGlobal<{ [key: string]: unknown }>('setting.cfg').first)
+      this.initWindowOpt.customize.route = '/welcome';
+    else this.initWindowOpt.customize.route = '/main';
   }
 }
 
