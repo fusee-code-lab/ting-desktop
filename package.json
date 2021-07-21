@@ -45,7 +45,6 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "glasstron": "^0.0.7",
     "music-api": "git://github.com/fusee-code-lab/node_music_api.git#0.0.1",
     "node-abort-controller": "^2.0.0",
     "node-fetch": "^2.6.1"

@@ -12,6 +12,7 @@ import { musicApiOn, appStartCfg } from './modular/musicapi';
 class Init {
   private initWindowOpt: BrowserWindowConstructorOptions = {
     //初始化创建窗口参数
+    backgroundColor: '#ffffff',
     customize: {
       isMainWin: true,
       route: null

@@ -41,6 +41,7 @@ export default defineComponent({
       if (!(await access(dirPath))) await mkdir(dirPath);
       writeFile(filePath, JSON.stringify(cfgData)).then(() => {
         windowCreate({
+          backgroundColor: '#ffffff',
           customize: {
             isMainWin: true,
             route: '/main'

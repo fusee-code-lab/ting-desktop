@@ -12,28 +12,28 @@ export interface BSongArrayOpt {
  * 获取歌曲详情
  */
 export async function getSongDetail(vendor: Vendors, id: number | string) {
-  return await window.ipcFun.invoke('musicapi-getsongdetail', { vendor, id });
+  return await window.ipc.invoke('musicapi-getsongdetail', { vendor, id });
 }
 
 /**
  * 批量获取任意歌曲详情
  */
 export async function getBSongDetail(arr: BSongArrayOpt[]) {
-  return await window.ipcFun.invoke('musicapi-getbsongdetail', { arr });
+  return await window.ipc.invoke('musicapi-getbsongdetail', { arr });
 }
 
 /**
  * 获取歌曲播放链接
  */
 export async function getSongUrl(vendor: Vendors, id: number | string, br: number = 192) {
-  return await window.ipcFun.invoke('musicapi-getsongurl', { vendor, id, br });
+  return await window.ipc.invoke('musicapi-getsongurl', { vendor, id, br });
 }
 
 /**
  * 获取歌曲歌词
  */
 export async function getLyric(vendor: Vendors, id: number | string) {
-  return await window.ipcFun.invoke('musicapi-getlyric', { vendor, id });
+  return await window.ipc.invoke('musicapi-getlyric', { vendor, id });
 }
 
 /**
@@ -43,14 +43,14 @@ export async function getLyric(vendor: Vendors, id: number | string) {
  * @param offset 页码
  */
 export async function searchSong(keyword: string, offset: number = 0, limit: number = 5) {
-  return await window.ipcFun.invoke('musicapi-searchsong', { keyword, offset, limit });
+  return await window.ipc.invoke('musicapi-searchsong', { keyword, offset, limit });
 }
 
 /**
  * 搜索歌单
  */
 export async function searchSheet(keyword: string, offset: number = 0, limit: number = 5) {
-  return await window.ipcFun.invoke('musicapi-searchsheet', { keyword, offset, limit });
+  return await window.ipc.invoke('musicapi-searchsheet', { keyword, offset, limit });
 }
 
 /**
@@ -62,19 +62,19 @@ export async function getPlaylistDetail(
   offset: number = 0,
   limit: number = 65535
 ) {
-  return await window.ipcFun.invoke('musicapi-getplaylistdetail', { vendor, id, offset, limit });
+  return await window.ipc.invoke('musicapi-getplaylistdetail', { vendor, id, offset, limit });
 }
 
 /**
  * 搜索专辑
  */
 export async function searchAlbum(keyword: string, offset: number = 0, limit: number = 5) {
-  return await window.ipcFun.invoke('musicapi-searchalbum', { keyword, offset, limit });
+  return await window.ipc.invoke('musicapi-searchalbum', { keyword, offset, limit });
 }
 
 /**
  * 获取专辑详情
  */
 export async function getAlbumDetail(vendor: Vendors, id: number | string) {
-  return await window.ipcFun.invoke('musicapi-getalbumdetail', { vendor, id });
+  return await window.ipc.invoke('musicapi-getalbumdetail', { vendor, id });
 }
