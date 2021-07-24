@@ -100,11 +100,11 @@ class Init {
     import('./modular/menu').then(({ Menus }) => new Menus().on());
     import('./modular/session').then(({ Session }) => new Session().on());
 
-    //ting
+    // ting配置
     musicApiOn();
     await appStartCfg();
-    if (Global.getGlobal<{ [key: string]: unknown }>('setting.cfg').first)
-      this.initWindowOpt.customize.route = '/welcome';
+    const tingCfg = Global.getGlobal<{ [key: string]: unknown } | 0>('setting.cfg');
+    if (tingCfg === 0 || tingCfg.first) this.initWindowOpt.customize.route = '/welcome';
     else this.initWindowOpt.customize.route = '/main';
   }
 }
