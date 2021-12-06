@@ -1,4 +1,4 @@
-import { audio } from '@/renderer/core/audio';
+import audio from '@/renderer/common/audio';
 
 class Animate {
   private static instance: Animate;

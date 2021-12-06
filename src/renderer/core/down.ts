@@ -1,6 +1,6 @@
-import { writeFile } from '@/renderer/utils/file';
+import { writeFile } from '@/renderer/common/file';
 import { tingCfgData, SongType } from '@/renderer/core/index';
-import { net, NET_RESPONSE_TYPE } from '@/lib/net';
+import net from '@/renderer/common/net';
 
 /**
  * 保存歌曲
@@ -15,7 +15,7 @@ export async function save(path: string, name: string) {
       break;
     }
   }
-  let req = await net(path, { type: NET_RESPONSE_TYPE.BUFFER }).catch(() => {
+  let req = await net<Buffer>(path, { type: 'BUFFER' }).catch(() => {
     return null;
   });
   if (req) {

@@ -5,6 +5,10 @@ export function sep() {
   return path.sep;
 }
 
+export function isAbsolute(str: string) {
+  return path.isAbsolute(str);
+}
+
 export function dirname(str: string) {
   return path.dirname(str);
 }
@@ -18,8 +22,9 @@ export function basename(str: string) {
 }
 
 export function pathOn() {
-  ipcMain.on('path-sep', async (event, args) => event.returnValue = sep());
-  ipcMain.on('path-dirname', async (event, args) => event.returnValue = dirname(args));
-  ipcMain.on('path-normalize', async (event, args) => event.returnValue = normalize(args));
-  ipcMain.on('path-basename', async (event, args) => event.returnValue = basename(args));
+  ipcMain.handle('path-sep', async (event, args) => (event.returnValue = sep()));
+  ipcMain.handle('path-isAbsolute', async (event, args) => (event.returnValue = isAbsolute(args)));
+  ipcMain.handle('path-func', async (event, args) => (event.returnValue = dirname(args)));
+  ipcMain.handle('path-normalize', async (event, args) => (event.returnValue = normalize(args)));
+  ipcMain.handle('path-basename', async (event, args) => (event.returnValue = basename(args)));
 }

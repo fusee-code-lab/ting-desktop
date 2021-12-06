@@ -3,7 +3,6 @@ const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
@@ -18,13 +17,11 @@ module.exports = (env) => {
       app: './src/renderer/index.ts'
     },
     output: {
-      filename: '[name].bundle.view.js',
-      chunkFilename: '[id].bundle.view.js',
+      filename: './js/[name]v.js',
+      chunkFilename: './js/[id]v.js',
       path: resolve('dist')
     },
-    resolve: {
-      ...base.resolve
-    },
+    resolve: base.resolve,
     module: {
       rules: [
         ...base.module.rules,
@@ -33,23 +30,12 @@ module.exports = (env) => {
           loader: 'vue-loader'
         },
         {
-          test: /\.css$/,
-          use: [{
-            loader: miniCssExtractPlugin.loader,
-            options: {
-              publicPath: './'
-            }
-          },
-            'css-loader'
-          ]
-        },
-        {
-          test: /\.scss$/,
+          test: /\.(css|scss)$/,
           use: [
             {
               loader: miniCssExtractPlugin.loader,
               options: {
-                publicPath: './'
+                publicPath: '../'
               }
             },
             'css-loader',
@@ -60,8 +46,8 @@ module.exports = (env) => {
     },
     plugins: [
       new miniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css'
+        filename: './css/[name].css',
+        chunkFilename: './css/[id].css'
       }),
       new HtmlWebpackPlugin({
         title: name,
@@ -70,12 +56,7 @@ module.exports = (env) => {
       new VueLoaderPlugin()
     ],
     optimization: {
-      minimize: env === 'production',
-      minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'esnext'
-        })
-      ]
+      minimize: env === 'production'
     }
   };
 };

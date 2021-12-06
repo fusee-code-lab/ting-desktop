@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 
 module.exports = (env) => {
@@ -13,17 +12,12 @@ module.exports = (env) => {
       preload: './src/main/preload/index.ts'
     },
     output: {
-      filename: '[name].bundle.js',
-      chunkFilename: '[id].bundle.js',
+      filename: './js/[name].js',
+      chunkFilename: './js/[id].js',
       path: resolve('dist')
     },
     optimization: {
-      minimize: env === 'production',
-      minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'esnext'
-        })
-      ]
+      minimize: env === 'production'
     }
   };
 };

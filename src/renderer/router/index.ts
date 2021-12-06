@@ -1,55 +1,19 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { argsData } from '@/renderer/store';
-import { windowUpdate } from '@/renderer/utils/window';
+import Customize from '@/renderer/store/customize';
+import { windowUpdate } from '@/renderer/common/window';
+
+import pageRoute from '@/renderer/router/modular/page';
+import dialogRoute from '@/renderer/router/modular/dialog';
 
 const Router = createRouter({
   history: createWebHashHistory(),
-  routes: [
-    {
-      path: '/welcome',
-      name: 'Welcome',
-      component: () => import('../views/pages/Welcome.vue')
-    },
-    {
-      path: '/main',
-      name: 'Main',
-      redirect: '/main/home',
-      component: () => import('../views/pages/Main.vue'),
-      children: [
-        {
-          path: 'home',
-          name: 'Home',
-          component: () => import('../views/pages/Home.vue')
-        },
-        {
-          path: 'search',
-          name: 'Search',
-          component: () => import('../views/pages/SearchDetails.vue')
-        },
-        {
-          path: 'sheet',
-          name: 'Sheet',
-          component: () => import('../views/pages/SheetDetails.vue')
-        },
-        {
-          path: 'setting',
-          name: 'setting',
-          component: () => import('../views/pages/Setting.vue')
-        }
-      ]
-    },
-    {
-      path: '/sheetCreate',
-      name: 'SheetCreate',
-      component: () => import('../views/dialogs/SheetCreate.vue')
-    }
-  ]
+  routes: [...pageRoute, ...dialogRoute]
 });
 
 Router.beforeEach((to, from) => {
-  if (to.path !== argsData.window.route) {
+  if (to.path !== Customize.data.route) {
     //更新窗口路由
-    argsData.window.route = to.path;
+    Customize.data.route = to.path;
     windowUpdate();
   }
 });

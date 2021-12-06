@@ -89,7 +89,11 @@
         </div>
       </div>
       <div class="audio-info-menu">
-        <HoverButton class="lyrics-btn" :class="{ active: isShowLyrics }" @click="onLyricsButtonClick">
+        <HoverButton
+          class="lyrics-btn"
+          :class="{ active: isShowLyrics }"
+          @click="onLyricsButtonClick"
+        >
           <LyricsIcon />
         </HoverButton>
         <HoverButton class="option-btn">
@@ -134,9 +138,8 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue';
 import { audioData, PlayTypeOpt, switchAudioType } from '@/renderer/core';
-import { audio } from '@/renderer/core/audio';
-import { windowAlwaysOnTop } from '@/renderer/utils/window';
-import { argsData } from '@/renderer/store';
+import audio from '@/renderer/common/audio';
+import { windowAlwaysOnTop } from '@/renderer/common/window';
 import LyricsIcon from '@/renderer/views/components/Icons/LyricsIcon.vue';
 import PlayStatusIcon from '@/renderer/views/components/Icons/PlaystatusIcon.vue';
 import PauseStatusIcon from '@/renderer/views/components/Icons/PausestatusIcon.vue';
@@ -148,7 +151,7 @@ import Volumes1Icon from '@/renderer/views/components/Icons/Volumes1Icon.vue';
 import Volumes2Icon from '@/renderer/views/components/Icons/Volumes2Icon.vue';
 import Volumes3Icon from '@/renderer/views/components/Icons/Volumes3Icon.vue';
 import MenuIcon from '@/renderer/views/components/Icons/MenuIcon.vue';
-import HoverButton from "@/renderer/views/components/HoverButton.vue";
+import HoverButton from '@/renderer/views/components/HoverButton.vue';
 
 export default defineComponent({
   name: 'Audio',
@@ -192,7 +195,7 @@ export default defineComponent({
     );
 
     function top() {
-      windowAlwaysOnTop(argsData.window.id, !isAlwaysOnTop, 'pop-up-menu');
+      windowAlwaysOnTop(!isAlwaysOnTop, 'pop-up-menu');
       isAlwaysOnTop = !isAlwaysOnTop;
     }
 

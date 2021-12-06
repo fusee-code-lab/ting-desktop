@@ -57,14 +57,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { tingCfgData } from '@/renderer/core/index';
-import { openDialog } from '@/renderer/utils/dialog';
-import { argsData } from '@/renderer/store';
-import { getGlobal } from '@/renderer/utils';
+import { openDialog } from '@/renderer/common/dialog';
+import { getGlobal } from '@/renderer/common';
 export default defineComponent({
   name: 'Setting',
   setup() {
     function revise(type: string) {
-      openDialog(argsData.window.id, {
+      openDialog({
         title: `选择【${type === 'down' ? '下载路径' : '歌单路径'}】目录`,
         properties: ['openDirectory']
       }).then((req) => {

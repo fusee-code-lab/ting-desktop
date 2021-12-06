@@ -7,8 +7,8 @@ import {
   SongOpt,
   SheetListOpt
 } from '@/renderer/core/index';
-import { readLine, writeFile, appendFile, fileBySuffix } from '@/renderer/utils/file';
-import { logError, getGlobal } from '@/renderer/utils';
+import { readLine, writeFile, appendFile, fileBySuffix } from '@/renderer/common/file';
+import { logError, getGlobal } from '@/renderer/common';
 
 const EOL = getGlobal('system.EOL');
 

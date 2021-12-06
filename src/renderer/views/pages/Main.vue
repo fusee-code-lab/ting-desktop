@@ -21,8 +21,7 @@
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import SideBar from '@/renderer/views/components/SideBar.vue';
 import { audioData, switchAudioType } from '@/renderer/core';
-import { argsData } from '@/renderer/store';
-import { windowShow } from '@/renderer/utils/window';
+import { windowShow } from '@/renderer/common/window';
 import Head from '../components/Head.vue';
 import Audio from '../components/Audio.vue';
 import SearchDetails from './SearchDetails.vue';
@@ -49,7 +48,7 @@ export default defineComponent({
     const shownLyricsSidePopup = ref(false);
 
     onMounted(() => {
-      windowShow(argsData.window.id);
+      windowShow();
     });
 
     return {

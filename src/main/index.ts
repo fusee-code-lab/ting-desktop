@@ -1,115 +1,39 @@
-import { resolve } from 'path';
-import { app, globalShortcut, ipcMain, BrowserWindowConstructorOptions } from 'electron';
-import { Platforms } from './platform';
-import { logOn } from './modular/log';
-import { fileOn } from './modular/file';
-import { pathOn } from './modular/path';
+import type { BrowserWindowConstructorOptions } from 'electron';
+import App from './modular/app';
+import Shortcut from './modular/shortcut';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
+import { logOn } from './modular/log';
+import { pathOn } from './modular/path';
+import { fileOn } from './modular/file';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
 
-class Init {
-  private initWindowOpt: BrowserWindowConstructorOptions = {
-    //初始化创建窗口参数
-    backgroundColor: '#ffffff',
-    customize: {
-      isMainWin: true,
-      route: null
-    }
-  };
-
-  constructor() {}
-
-  /**
-   * 初始化并加载
-   * */
-  async init() {
-    //协议调起
-    let args = [];
-    if (!app.isPackaged) args.push(resolve(process.argv[1]));
-    args.push('--');
-    if (!app.isDefaultProtocolClient(app.name, process.execPath, args))
-      app.setAsDefaultProtocolClient(app.name, process.execPath, args);
-    app.allowRendererProcessReuse = true;
-    //重复启动(单例)
-    if (!app.requestSingleInstanceLock()) {
-      app.quit();
-    } else {
-      app.on('second-instance', () => {
-        // 当运行第二个实例时,将会聚焦到main窗口
-        if (Window.main) {
-          if (Window.main.isMinimized()) Window.main.restore();
-          Window.main.focus();
-        }
-      });
-    }
-    //关闭所有窗口退出
-    app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
-        app.quit();
-      }
-    });
-    app.on('activate', () => {
-      if (Window.getAll().length === 0) {
-        Window.create(this.initWindowOpt);
-      }
-    });
-    //获得焦点时发出
-    app.on('browser-window-focus', () => {
-      //关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {});
-    });
-    //失去焦点时发出
-    app.on('browser-window-blur', () => {
-      // 注销关闭刷新
-      globalShortcut.unregister('CommandOrControl+R');
-    });
-    //app重启
-    ipcMain.on('app-relaunch', () => {
-      app.relaunch({ args: process.argv.slice(1) });
-    });
-    //启动
-    await app.whenReady();
-    await Platforms[process.platform]();
-    //模块、创建窗口、托盘
-    await this.modular();
-    setTimeout(
-      () => {
-        Window.create(this.initWindowOpt);
-        Tray.create();
-      },
-      process.platform === 'linux' ? 1000 : 0
-    );
+await App.start();
+// 主要模块
+Shortcut.on();
+Global.on();
+Window.on();
+Tray.on();
+logOn();
+// 可选模块
+fileOn();
+pathOn();
+musicApiOn();
+await App.use([import('./modular/session'), import('./modular/dialog'), import('./modular/menu')]);
+await appStartCfg();
+// 窗口
+const tingCfg = Global.getGlobal<{ [key: string]: unknown } | 0>('setting.cfg');
+let opt: BrowserWindowConstructorOptions = {
+  customize: {
+    route: '/main'
   }
-
-  /**
-   * 模块
-   * */
-  async modular() {
-    //开启模块监听
-    logOn();
-    fileOn();
-    pathOn();
-    Global.on();
-    Window.on();
-    Tray.on();
-
-    //自定义模块
-    import('./modular/dialog').then(({ Dialog }) => new Dialog().on());
-    import('./modular/menu').then(({ Menus }) => new Menus().on());
-    import('./modular/session').then(({ Session }) => new Session().on());
-
-    // ting配置
-    musicApiOn();
-    await appStartCfg();
-    const tingCfg = Global.getGlobal<{ [key: string]: unknown } | 0>('setting.cfg');
-    if (tingCfg === 0 || tingCfg.first) this.initWindowOpt.customize.route = '/welcome';
-    else this.initWindowOpt.customize.route = '/main';
-  }
+};
+if (tingCfg === 0 || tingCfg.first) {
+  opt.width = 800;
+  opt.height = 600;
+  opt.customize.route = '/welcome';
 }
-
-/**
- * 启动
- * */
-new Init().init().then();
+Window.create(opt);
+// 托盘
+Tray.create();

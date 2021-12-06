@@ -1,11 +1,10 @@
 import { reactive, ref, watch } from 'vue';
-import { debounce, isNull } from '@/lib';
+import { debounce, isNull } from '@/utils';
 import { Vendors } from './musicapi';
-import { writeFile } from '@/renderer/utils/file';
-import { sep } from '@/renderer/utils/path';
-import { getAppPath, getGlobal, logError } from '@/renderer/utils';
-import { windowSetSize } from '@/renderer/utils/window';
-import { argsData } from '@/renderer/store';
+import { writeFile } from '@/renderer/common/file';
+import { sep } from '@/renderer/common/path';
+import { getAppPath, getGlobal, logError } from '@/renderer/common';
+import { windowSetSize } from '@/renderer/common/window';
 
 export enum PlayTypeOpt { //播放类型
   list,
@@ -72,13 +71,13 @@ export const SongType: string[] = ['mp3', 'wav', 'wma', 'midi'];
  */
 export const sheetSuffix: string = '.ting'; //歌单后缀名
 
-const SEP = sep();
+const SEP = await sep();
 
 let cfg: TingCfgOpt = {
   first: true, //是否第一次打开
   br: 192, //音频质量（当前仅网易云适用）
-  sheet: getAppPath('music') + `${SEP}ting${SEP}sheet`, //默认歌单路径
-  down: getAppPath('music') + `${SEP}ting${SEP}down` //默认下载歌曲存储路径
+  sheet: (await getAppPath('music')) + `${SEP}ting${SEP}sheet`, //默认歌单路径
+  down: (await getAppPath('music')) + `${SEP}ting${SEP}down` //默认下载歌曲存储路径
 };
 
 let audio: TingAudioOpt = {
@@ -102,8 +101,8 @@ let audioSheetList: TingSheetListOpt = {
 let audioPlayList: TingPlayListOpt = {};
 
 try {
-  let settingCfg = getGlobal('setting.cfg');
-  let settingAudio = getGlobal('setting.audio');
+  let settingCfg = await getGlobal<TingCfgOpt>('setting.cfg');
+  let settingAudio = await getGlobal<TingAudioOpt>('setting.audio');
   if (settingCfg) cfg = settingCfg;
   if (settingAudio) audio = settingAudio;
   if (!!audio.songInfo)
@@ -178,13 +177,13 @@ export function getSheetPath(name: string) {
  */
 export function switchAudioType(type?: string) {
   if (!isNull(type)) {
-    if (type === 'mini') windowSetSize(argsData.window.id, [195, 150], false);
+    if (type === 'mini') windowSetSize([195, 150], false);
   } else {
     if (audioData.type === 'normal') {
-      windowSetSize(argsData.window.id, [195, 150], false);
+      windowSetSize([195, 150], false);
       audioData.type = 'mini';
     } else {
-      windowSetSize(argsData.window.id, [980, 700]);
+      windowSetSize([980, 700]);
       audioData.type = 'normal';
     }
   }

@@ -14,7 +14,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { keepAliveData } from './store';
+import { keepAliveData } from '@/renderer/store';
 
 export default defineComponent({
   setup() {
@@ -23,6 +23,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-@import 'views/scss/color';
-@import 'views/scss/main';
+@import '~@/renderer/views/scss/color';
+@import '~@/renderer/views/scss/main';
 </style>

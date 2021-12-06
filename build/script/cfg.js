@@ -1,9 +1,9 @@
 const fs = require('fs');
 const { name } = require('../../package.json');
 const config = require('../cfg/build.json');
-const appConfig = require('../../src/cfg/index.json');
 
 /**  config配置  **/
+config.publish = [];
 config.productName = name;
 config.appId = `org.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
@@ -15,16 +15,6 @@ config.nsis.menuCategory = false; //是否创建开始菜单目录
 config.nsis.shortcutName = name; //快捷方式名称(可中文)
 config.nsis.allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ['asInvoker', 'highestAvailable'][0]; //应用权限
-config.win.target = [];
-// config.win.target.push({ //单文件
-//     "target": "portable"
-//     // "arch": ["x64"]
-// });
-config.win.target.push({
-  //nsis打包
-  target: 'nsis',
-  arch: ['x64']
-});
 
 let nsh = '';
 if (config.nsis.allowToChangeInstallationDirectory) {
@@ -82,4 +72,3 @@ config.linux.executableName = name;
 
 fs.writeFileSync('./build/cfg/build.json', JSON.stringify(config, null, 2));
 fs.writeFileSync('./build/cfg/installer.nsh', nsh);
-fs.writeFileSync('./src/cfg/index.json', JSON.stringify(appConfig, null, 2));

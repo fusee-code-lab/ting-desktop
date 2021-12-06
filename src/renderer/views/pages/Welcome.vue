@@ -3,7 +3,7 @@
     <Head />
     <div class="main">
       <div class="content">
-        <img src="~@/lib/assets/logo.png" alt="logo" />
+        <img src="~@/assets/logo.png" alt="logo" />
         <div class="title">
           欢迎来到
           <span style="margin-left: 10px">Ting</span>
@@ -16,13 +16,12 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, toRaw } from 'vue';
-import { windowSetSize, windowCreate, windowShow } from '@/renderer/utils/window';
+import { windowCreate, windowShow } from '@/renderer/common/window';
 import Head from '@/renderer/views/components/Head.vue';
-import { argsData } from '@/renderer/store';
 import { tingCfgData } from '@/renderer/core';
-import { dirname, normalize } from '@/renderer/utils/path';
-import { writeFile, access, mkdir } from '@/renderer/utils/file';
-import { sendGlobal, getAppPath } from '@/renderer/utils';
+import { dirname } from '@/renderer/common/path';
+import { writeFile, access, mkdir } from '@/renderer/common/file';
+import { sendGlobal, getAppPath } from '@/renderer/common';
 
 export default defineComponent({
   name: 'Welcome',
@@ -30,11 +29,9 @@ export default defineComponent({
     Head
   },
   setup() {
-    windowSetSize(argsData.window.id, [800, 600]);
-
     const handleJumpHome = async () => {
-      const filePath = getAppPath('userData') + '/cfg/index.json';
-      const dirPath = dirname(filePath);
+      const filePath = (await getAppPath('userData')) + '/cfg/index.json';
+      const dirPath = await dirname(filePath);
       let cfgData = toRaw(tingCfgData);
       cfgData.first = false;
       sendGlobal('setting.cfg', cfgData);
@@ -52,7 +49,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      windowShow(argsData.window.id);
+      windowShow();
     });
 
     return {
@@ -95,7 +92,7 @@ export default defineComponent({
 
 .container {
   position: relative;
-  background-image: url('~@/lib/assets/rocket.png');
+  background-image: url('~@/assets/rocket.png');
 
   > .main {
     position: absolute;

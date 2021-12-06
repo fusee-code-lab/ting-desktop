@@ -1,12 +1,7 @@
-import {
-  app,
-  Menu,
-  Tray,
-  nativeImage
-} from 'electron';
+import { app, Menu, Tray, nativeImage } from 'electron';
 import { join } from 'path';
 import Window from '@/main/modular/window';
-import ico from '@/lib/assets/tray.png';
+import ico from '@/assets/tray.png';
 
 class Trays {
   private static instance: Trays;
@@ -18,8 +13,7 @@ class Trays {
     return Trays.instance;
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 创建托盘
@@ -35,18 +29,16 @@ class Trays {
         click: () => app.quit()
       }
     ]);
-    this.main = new Tray(nativeImage.createFromPath(join(__dirname, `./${ico}`)));
+    this.main = new Tray(nativeImage.createFromPath(join(__dirname, `../${ico}`)));
     this.main.setContextMenu(contextMenu);
     this.main.setToolTip(app.name);
-    this.main.on('double-click', () => Window.func('show'));
+    this.main.on('click', () => Window.func('show'));
   }
 
   /**
    * 监听
    */
-  on() {
-  }
-
+  on() {}
 }
 
 export default Trays.getInstance();

@@ -29,17 +29,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getGlobal } from '@/renderer/utils';
-import { argsData } from '@/renderer/store';
+import { getGlobal } from '@/renderer/common';
+import Customize from '@/renderer/store/customize';
 import {
   windowClose,
   windowHide,
   windowMax,
   windowMaxMin,
   windowMin
-} from '@/renderer/utils/window';
+} from '@/renderer/common/window';
 import { audioData } from '@/renderer/core';
 import CloseIcon from '@/renderer/views/components/Icons/CloseIcon.vue';
 import MinimizeIcon from '@/renderer/views/components/Icons/MinimizeIcon.vue';
@@ -57,21 +57,29 @@ export default defineComponent({
     BackIcon
   },
   setup() {
+    const argsData = Customize.get();
+    const isMacintosh = ref(false);
+    const title = ref(argsData.title);
+    getGlobal<string>('system.platform').then(
+      (platform) => (isMacintosh.value = platform === 'darwin')
+    );
+    getGlobal<string>('app.name').then((appNmae) => (title.value = appNmae));
+
     function close() {
-      if (argsData.window.route === '/') windowClose(argsData.window.id);
-      else windowHide(argsData.window.id);
+      if (argsData.route === '/') windowClose();
+      else windowHide();
     }
 
     function minimize() {
-      windowMin(argsData.window.id);
+      windowMin();
     }
 
     function maximize() {
-      windowMax(argsData.window.id);
+      windowMax();
     }
 
     function maxMin() {
-      windowMaxMin(argsData.window.id);
+      windowMaxMin();
     }
 
     const route = useRoute();
@@ -87,8 +95,6 @@ export default defineComponent({
       router.back();
     }
 
-    const isMacintosh = computed(() => getGlobal('system.platform') === 'darwin');
-
     return {
       close,
       minimize,
@@ -97,7 +103,7 @@ export default defineComponent({
       canBack,
       isMacintosh,
       back,
-      title: argsData.window.title || getGlobal('app.name'),
+      title,
       audioData
     };
   }

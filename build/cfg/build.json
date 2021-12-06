@@ -8,24 +8,19 @@
     "output": "out"
   },
   "files": [
-    "out/electron/**/*",
-    "node_modules/",
-    "dist/",
+    "dist/**/*",
     {
-      "from": "src/lib/inside",
+      "from": "resources/inside",
       "to": "inside/",
       "filter": [
         "**/*"
       ]
     }
   ],
-  "extraResources": [
+  "extraFiles": [
     {
-      "from": "src/lib/extern",
-      "to": "extern/",
-      "filter": [
-        "**/*"
-      ]
+      "from": "resources/root",
+      "to": "./"
     }
   ],
   "nsis": {
@@ -70,7 +65,7 @@
       {
         "target": "nsis",
         "arch": [
-          "x64"
+          "ia32"
         ]
       }
     ]
@@ -80,5 +75,15 @@
     "target": "AppImage",
     "executableName": "ting"
   },
-  "npmRebuild": true
+  "npmRebuild": true,
+  "publish": [],
+  "extraResources": [
+    {
+      "from": "resources/extern",
+      "to": "extern/",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ]
 }

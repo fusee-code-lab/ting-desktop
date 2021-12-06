@@ -75,9 +75,9 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
 import { getPlaylistDetail, getSongUrl, Vendors } from '@/renderer/core/musicapi';
-import { audio } from '@/renderer/core/audio';
+import audio from '@/renderer/common/audio';
 import { audioPlayListData, sheetData, TingPlayListOpt } from '@/renderer/core';
-import { openUrl } from '@/renderer/utils';
+import { openUrl } from '@/renderer/common';
 
 interface SheetDetailsOpt {
   info?: any;
@@ -111,15 +111,7 @@ export default defineComponent({
 
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
-      if (req)
-        await audio.play({
-          id: item.id,
-          vendor: item.vendor,
-          path: req.url,
-          name: item.name,
-          cover: item.album.cover,
-          singer: item.artists.map((e: any) => e.name).toString()
-        });
+      if (req) await audio.play(req.url);
     }
 
     async function playAll() {
@@ -258,11 +250,11 @@ export default defineComponent({
           }
 
           > .icon.netease {
-            @include device-pixel('~@/lib/assets/icons/netease_music');
+            @include device-pixel('~@/assets/icons/netease_music');
           }
 
           > .icon.qq {
-            @include device-pixel('~@/lib/assets/icons/qq_music');
+            @include device-pixel('~@/assets/icons/qq_music');
           }
 
           > .nickname {

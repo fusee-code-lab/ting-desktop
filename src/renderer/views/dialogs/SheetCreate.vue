@@ -16,11 +16,9 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, toRaw } from 'vue';
-import { isNull } from '@/lib';
-import { windowMessageSend } from '@/renderer/utils/window';
+import { isNull } from '@/utils';
 import { SheetOpt } from '@/renderer/core';
-import { argsData } from '@/renderer/store';
-import { windowClose, windowShow } from '@/renderer/utils/window';
+import { windowClose, windowShow, windowMessageSend } from '@/renderer/common/window';
 
 export default defineComponent({
   name: 'SheetCreate',
@@ -32,7 +30,7 @@ export default defineComponent({
     });
 
     function close() {
-      windowClose(argsData.window.id);
+      windowClose();
     }
 
     function send() {
@@ -45,7 +43,7 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      windowShow(argsData.window.id);
+      windowShow();
     });
 
     return {

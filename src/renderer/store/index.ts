@@ -1,4 +1,4 @@
-import { reactive, provide, inject } from 'vue';
+import { reactive } from 'vue';
 
 /**
  * 组件页面配置
@@ -26,19 +26,3 @@ export const delExclude = (key: string) => {
   if (keepAliveData.exclude.indexOf(key) > -1)
     keepAliveData.exclude.splice(keepAliveData.exclude.indexOf(key), 1);
 };
-
-/**
- * 窗口常驻参数
- * */
-export const argsData = reactive<{ window: Customize }>({
-  window: null
-});
-
-/**
- * 创建全局provide
- * @param key 唯一标识
- * @param args
- */
-export const provideState = (key: string, args: { [key: string]: unknown }) =>
-  provide(Symbol(key), reactive(args));
-export const getProvideState = (key: string) => inject(Symbol(key));

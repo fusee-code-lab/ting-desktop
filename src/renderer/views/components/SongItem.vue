@@ -12,7 +12,7 @@
 
 <script lang='ts'>
 import { defineComponent, onMounted, PropType, reactive } from 'vue';
-import { SearchResultSongItem } from './SearchDetails.vue';
+import { SearchResultSongItem } from '@/renderer/views/pages/SearchDetails.vue';
 import PlayIcon from '@/renderer/views/components/Icons/PausestatusIcon.vue';
 
 export default defineComponent({

@@ -1,0 +1,7 @@
+{
+  "width": 980,
+  "height": 700,
+  "backgroundColor": "#ffffff",
+  "initRoute": "/home",
+  "single": true
+}

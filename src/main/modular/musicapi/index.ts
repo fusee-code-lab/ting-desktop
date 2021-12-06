@@ -1,4 +1,4 @@
-import * as Api from 'music-api/api';
+import * as Api from './api';
 import { ipcMain, app } from 'electron';
 import { readFile } from '@/main/modular/file';
 import { logError } from '@/main/modular/log';

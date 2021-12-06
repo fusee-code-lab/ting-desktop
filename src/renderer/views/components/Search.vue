@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { isNull } from '@/lib';
+import { isNull } from '@/utils';
 import { audioSheetListData, searchData } from '@/renderer/core';
 import { searchSheet, searchSong } from '@/renderer/core/musicapi';
 import { useRouter } from 'vue-router';
@@ -91,7 +91,7 @@ export default defineComponent({
     }
 
     &:before {
-      @include device-pixel('~@/lib/assets/icons/search_icon');
+      @include device-pixel('~@/assets/icons/search_icon');
       content: '';
       width: 15px;
       height: 15px;

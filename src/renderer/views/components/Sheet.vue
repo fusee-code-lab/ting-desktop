@@ -1,28 +1,28 @@
 <template>
-  <div class='sheet-info'>
-    <div class='items'>
-      <div class='title'>歌单</div>
-      <div class='content'>
-        <div class='item' v-for='(sheet, index) in audioSheetListData.list' :key='index'>
-          <div class='left'>
-            <div class='icon bg-img'></div>
-            <div class='text'>{{ sheet.detail.name }}</div>
+  <div class="sheet-info">
+    <div class="items">
+      <div class="title">歌单</div>
+      <div class="content">
+        <div class="item" v-for="(sheet, index) in audioSheetListData.list" :key="index">
+          <div class="left">
+            <div class="icon bg-img"></div>
+            <div class="text">{{ sheet.detail.name }}</div>
           </div>
         </div>
       </div>
-      <div class='add' @click='addSheet'>创建歌单</div>
+      <div class="add" @click="addSheet">创建歌单</div>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { IpcRendererEvent } from 'electron';
 import { defineComponent, toRaw, onMounted, onUnmounted } from 'vue';
 import { audioSheetListData } from '@/renderer/core';
 import { sheetList, sheetCreate } from '@/renderer/core/sheet';
-import { windowCreate, windowMessageOn, windowMessageRemove } from '@/renderer/utils/window';
-import { argsData } from '@/renderer/store';
-import { getGlobal } from '@/renderer/utils';
+import { windowCreate, windowMessageOn, windowMessageRemove } from '@/renderer/common/window';
+import { getGlobal } from '@/renderer/common';
+import Customize from '@/renderer/store/customize';
 
 export default defineComponent({
   name: 'Sheet',
@@ -41,18 +41,18 @@ export default defineComponent({
       }
     });
 
-    // TODO macos 下的 modal 高度有问题，目前仅仅加上 titleBar 的高度
-    const isMacintosh = getGlobal('system.platform') === 'darwin';
-    const isBigSurOrLatter =
-      isMacintosh && parseInt(getGlobal('system.version').split('.')[0]) >= 11;
-    const topTitleBarHeight = isBigSurOrLatter ? 28 : 22;
+    async function addSheet() {
+      // TODO macos 下的 modal 高度有问题，目前仅仅加上 titleBar 的高度
+      const isMacintosh = (await getGlobal('system.platform')) === 'darwin';
+      const isBigSurOrLatter =
+        isMacintosh && parseInt((await getGlobal<string>('system.version')).split('.')[0]) >= 11;
+      const topTitleBarHeight = isBigSurOrLatter ? 28 : 22;
 
-    function addSheet() {
       windowCreate({
         customize: {
           title: '歌单添加',
           route: '/sheetCreate',
-          parentId: argsData.window.id
+          parentId: Customize.get().id
         },
         width: 400,
         height: isMacintosh ? topTitleBarHeight + 180 : 180,
@@ -75,7 +75,7 @@ export default defineComponent({
   }
 });
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .sheet-info {
@@ -101,7 +101,7 @@ export default defineComponent({
           align-items: center;
 
           > .icon {
-            @include device-pixel('~@/lib/assets/icons/play_list_icon');
+            @include device-pixel('~@/assets/icons/play_list_icon');
             width: 16px;
             height: 16px;
             margin-right: 12px;

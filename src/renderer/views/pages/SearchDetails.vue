@@ -1,36 +1,36 @@
 <template>
-  <div class='Search-details-info'>
+  <div class="Search-details-info">
     <EnhancedList
-      :contentInsets='{ left: 20, right: 20, bottom: 10 }'
-      :fixedHeader='true'
-      :data='listData'
+      :contentInsets="{ left: 20, right: 20, bottom: 10 }"
+      :fixedHeader="true"
+      :data="listData"
     >
       <template v-slot:header>
-        <div :topInsets='40' class='header'>
-          <div class='title'>
-            <div class='song-name'>“{{ searchData.keyword }}”</div>
-            <div class='suffix'>的搜索结果</div>
+        <div :topInsets="40" class="header">
+          <div class="title">
+            <div class="song-name">“{{ searchData.keyword }}”</div>
+            <div class="suffix">的搜索结果</div>
           </div>
         </div>
       </template>
-      <template v-slot:section-header='{ section }'>
-        <div class='section-header'>
-          <div class='title'>
-            <div class='text'>{{ section }}</div>
+      <template v-slot:section-header="{ section }">
+        <div class="section-header">
+          <div class="title">
+            <div class="text">{{ section }}</div>
           </div>
         </div>
       </template>
-      <template v-slot:item='{ item: searchRes }'>
-        <div class='section-body'>
-          <div class='content'>
+      <template v-slot:item="{ item: searchRes }">
+        <div class="section-body">
+          <div class="content">
             <SongItem
-              v-for='item in searchRes.items'
-              v-bind:key='item.id'
-              @click='searchRes.clickItemAction(item)'
-              :song='item'
+              v-for="item in searchRes.items"
+              v-bind:key="item.id"
+              @click="searchRes.clickItemAction(item)"
+              :song="item"
             />
           </div>
-          <div v-if='searchRes.haveMore' class='suffix' @click='searchRes.moreAction'>
+          <div v-if="searchRes.haveMore" class="suffix" @click="searchRes.moreAction">
             {{ searchRes.moreText }}
           </div>
         </div>
@@ -39,14 +39,14 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { computed, defineComponent, reactive } from 'vue';
 import { searchData, sheetData } from '@/renderer/core';
 import { getSongUrl, searchSheet, searchSong } from '@/renderer/core/musicapi';
-import { audio } from '@/renderer/core/audio';
+import audio from '@/renderer/common/audio';
 import EnhancedList, { EnhancedListSection as Section } from '../components/EnhancedList.vue';
 import SongItem from '../components/SongItem.vue';
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 
 export interface SearchResultSongItem {
   id: string;
@@ -142,23 +142,13 @@ export default defineComponent({
 
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
-      if (req)
-        audio
-          .play({
-            id: item.id,
-            vendor: item.vendor,
-            path: req.url,
-            name: item.name,
-            cover: item.album.cover,
-            singer: item.artists.map((e: any) => e.name).toString()
-          })
-          .catch(console.log);
+      if (req) audio.play(req.url).catch(console.log);
     }
 
     async function sheet(item: any) {
       sheetData.value = item;
       // messageData[messageKeys.Show] = componentShow.SheetDetails;
-      router.push("/main/sheet").then();
+      router.push('/main/sheet').then();
     }
 
     // TODO 有些没有 cover 的音乐 。。。
@@ -214,7 +204,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 @import '~@/renderer/views/scss/mixin.scss';
 
 .Search-details-info {

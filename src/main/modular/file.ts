@@ -1,7 +1,6 @@
 import fs, { MakeDirectoryOptions } from 'fs';
 import { createInterface } from 'readline';
-import { resolve, dirname, extname } from 'path';
-import { isNull } from '@/lib';
+import { resolve, extname } from 'path';
 import { ipcMain } from 'electron';
 
 /**
@@ -10,7 +9,6 @@ import { ipcMain } from 'electron';
  * @param suffix
  */
 export function fileBySuffix(path: string, suffix: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   try {
     let files: string[] = [];
     let dirArray = fs.readdirSync(path);
@@ -34,7 +32,6 @@ export function fileBySuffix(path: string, suffix: string) {
  * 删除目录和内部文件
  * */
 export function delDir(path: string): void {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   let files = [];
   if (fs.existsSync(path)) {
     files = fs.readdirSync(path);
@@ -51,13 +48,25 @@ export function delDir(path: string): void {
 }
 
 /**
+ * 删除文件
+ * @param path
+ */
+export function unlink(path: string) {
+  return new Promise((resolve) =>
+    fs.unlink(path, (err) => {
+      if (err) resolve(0);
+      else resolve(1);
+    })
+  );
+}
+
+/**
  * 检查文件是否存在于当前目录中、以及是否可写
  * @return 0 不存在 1 只可读 2 存在可读写
  */
 export function access(path: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
-    fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
       if (err) err.code === 'ENOENT' ? resolve(0) : resolve(1);
       else resolve(2);
     })
@@ -69,8 +78,6 @@ export function access(path: string) {
  * @return 0 失败 1 成功
  */
 export function rename(path: string, newPath: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if (newPath.substr(0, 1) !== '/' && newPath.indexOf(':') === -1) newPath = resolve(newPath);
   return new Promise((resolve) => {
     fs.rename(path, newPath, (err) => {
       if (err) resolve(0);
@@ -85,7 +92,6 @@ export function rename(path: string, newPath: string) {
  * @param options 选项
  */
 export function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string }) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
     fs.readFile(path, options, (err, data) => {
       if (err) resolve(0);
@@ -100,7 +106,6 @@ export function readFile(path: string, options?: { encoding?: BufferEncoding; fl
  * @param index
  */
 export function readLine(path: string, index?: number): Promise<string | any[]> | null {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   const io = createInterface({
     input: fs.createReadStream(path)
   });
@@ -110,7 +115,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
         io.on('line', (line) => {
           line = line.replace(/(^\s*)|(\s*$)/g, '');
           io.close();
-          if (isNull(line)) line = null;
+          if (!line) line = null;
           resolve(line);
         });
         break;
@@ -121,7 +126,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
           indes++;
           if (index && indes === index) io.close();
           line = line.replace(/(^\s*)|(\s*$)/g, '');
-          if (!isNull(line)) data.push(line);
+          if (line) data.push(line);
         });
         io.on('close', () => resolve(data));
     }
@@ -135,7 +140,6 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
  * @returns 0 失败 1成功
  */
 export async function mkdir(path: string, options: MakeDirectoryOptions) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) => {
     fs.mkdir(path, options || { recursive: true }, (err) => {
       if (err) {
@@ -155,7 +159,6 @@ export async function writeFile(
   data: string | Buffer,
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
     fs.writeFile(path, data, options, (err) => {
       if (err) {
@@ -175,7 +178,6 @@ export async function appendFile(
   data: string | Uint8Array,
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
     fs.appendFile(path, data, options, (err) => {
       if (err) {
@@ -195,6 +197,7 @@ export function fileOn() {
   );
   ipcMain.handle('file-mkdir', async (event, args) => mkdir(args.path, args.options));
   ipcMain.handle('file-deldir', async (event, args) => delDir(args.path));
+  ipcMain.handle('file-unlink', async (event, args) => unlink(args.path));
   ipcMain.handle('file-access', async (event, args) => access(args.path));
   ipcMain.handle('file-rename', async (event, args) => rename(args.path, args.newPath));
   ipcMain.handle('file-readfile', async (event, args) => readFile(args.path, args.options));

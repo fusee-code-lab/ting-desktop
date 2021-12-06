@@ -23,8 +23,8 @@
 import { defineComponent, ref, reactive, watch, onMounted, onBeforeUnmount, computed } from 'vue';
 import { audioData } from '@/renderer/core';
 import { getLyric } from '@/renderer/core/musicapi';
-import { audio } from '@/renderer/core/audio';
-import { debounce } from '@/lib';
+import audio from '@/renderer/common/audio';
+import { debounce } from '@/utils';
 import { WatchStopHandle } from '@vue/runtime-core';
 
 interface SongLyrics {

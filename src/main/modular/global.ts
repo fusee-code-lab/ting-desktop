@@ -1,10 +1,22 @@
-import { app, ipcMain, shell } from 'electron';
-import { resolve } from 'path';
+import { app, ipcMain } from 'electron';
+import { accessSync, constants } from 'fs';
+import { resolve, join, normalize } from 'path';
 import { EOL } from 'os';
+import { logError } from '@/main/modular/log';
+import { readFile } from './file';
+
+const { single } = require('@/cfg/window.json');
 
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
 };
+
+interface Config {
+  path: string;
+  seat: string;
+  parse: boolean;
+  opt?: { encoding?: BufferEncoding; flag?: string };
+}
 
 /**
  * Global
@@ -13,22 +25,18 @@ export class Global {
   private static instance: Global;
 
   public sharedObject: { [key: string]: any } = {
+    // 系统信息
     system: {
-      //系统信息
       EOL,
       version: process.getSystemVersion(),
       platform: process.platform
     },
+    // 应用信息
     app: {
-      //应用信息
+      // 是否单例
+      single,
       name: app.name,
-      version: app.getVersion(),
-      argv: process.argv,
-      dom: {
-        //dom常量集
-        class: [process.platform],
-        css: {}
-      }
+      version: app.getVersion()
     }
   };
 
@@ -37,36 +45,51 @@ export class Global {
     return Global.instance;
   }
 
-  constructor() {}
+  constructor() { }
+
+  /**
+   * 挂载配置
+   * @param path 配置文件路径
+   * @param seat 存放位置
+   * @param parse 是否parse
+   * @param opt
+   */
+  async use(conf: Config | Config[]) {
+    if (Array.isArray(conf)) {
+      for (let index = 0; index < conf.length; index++) {
+        const c = conf[index];
+        try {
+          const cfg = (await readFile(c.path, c.opt || { encoding: 'utf-8' })) as any;
+          if (cfg) this.sendGlobal(c.seat, c.parse ? JSON.parse(cfg) : cfg);
+        } catch (e) {
+          logError(`[cfg ${c.path}]`, e);
+        }
+      }
+    } else {
+      try {
+        const cfg = (await readFile(conf.path, conf.opt || { encoding: 'utf-8' })) as any;
+        if (cfg) this.sendGlobal(conf.seat, conf.parse ? JSON.parse(cfg) : cfg);
+      } catch (e) {
+        logError(`[cfg ${conf.path}]`, e);
+      }
+    }
+  }
 
   /**
    * 开启监听
    */
   on() {
-    //app常用获取路径
-    ipcMain.on('app-path-get', (event, args) => {
-      event.returnValue = app.getPath(args.key);
-    });
-    //app打开外部url
-    ipcMain.on('app-open-url', (event, args) => {
-      shell.openExternal(args.url).then();
-    });
     //赋值(sharedObject)
-    ipcMain.on('global-sharedObject-set', (event, args) => {
-      this.sendGlobal(args.key, args.value);
-      event.returnValue = 1;
+    ipcMain.handle('global-sharedObject-set', (event, args) => {
+      return this.sendGlobal(args.key, args.value);
     });
     //获取(sharedObject)
-    ipcMain.on('global-sharedObject-get', (event, key) => {
-      event.returnValue = this.getGlobal(key);
+    ipcMain.handle('global-sharedObject-get', (event, key) => {
+      return this.getGlobal(key);
     });
-    //获取(insidePath)
-    ipcMain.on('global-insidePath-get', (event, path) => {
-      event.returnValue = this.getInsidePath(path);
-    });
-    //获取(externPath)
-    ipcMain.on('global-externPath-get', (event, path) => {
-      event.returnValue = this.getExternPath(path);
+    //获取依赖路径
+    ipcMain.handle('global-resources-path-get', (event, { type, path }) => {
+      return this.getResourcesPath(type, path);
     });
   }
 
@@ -93,14 +116,14 @@ export class Global {
     return cur as unknown as Value;
   }
 
-  sendGlobal<Value>(key: string, value: Value): void {
+  sendGlobal<Value>(key: string, value: Value, exists: boolean = false): void {
     if (key === '') {
       console.error('Invalid key, the key can not be a empty string');
       return;
     }
 
     if (!key.includes('.')) {
-      if (Object.prototype.hasOwnProperty.call(this.sharedObject, key)) {
+      if (Object.prototype.hasOwnProperty.call(this.sharedObject, key) && exists) {
         console.warn(`The key ${key} looks like already exists on obj.`);
       }
       this.sharedObject[key] = value;
@@ -123,30 +146,52 @@ export class Global {
       console.error(`Invalid key ${key} because the value of this key is not a object.`);
       return;
     }
-    if (Object.prototype.hasOwnProperty.call(cur, lastKey)) {
+    if (Object.prototype.hasOwnProperty.call(cur, lastKey) && exists) {
       console.warn(`The key ${key} looks like already exists on obj.`);
     }
     cur[lastKey] = value;
   }
 
   /**
-   * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
-   * @param path lib/inside为起点的相对路径
+   * 获取资源文件路径
+   * 不传path返回此根目录
    * */
-  getInsidePath(path: string): string {
-    return app.isPackaged
-      ? resolve(__dirname, '../inside/' + path)
-      : resolve('./src/lib/inside/' + path);
-  }
-
-  /**
-   * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
-   * @param path lib/extern为起点的相对路径
-   * */
-  getExternPath(path: string): string {
-    return app.isPackaged
-      ? resolve(__dirname, '../../extern/' + path)
-      : resolve('./src/lib/extern/' + path);
+  getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path: string = './'): string {
+    try {
+      switch (type) {
+        case 'platform':
+          path = normalize(app.isPackaged
+            ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform, path))
+            : resolve(join('resources', 'platform', process.platform, path)));
+          break;
+        case 'inside':
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', 'inside', path))
+              : resolve(join('resources', 'inside', path))
+          );
+          break;
+        case 'extern':
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
+              : resolve(join('resources', 'extern', path))
+          );
+          break;
+        case 'root':  
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', '..', path))
+              : resolve(join('resources', 'root', path))
+          );
+          break;
+      }
+      accessSync(path, constants.R_OK);
+      return path;
+    } catch (e) {
+      logError(`[path ${path}]`, e);
+      throw e;
+    }
   }
 }
 
