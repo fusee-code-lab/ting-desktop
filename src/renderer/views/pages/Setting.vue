@@ -55,13 +55,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { tingCfgData } from '@/renderer/core/index';
 import { openDialog } from '@/renderer/common/dialog';
 import { getGlobal } from '@/renderer/common';
 export default defineComponent({
   name: 'Setting',
   setup() {
+    const version = ref<string>('');
+    getGlobal<string>('app.version').then((v) => (version.value = v));
+
     function revise(type: string) {
       openDialog({
         title: `选择【${type === 'down' ? '下载路径' : '歌单路径'}】目录`,
@@ -79,7 +82,7 @@ export default defineComponent({
     }
 
     return {
-      version: getGlobal('app.version'),
+      version,
       tingCfgData,
       revise,
       setBr
