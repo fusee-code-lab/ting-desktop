@@ -138,7 +138,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue';
 import { audioData, PlayTypeOpt, switchAudioType } from '@/renderer/core';
-import audio from '@/renderer/common/audio';
+import { audio } from '@/renderer/core/audio';
 import { windowAlwaysOnTop } from '@/renderer/common/window';
 import LyricsIcon from '@/renderer/views/components/Icons/LyricsIcon.vue';
 import PlayStatusIcon from '@/renderer/views/components/Icons/PlaystatusIcon.vue';

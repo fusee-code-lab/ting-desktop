@@ -75,7 +75,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
 import { getPlaylistDetail, getSongUrl, Vendors } from '@/renderer/core/musicapi';
-import audio from '@/renderer/common/audio';
+import { audio } from '@/renderer/core/audio';
 import { audioPlayListData, sheetData, TingPlayListOpt } from '@/renderer/core';
 import { openUrl } from '@/renderer/common';
 
@@ -108,10 +108,18 @@ export default defineComponent({
     function showHide() {
       data.isDesc = !data.isDesc;
     }
-
+    
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
-      if (req) await audio.play(req.url);
+      if (req)
+        await audio.play({
+          id: item.id,
+          vendor: item.vendor,
+          path: req.url,
+          name: item.name,
+          cover: item.album.cover,
+          singer: item.artists.map((e: any) => e.name).toString()
+        });
     }
 
     async function playAll() {

@@ -43,7 +43,7 @@
 import { computed, defineComponent, reactive } from 'vue';
 import { searchData, sheetData } from '@/renderer/core';
 import { getSongUrl, searchSheet, searchSong } from '@/renderer/core/musicapi';
-import audio from '@/renderer/common/audio';
+import { audio } from '@/renderer/core/audio';
 import EnhancedList, { EnhancedListSection as Section } from '../components/EnhancedList.vue';
 import SongItem from '../components/SongItem.vue';
 import { useRouter } from 'vue-router';
@@ -142,7 +142,17 @@ export default defineComponent({
 
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
-      if (req) audio.play(req.url).catch(console.log);
+      if (req)
+        audio
+          .play({
+            id: item.id,
+            vendor: item.vendor,
+            path: req.url,
+            name: item.name,
+            cover: item.album.cover,
+            singer: item.artists.map((e: any) => e.name).toString()
+          })
+          .catch(console.log);
     }
 
     async function sheet(item: any) {
