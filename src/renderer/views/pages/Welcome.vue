@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, toRaw } from 'vue';
-import { windowCreate, windowShow } from '@/renderer/common/window';
+import { windowCreate, windowShow, windowClose } from '@/renderer/common/window';
 import Head from '@/renderer/views/components/Head.vue';
 import { tingCfgData } from '@/renderer/core';
 import { dirname } from '@/renderer/common/path';
@@ -45,6 +45,7 @@ export default defineComponent({
           },
           resizable: true
         });
+        windowClose();
       });
     };
 
@@ -59,8 +60,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.win32,
-.linux {
+[platform='win32'],
+[platform='linux'] {
   .container > .main {
     right: 0;
 
@@ -75,7 +76,7 @@ export default defineComponent({
   }
 }
 
-.darwin {
+[platform='darwin'] {
   .container > .main {
     left: 0;
 
