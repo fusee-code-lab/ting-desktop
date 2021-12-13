@@ -1,18 +1,20 @@
-import type { ClientRequestConstructorOptions, ClientRequest } from 'electron';
-import { net } from 'electron';
-import { createReadStream, statSync } from 'fs';
-import { basename, extname } from 'path';
+import type { ClientRequest, ClientRequestArgs, IncomingMessage, OutgoingHttpHeaders } from 'http';
+import { request as httpRequest } from 'http';
+import { request as httpsRequest } from 'https';
 import { queryParams } from '@/utils';
+import { basename, extname } from 'path';
+import { createReadStream, statSync } from 'fs';
 
-const { timeout, appUrl } = require('@/cfg/net.json');
+export type Response = IncomingMessage;
+export type HeadersInit = OutgoingHttpHeaders;
 
-export interface NetOpt extends ClientRequestConstructorOptions {
+export interface RequestInit extends ClientRequestArgs {
   // 是否stringify参数（非GET请求使用）
   isStringify?: boolean;
   // 是否获取headers
   isHeaders?: boolean;
   onRequest?: (request: ClientRequest) => void;
-  headers?: { [key: string]: string };
+  headers?: HeadersInit;
   timeout?: number;
   data?: any;
   type?: 'TEXT' | 'JSON' | 'BUFFER';
@@ -33,10 +35,11 @@ function dataToFormData(boundary: string, key: string, value: string) {
 
 /**
  * 上传
+ * @param url
  * @param sendData
  * @param params
  */
-function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) {
+function upload(url: string, sendData: ClientRequestArgs, params: RequestInit = {}) {
   return new Promise((resolve, reject) => {
     const boundary = '--' + Math.random().toString(16);
     const headers = Object.assign(
@@ -48,7 +51,21 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
     if (!params.fileName) params.fileName = basename(params.filePath, extname(params.filePath));
     let chunks: Buffer[] = [];
     let size: number = 0;
-    const request = net.request(sendData);
+
+    function ing(response: IncomingMessage) {
+      response.on('data', (chunk) => {
+        chunks.push(chunk);
+        size += chunk.length;
+      });
+      response.on('end', () => {
+        const data = Buffer.concat(chunks, size);
+        resolve(data);
+      });
+    }
+
+    let request: ClientRequest;
+    if (url.startsWith('http://')) request = httpRequest(url, sendData, ing);
+    else request = httpsRequest(url, sendData, ing);
     for (const header in headers) request.setHeader(header, headers[header]);
     if (params.data) {
       for (const i in params.data) {
@@ -64,15 +81,11 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
     request.on('error', (err) => {
       reject(err);
     });
-    request.on('response', (response) => {
-      response.on('data', (chunk) => {
-        chunks.push(chunk);
-        size += chunk.length;
-      });
-      response.on('end', () => {
-        const data = Buffer.concat(chunks, size);
-        resolve(data);
-      });
+    request.on('destroyed', () => {
+      reject(new Error('destroy'));
+    });
+    request.on('error', (err) => {
+      reject(err);
     });
     const fileSize = statSync(params.filePath).size;
     const readStream = createReadStream(params.fileName, {
@@ -98,24 +111,18 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
 
 /**
  * 下载
+ * @param url
  * @param sendData
  * @param params
  */
-function download(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) {
+function download(url: string, sendData: ClientRequestArgs, params: RequestInit = {}) {
   return new Promise((resolve, reject) => {
     const headers = Object.assign({}, params.headers);
     params.type = 'BUFFER';
     let chunks: Buffer[] = [];
     let size: number = 0;
-    const request = net.request(sendData);
-    for (const header in headers) request.setHeader(header, headers[header]);
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    request.on('response', (response) => {
+
+    function ing(response: IncomingMessage) {
       response.on('data', (chunk) => {
         if (params.onDownload) {
           params.onDownload(chunk, Number(response.headers['content-length'] || 0));
@@ -141,10 +148,20 @@ function download(sendData: ClientRequestConstructorOptions, params: NetOpt = {}
         if (params.isHeaders) resolve({ data: result, headers: response.headers });
         else resolve(result);
       });
+    }
+
+    let request: ClientRequest;
+    if (url.startsWith('http://')) request = httpRequest(url, sendData, ing);
+    else request = httpsRequest(url, sendData, ing);
+    for (const header in headers) request.setHeader(header, headers[header]);
+    request.on('destroyed', () => {
+      reject(new Error('destroy'));
+    });
+    request.on('error', (err) => {
+      reject(err);
     });
     request.end();
     if (params.onRequest) params.onRequest(request);
-    if (!params.isDownload) setTimeout(() => request.abort(), params.timeout || timeout);
   });
 }
 
@@ -153,40 +170,26 @@ function download(sendData: ClientRequestConstructorOptions, params: NetOpt = {}
  * @param url
  * @param params
  */
-export default function request<T>(url: string, params: NetOpt = {}): Promise<T> {
-  if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
-  let sendData: ClientRequestConstructorOptions = {
-    url,
+export default function request<T>(url: string, params: RequestInit = {}): Promise<T> {
+  let sendData: ClientRequestArgs = {
     method: params.method || 'GET'
   };
   if (!params.isUpload && params.data && sendData.method === 'GET') {
-    sendData.url += `?${queryParams(params.data)}`;
+    url += `?${queryParams(params.data)}`;
   }
   if (params.isUpload) {
-    return upload(sendData, params) as Promise<T>;
+    return upload(url, sendData, params) as Promise<T>;
   }
   if (params.isDownload) {
-    return download(sendData, params) as Promise<T>;
+    return download(url, sendData, params) as Promise<T>;
   }
   return new Promise((resolve, reject) => {
-    const headers = Object.assign(
-      {
-        'content-type': 'application/json;charset=utf-8'
-      },
-      params.headers
-    );
+    const headers = params.headers || { 'content-type': 'application/json;charset=utf-8' };
     if (!params.type) params.type = 'JSON';
+    if (!params.timeout) params.timeout = 1000 * 60;
     let chunks: Buffer[] = [];
     let size: number = 0;
-    const request = net.request(sendData);
-    for (const header in headers) request.setHeader(header, headers[header]);
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    request.on('response', (response) => {
+    function ing(response: IncomingMessage) {
       response.on('data', (chunk) => {
         chunks.push(chunk);
         size += chunk.length;
@@ -216,7 +219,17 @@ export default function request<T>(url: string, params: NetOpt = {}): Promise<T>
         if (params.isHeaders) resolve({ data: result, headers: response.headers } as unknown as T);
         else resolve(result as unknown as T);
       });
+    }
+    let request: ClientRequest;
+    if (url.startsWith('http://')) request = httpRequest(url, sendData, ing);
+    else request = httpsRequest(url, sendData, ing);
+    request.on('destroyed', () => {
+      reject(new Error('destroy'));
     });
+    request.on('error', (err) => {
+      reject(err);
+    });
+    for (const header in headers) request.setHeader(header, headers[header]);
     if (params.data && sendData.method !== 'GET') {
       if (typeof params.data !== 'string') {
         const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
@@ -225,6 +238,5 @@ export default function request<T>(url: string, params: NetOpt = {}): Promise<T>
     }
     request.end();
     if (params.onRequest) params.onRequest(request);
-    setTimeout(() => request.abort(), params.timeout || timeout);
   });
 }

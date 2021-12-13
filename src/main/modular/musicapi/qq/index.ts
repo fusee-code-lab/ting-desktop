@@ -1,11 +1,11 @@
-import { lyric_decode, noSongsDetailMsg, pagination } from "../util";
-import { base, getMusicInfo, getMusicInfo2 } from "./base";
+import { lyric_decode, noSongsDetailMsg, pagination } from '../util';
+import { base, getMusicInfo, getMusicInfo2 } from './base';
 
 export async function searchSong({
-  keyword = "",
+  keyword = '',
   limit = 30,
   offset = 0,
-  remoteplace = "txt.yqq.song",
+  remoteplace = 'txt.yqq.song'
 }) {
   let params: { [key: string]: any } = {
     p: offset + 1,
@@ -15,39 +15,39 @@ export async function searchSong({
     remoteplace,
     aggr: 1,
     cr: 1,
-    lossless: 0,
+    lossless: 0
   };
-  let url = "/soso/fcgi-bin/client_search_cp";
-  if (remoteplace === "txt.yqq.playlist") {
-    url = "/soso/fcgi-bin/client_music_search_songlist";
+  let url = '/soso/fcgi-bin/client_search_cp';
+  if (remoteplace === 'txt.yqq.playlist') {
+    url = '/soso/fcgi-bin/client_music_search_songlist';
     params = {
       flag_qc: 0,
       page_no: offset,
       num_per_page: limit,
       remoteplace,
-      query: keyword,
+      query: keyword
     };
   }
   try {
     let data = await base(url, params);
-    if (remoteplace === "txt.yqq.playlist") {
+    if (remoteplace === 'txt.yqq.playlist') {
       return {
         status: true,
         data: {
           total: data.data.display_num,
           sheets: data.data.list.map((e: any) => {
-            e.vendor = "qq";
+            e.vendor = 'qq';
             return e;
-          }),
-        },
+          })
+        }
       };
     }
     return {
       status: true,
       data: {
         total: data.data.song.totalnum,
-        songs: data.data.song.list.map((item: any) => getMusicInfo2(item)),
-      },
+        songs: data.data.song.list.map((item: any) => getMusicInfo2(item))
+      }
     };
   } catch (e) {
     console.log(e);
@@ -55,26 +55,22 @@ export async function searchSong({
   }
 }
 
-export async function getSongDetail(
-  id: number | string,
-  raw = false,
-  type = "songid"
-) {
+export async function getSongDetail(id: number | string, raw = false, type = 'songid') {
   try {
-    const data = await base("/v8/fcg-bin/fcg_play_single_song.fcg", {
+    const data = await base('/v8/fcg-bin/fcg_play_single_song.fcg', {
       [type]: id,
-      format: "json",
+      format: 'json'
     });
     const info = data.data[0];
     if (!info) {
       return {
         status: false,
-        msg: noSongsDetailMsg,
+        msg: noSongsDetailMsg
       };
     }
     return {
       status: true,
-      data: raw ? info : getMusicInfo(info),
+      data: raw ? info : getMusicInfo(info)
     };
   } catch (e) {
     return e;
@@ -83,13 +79,13 @@ export async function getSongDetail(
 
 export async function getBatchSongDetail(songids: number[]) {
   try {
-    const data = await base("/v8/fcg-bin/fcg_play_single_song.fcg", {
-      songid: songids.join(","),
-      format: "json",
+    const data = await base('/v8/fcg-bin/fcg_play_single_song.fcg', {
+      songid: songids.join(','),
+      format: 'json'
     });
     return {
       status: true,
-      data: data.data.map((item: any) => getMusicInfo(item)),
+      data: data.data.map((item: any) => getMusicInfo(item))
     };
   } catch (e) {
     return e;
@@ -148,32 +144,31 @@ export async function getSongUrl(songid: string | number, br = 192) {
       true
     );
     try {
-      const host =
-        freeflowsip[Math.floor(Math.random() * freeflowsip.length - 1)];
+      const host = freeflowsip[Math.floor(Math.random() * freeflowsip.length - 1)];
       if (!midurlinfo[0].purl) {
         data = {
           status: false,
-          msg: "请求失败",
+          msg: '请求失败'
         };
       } else {
         data = {
           status: true,
           data: {
-            url: host + midurlinfo[0].purl,
-          },
+            url: host + midurlinfo[0].purl
+          }
         };
       }
     } catch (e) {
       data = {
         status: false,
-        msg: e.message || "请求失败",
+        msg: e.message || '请求失败'
       };
     }
   } catch (e) {
     data = {
       status: false,
-      msg: e.message || "请求失败",
-      log: e,
+      msg: e.message || '请求失败',
+      log: e
     };
   }
   return data;
@@ -182,25 +177,25 @@ export async function getSongUrl(songid: string | number, br = 192) {
 export async function getLyric(songid: number | string) {
   try {
     const mid = await this.getMid(songid);
-    let data = await base("/lyric/fcgi-bin/fcg_query_lyric_new.fcg", {
+    let data = await base('/lyric/fcgi-bin/fcg_query_lyric_new.fcg', {
       pcachetime: Date.parse(new Date().toUTCString()),
-      songmid: mid,
+      songmid: mid
     });
     if (data.lyric) {
       return {
         status: true,
         data: {
-          lyric: lyric_decode(Buffer.from(data.lyric, "base64").toString()),
-          translate: lyric_decode(Buffer.from(data.trans, "base64").toString()),
-        },
+          lyric: lyric_decode(Buffer.from(data.lyric, 'base64').toString()),
+          translate: lyric_decode(Buffer.from(data.trans, 'base64').toString())
+        }
       };
     } else {
       return {
         status: true,
         data: {
           lyric: [],
-          translate: [],
-        },
+          translate: []
+        }
       };
     }
   } catch (e) {
@@ -208,59 +203,44 @@ export async function getLyric(songid: number | string) {
   }
 }
 
-export async function getComment(
-  songid: number | string,
-  page = 1,
-  pagesize = 20
-) {
+export async function getComment(songid: number | string, page = 1, pagesize = 20) {
   try {
-    const { comment, hot_comment } = await base(
-      "/base/fcgi-bin/fcg_global_comment_h5.fcg",
-      {
-        reqtype: 2,
-        biztype: 1,
-        topid: songid,
-        cmd: 8,
-        needmusiccrit: 0,
-        pagenum: page - 1,
-        pagesize,
-        lasthotcommentid: "",
-        domain: "qq.com",
-      }
-    );
+    const { comment, hot_comment } = await base('/base/fcgi-bin/fcg_global_comment_h5.fcg', {
+      reqtype: 2,
+      biztype: 1,
+      topid: songid,
+      cmd: 8,
+      needmusiccrit: 0,
+      pagenum: page - 1,
+      pagesize,
+      lasthotcommentid: '',
+      domain: 'qq.com'
+    });
     return {
       status: true,
       data: {
-        hotComments:
-          hot_comment && hot_comment.commentlist ? hot_comment.commentlist : [],
+        hotComments: hot_comment && hot_comment.commentlist ? hot_comment.commentlist : [],
         comments: comment.commentlist || [],
-        total: comment.commenttotal,
-      },
+        total: comment.commenttotal
+      }
     };
   } catch (e) {
     return e;
   }
 }
 
-export async function getArtistSongs(
-  id: number | string,
-  offset: number,
-  limit: number
-) {
+export async function getArtistSongs(id: number | string, offset: number, limit: number) {
   try {
     const params = {
-      platform: "h5page",
-      from: "h5",
+      platform: 'h5page',
+      from: 'h5',
       singerid: id,
-      order: "listen",
+      order: 'listen',
       begin: offset * limit,
       num: limit,
-      songstatus: 1,
+      songstatus: 1
     };
-    const { data } = await base(
-      "/v8/fcg-bin/fcg_v8_singer_track_cp.fcg",
-      params
-    );
+    const { data } = await base('/v8/fcg-bin/fcg_v8_singer_track_cp.fcg', params);
     return {
       status: true,
       data: {
@@ -268,21 +248,17 @@ export async function getArtistSongs(
           id,
           name: data.singer_name,
           avatar: `http://y.gtimg.cn/music/photo_new/T001R300x300M000${data.singer_mid}.jpg`,
-          desc: data.SingerDesc,
+          desc: data.SingerDesc
         },
-        songs: data.list.map((item: any) => getMusicInfo2(item.musicData)),
-      },
+        songs: data.list.map((item: any) => getMusicInfo2(item.musicData))
+      }
     };
   } catch (e) {
     return e;
   }
 }
 
-export async function getPlaylistDetail(
-  id: string | number,
-  offset: number,
-  limit: number
-) {
+export async function getPlaylistDetail(id: string | number, offset: number, limit: number) {
   try {
     const params = {
       type: 1,
@@ -290,15 +266,12 @@ export async function getPlaylistDetail(
       utf8: 1,
       onlysong: 0,
       disstid: id,
-      format: "json",
-      inCharset: "utf8",
-      outCharset: "utf-8",
-      platform: "yqq",
+      format: 'json',
+      inCharset: 'utf8',
+      outCharset: 'utf-8',
+      platform: 'yqq'
     };
-    const { cdlist } = await base(
-      "/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg",
-      params
-    );
+    const { cdlist } = await base('/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg', params);
     let privileges = pagination(offset, limit, cdlist[0].songlist);
     return {
       status: true,
@@ -311,16 +284,16 @@ export async function getPlaylistDetail(
           desc: cdlist[0].desc,
           tags: cdlist[0].tags.map((e: any) => e.name),
           count: cdlist[0].songnum,
-          creat_name: cdlist[0].nickname,
+          creat_name: cdlist[0].nickname
         },
         songs: privileges.map((info: any) => getMusicInfo2(info)),
         song_all: cdlist[0].songlist.map((e: any) => {
           return {
             id: e.songid,
-            vendor: "qq",
+            vendor: 'qq'
           };
-        }),
-      },
+        })
+      }
     };
   } catch (e) {
     return e;
@@ -329,9 +302,9 @@ export async function getPlaylistDetail(
 
 export async function getMusicu(data: any) {
   return base(
-    "/cgi-bin/musicu.fcg",
+    '/cgi-bin/musicu.fcg',
     {
-      data: JSON.stringify(data),
+      data: JSON.stringify(data)
     },
     true
   );
@@ -343,24 +316,24 @@ export async function getArtists(offset = 0, param: any) {
     const { singerList } = await this.getMusicu({
       comm: {
         ct: 24,
-        cv: 10000,
+        cv: 10000
       },
       singerList: {
-        module: "Music.SingerListServer",
-        method: "get_singer_list",
+        module: 'Music.SingerListServer',
+        method: 'get_singer_list',
         param: {
           area,
           sex,
           genre,
           index,
           sin: offset * 80,
-          cur_page: offset + 1,
-        },
-      },
+          cur_page: offset + 1
+        }
+      }
     });
     return {
       status: true,
-      data: singerList.data,
+      data: singerList.data
     };
   } catch (e) {
     return e;
@@ -369,13 +342,10 @@ export async function getArtists(offset = 0, param: any) {
 
 export async function getAlbumDetail(id: string | number) {
   try {
-    const { data } = await base(
-      "https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg",
-      {
-        albumid: id,
-        tpl: "yqq_song_detail",
-      }
-    );
+    const { data } = await base('https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_info_cp.fcg', {
+      albumid: id,
+      tpl: 'yqq_song_detail'
+    });
     return {
       status: true,
       data: {
@@ -383,12 +353,12 @@ export async function getAlbumDetail(id: string | number) {
         cover: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${data.mid}.jpg`,
         artist: {
           id: data.singerid,
-          name: data.singername,
+          name: data.singername
         },
         desc: data.desc,
         publishTime: Date.parse(data.aDate),
-        songs: data.list.map((item: any) => getMusicInfo2(item)),
-      },
+        songs: data.list.map((item: any) => getMusicInfo2(item))
+      }
     };
   } catch (e) {
     return e;
@@ -397,13 +367,13 @@ export async function getAlbumDetail(id: string | number) {
 
 export async function getAllTopList() {
   const params = {
-    page: "index",
-    format: "html",
-    tpl: "macv4",
-    v8debug: 1,
+    page: 'index',
+    format: 'html',
+    tpl: 'macv4',
+    v8debug: 1
   };
   try {
-    let data = await base("/v8/fcg-bin/fcg_v8_toplist_opt.fcg", params);
+    let data = await base('/v8/fcg-bin/fcg_v8_toplist_opt.fcg', params);
     return {
       status: true,
       data: data
@@ -418,15 +388,15 @@ export async function getAllTopList() {
                 artists: [
                   {
                     id: item.singerid,
-                    name: item.singername,
-                  },
+                    name: item.singername
+                  }
                 ],
                 name: item.songname,
-                id: item.songid,
+                id: item.songid
               };
-            }),
+            })
           };
-        }),
+        })
     };
   } catch (e) {
     return e;
@@ -435,14 +405,14 @@ export async function getAllTopList() {
 
 export async function getTopList(id: string | number) {
   const params = {
-    platform: "h5",
+    platform: 'h5',
     topid: id,
     tpl: 3,
-    page: "detail",
-    type: "top",
+    page: 'detail',
+    type: 'top'
   };
   try {
-    let data = await base("/v8/fcg-bin/fcg_v8_toplist_cp.fcg", params);
+    let data = await base('/v8/fcg-bin/fcg_v8_toplist_cp.fcg', params);
     return {
       status: true,
       data: {
@@ -450,8 +420,8 @@ export async function getTopList(id: string | number) {
         description: data.topinfo.info,
         cover: data.topinfo.pic_v12,
         playCount: data.topinfo.listennum,
-        list: data.songlist.map((item: any) => getMusicInfo2(item.data)),
-      },
+        list: data.songlist.map((item: any) => getMusicInfo2(item.data))
+      }
     };
   } catch (e) {
     return e;
@@ -460,12 +430,10 @@ export async function getTopList(id: string | number) {
 
 export async function getUserInfo() {
   try {
-    const { data } = await base(
-      "/portalcgi/fcgi-bin/music_mini_portal/fcg_getuser_infoEx.fcg"
-    );
+    const { data } = await base('/portalcgi/fcgi-bin/music_mini_portal/fcg_getuser_infoEx.fcg');
     return {
       status: true,
-      data,
+      data
     };
   } catch (e) {
     return e;
@@ -476,20 +444,20 @@ export async function getRecommendPlaylist() {
   try {
     const { recomPlaylist } = await this.getMusicu({
       comm: {
-        ct: 24,
+        ct: 24
       },
       recomPlaylist: {
-        method: "get_hot_recommend",
+        method: 'get_hot_recommend',
         param: {
           async: 1,
-          cmd: 2,
+          cmd: 2
         },
-        module: "playlist.HotRecommendServer",
-      },
+        module: 'playlist.HotRecommendServer'
+      }
     });
     return {
       status: true,
-      data: recomPlaylist.data.v_hot,
+      data: recomPlaylist.data.v_hot
     };
   } catch (e) {
     return e;
@@ -501,18 +469,18 @@ export async function getRecommendSongs(page = 1, limit = 30) {
     const { get_daily_track } = await this.getMusicu({
       comm: { ct: 6, cv: 50500 },
       get_daily_track: {
-        module: "music.ai_track_daily_svr",
-        method: "get_daily_track",
+        module: 'music.ai_track_daily_svr',
+        method: 'get_daily_track',
         param: {
           id: 99,
           cmd: 0,
-          page: page - 1,
-        },
-      },
+          page: page - 1
+        }
+      }
     });
     return {
       status: true,
-      data: get_daily_track.data.tracks.map((item: any) => getMusicInfo(item)),
+      data: get_daily_track.data.tracks.map((item: any) => getMusicInfo(item))
     };
   } catch (e) {
     return e;

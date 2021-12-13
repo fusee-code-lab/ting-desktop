@@ -1,4 +1,4 @@
-import net, { NetOpt } from '@/main/modular/net';
+import net, { RequestInit } from '@/main/modular/net';
 import crypto from 'crypto';
 import { isNull } from '@/utils';
 import { completeCookie, randomUserAgent } from '../util';
@@ -56,20 +56,18 @@ export async function base(
   data?: any,
   opt?: { pureFly?: boolean; crypto?: string }
 ) {
-  let params: NetOpt = {
+  let params: RequestInit = {
     type: 'TEXT',
     method,
     headers: {
-      Accept: '*/*',
-      'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-      Connection: 'keep-alive',
-      // 'X-Real-IP': '223.74.158.213', // 此处加上可以解决海外请求的问题
-      'Content-type': 'application/x-www-form-urlencoded',
-      'User-Agent': opt && opt.crypto,
+      accept: '*/*',
+      'accept-language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
+      connection: 'keep-alive',
+      'content-type': 'application/x-www-form-urlencoded',
       referer: 'http://music.163.com',
       Host: 'music.163.com',
       Cookie: completeCookie(),
-      'user-agent': randomUserAgent()
+      'User-Agent': opt && opt.crypto ? opt.crypto : randomUserAgent()
     },
     timeout: 5000
   };
@@ -82,17 +80,20 @@ export async function base(
       params: data
     });
     uri = '/api/linux/forward';
+    params.data = JSON.stringify(body);
   } else {
     const cryptoreq = weapi(data);
     body = {
       params: cryptoreq.params,
       encSecKey: cryptoreq.encSecKey
     };
+    params.data = body;
+    params.isStringify = true;
   }
-  params.data = body;
   const url = `${baseURL}${uri}`;
 
-  let req = await net(url, params).catch(() => {
+  let req = await net(url, params).catch((e) => {
+    console.error(e);
     return null;
   });
 
