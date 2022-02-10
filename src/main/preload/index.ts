@@ -1,4 +1,7 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import type { IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
+import { EOL } from 'os';
+import { isSecondInstanceWin } from '@/cfg/app.json';
 
 contextBridge.exposeInMainWorld('ipc', {
   send: (channel: string, args?: any) => ipcRenderer.send(channel, args),
@@ -9,4 +12,11 @@ contextBridge.exposeInMainWorld('ipc', {
     ipcRenderer.once(channel, listener),
   invoke: (channel: string, args: any) => ipcRenderer.invoke(channel, args),
   removeAllListeners: (channel: string) => ipcRenderer.removeAllListeners(channel)
+});
+
+contextBridge.exposeInMainWorld('environment', {
+  EOL,
+  systemVersion: process.getSystemVersion(),
+  platform: process.platform,
+  isSecondInstanceWin
 });

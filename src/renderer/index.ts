@@ -1,16 +1,14 @@
-import { createApp } from 'vue';
-import customize from '@/renderer/store/customize';
 import { windowLoad } from '@/renderer/common/window';
-import { domPropertyLoad } from '@/renderer/common/dom';
-import App from '@/renderer/views/App.vue';
-import router from '@/renderer/router';
+import { setCustomize } from '@/renderer/store';
+import GlobalComponent from '@/renderer/common/globalComponent';
+import '@/renderer/views/scss/color.scss';
+import '@/renderer/views/scss/index.scss';
 
 windowLoad((_, args) => {
-  router.addRoute({
-    path: '/',
-    redirect: args.route
-  });
-  customize.set(args);
-  domPropertyLoad();
-  createApp(App).use(router).mount('#app');
+  setCustomize(args);
+  document.title = args.title || '';
+  document.body.setAttribute('platform', window.environment.platform);
+  document.body.setAttribute('headNative', args.headNative + '');
+  !args.headNative && GlobalComponent.use(import('./views/components/head'), 'head');
+  import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string));
 });

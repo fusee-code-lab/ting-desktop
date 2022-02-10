@@ -1,0 +1,88 @@
+{
+  "compression": "maximum",
+  "productName": "ting",
+  "appId": "org.ting",
+  "copyright": "MIT",
+  "asar": true,
+  "directories": {
+    "output": "out"
+  },
+  "files": [
+    "dist/**/*",
+    {
+      "from": "resources/inside",
+      "to": "inside/",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
+  "extraFiles": [
+    {
+      "from": "resources/root",
+      "to": "./"
+    }
+  ],
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "resources/build/icons/icon.ico",
+    "uninstallerIcon": "resources/build/icons/unicon.ico",
+    "installerHeaderIcon": "resources/build/icons/icon.ico",
+    "installerSidebar": "resources/build/icons/modern-wizard.bmp",
+    "uninstallerSidebar": "resources/build/icons/modern-wizard.bmp",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "ting",
+    "include": "resources/build/cfg/installer.nsh",
+    "menuCategory": false,
+    "displayLanguageSelector": false
+  },
+  "dmg": {
+    "contents": [
+      {
+        "x": 410,
+        "y": 150,
+        "type": "link",
+        "path": "/Applications"
+      },
+      {
+        "x": 130,
+        "y": 150,
+        "type": "file"
+      }
+    ]
+  },
+  "mac": {
+    "icon": "resources/build/icons/icon.icns"
+  },
+  "win": {
+    "icon": "resources/build/icons/icon.ico",
+    "requestedExecutionLevel": "asInvoker",
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "ia32"
+        ]
+      }
+    ]
+  },
+  "linux": {
+    "icon": "resources/build/icons",
+    "target": "AppImage",
+    "executableName": "ting"
+  },
+  "npmRebuild": true,
+  "extraResources": [
+    {
+      "from": "resources/extern",
+      "to": "extern/",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ]
+}

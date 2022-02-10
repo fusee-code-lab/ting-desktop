@@ -1,21 +1,33 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "traceResolution": false,
+    "listEmittedFiles": false,
+    "listFiles": false,
     "target": "esnext",
     "module": "esnext",
-    "noImplicitAny": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": "./",
     "isolatedModules": true,
     "allowJs": true,
-    "moduleResolution": "node",
     "importHelpers": true,
     "jsx": "preserve",
-    "esModuleInterop": true,
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "f",
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.d.ts", "src/**/*.vue", "src/**/*.ts"]
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.tsx"]
 }

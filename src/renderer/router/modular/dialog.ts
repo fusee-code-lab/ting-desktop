@@ -1,11 +1,8 @@
-import { RouteRecordRaw } from 'vue-router';
-
-const Route: RouteRecordRaw[] = [
+const Router: Route[] = [
   {
-    path: '/sheetCreate',
-    name: 'SheetCreate',
-    component: () => import('@/renderer/views/dialogs/SheetCreate.vue')
+    path: '/message',
+    component: () => import('@/renderer/views/dialog/message/index')
   }
 ];
 
-export default Route;
+export default Router;

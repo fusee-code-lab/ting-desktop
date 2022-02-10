@@ -1,28 +1,20 @@
-import { reactive } from 'vue';
+import Store from '@/renderer/common/store';
+import { windowUpdate } from '@/renderer/common/window';
+
+export function setCustomize(args: Customize) {
+  Store.set('customize', args);
+}
+
+export function getCustomize() {
+  return Store.get<Customize>('customize') as Customize;
+}
 
 /**
- * 组件页面配置
- * */
-export const keepAliveData = reactive<{
-  include: string[];
-  exclude: string[];
-  max: number;
-}>({
-  include: [],
-  exclude: [],
-  max: 10
-});
-export const addInclude = (key: string) => {
-  if (keepAliveData.include.indexOf(key) === -1) keepAliveData.include.push(key);
-};
-export const delInclude = (key: string) => {
-  if (keepAliveData.include.indexOf(key) > -1)
-    keepAliveData.include.splice(keepAliveData.include.indexOf(key), 1);
-};
-export const addExclude = (key: string) => {
-  if (keepAliveData.exclude.indexOf(key) === -1) keepAliveData.exclude.push(key);
-};
-export const delExclude = (key: string) => {
-  if (keepAliveData.exclude.indexOf(key) > -1)
-    keepAliveData.exclude.splice(keepAliveData.exclude.indexOf(key), 1);
-};
+ * 更新页面路由信息
+ */
+export function updateCustomizeRoute(route: string) {
+  let customize = getCustomize();
+  customize.route = route;
+  setCustomize(customize);
+  windowUpdate(customize);
+}

@@ -1,39 +1,19 @@
-import { RouteRecordRaw } from 'vue-router';
+import home from '@/renderer/views/pages/home';
+import welcome from '@/renderer/views/pages/welcome';
 
-const Route: RouteRecordRaw[] = [
+const Router: Route[] = [
   {
     path: '/welcome',
-    name: 'Welcome',
-    component: () => import('@/renderer/views/pages/Welcome.vue')
+    component: welcome
   },
   {
-    path: '/main',
-    name: 'Main',
-    redirect: '/main/home',
-    component: () => import('@/renderer/views/pages/Main.vue'),
-    children: [
-      {
-        path: 'home',
-        name: 'Home',
-        component: () => import('@/renderer/views/pages/Home.vue')
-      },
-      {
-        path: 'search',
-        name: 'Search',
-        component: () => import('@/renderer/views/pages/SearchDetails.vue')
-      },
-      {
-        path: 'sheet',
-        name: 'Sheet',
-        component: () => import('@/renderer/views/pages/SheetDetails.vue')
-      },
-      {
-        path: 'setting',
-        name: 'setting',
-        component: () => import('@/renderer/views/pages/Setting.vue')
-      }
-    ]
+    path: '/home',
+    component: home
+  },
+  {
+    path: '/about',
+    component: () => import('@/renderer/views/pages/about')
   }
 ];
 
-export default Route;
+export default Router;

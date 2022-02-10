@@ -1,21 +1,19 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import Customize from '@/renderer/store/customize';
-import { windowUpdate } from '@/renderer/common/window';
-
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
+import Router from '@/renderer/common/router';
+import { updateCustomizeRoute } from '@/renderer/store';
 
-const Router = createRouter({
-  history: createWebHashHistory(),
-  routes: [...pageRoute, ...dialogRoute]
-});
+const router = new Router([...pageRoute, ...dialogRoute]);
 
-Router.beforeEach((to, from) => {
-  if (to.path !== Customize.data.route) {
-    //更新窗口路由
-    Customize.data.route = to.path;
-    windowUpdate();
-  }
-});
+router.onBeforeRoute = (route) => {
+  updateCustomizeRoute(route.path);
+  return true;
+};
 
-export default Router;
+router.onAfterRoute = (route) => {};
+
+export function routerInit(route: string) {
+  router.push(route);
+}
+
+export default router;

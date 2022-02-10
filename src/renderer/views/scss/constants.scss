@@ -1,6 +1,0 @@
-$title-bar-height: 32px;
-$sidebar-width: 220px;
-
-@mixin quick-transition($property: all) {
-  transition: $property .15s ease-in-out;
-}

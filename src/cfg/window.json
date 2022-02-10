@@ -1,7 +1,11 @@
 {
-  "width": 980,
-  "height": 700,
-  "backgroundColor": "#ffffff",
-  "initRoute": "/home",
-  "single": true
+  "opt": {
+    "width": 800,
+    "height": 600,
+    "backgroundColor": "#ffffff"
+  },
+  "customize": {
+    "title": "Ting",
+    "route": "/home"
+  }
 }
