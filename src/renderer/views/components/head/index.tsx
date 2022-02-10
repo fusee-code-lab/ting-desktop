@@ -15,9 +15,15 @@ export default class Head implements Component {
   events() {
     return (
       <div class="events">
-        <div class="event min no-drag" onClick={() => windowMin()}></div>
-        <div class="event max-min no-drag" onClick={() => windowMaxMin()}></div>
-        <div class="event close no-drag" onClick={() => windowClose()}></div>
+        <div class="event min no-drag" onClick={() => windowMin()}>
+          <span class="ting-font ting-font-minimize"></span>
+        </div>
+        <div class="event max-min no-drag" onClick={() => windowMaxMin()}>
+          <span class="ting-font ting-font-maximize"></span>
+        </div>
+        <div class="event close no-drag" onClick={() => windowClose()}>
+          <span class="ting-font ting-font-close"></span>
+        </div>
       </div>
     );
   }

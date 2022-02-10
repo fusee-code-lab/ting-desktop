@@ -60,3 +60,63 @@ body {
   background-color: transparent;
 }
 
+ul,
+li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+a:link {
+  color: #ffffff;
+}
+
+a:visited {
+  color: #ffffff;
+}
+
+a,
+button,
+select,
+input {
+  -webkit-app-region: no-drag;
+}
+
+input,
+button,
+select {
+  border: none;
+  outline: none;
+  border-radius: 0;
+  margin: 2px 0;
+  padding: 0 12px;
+  background-color: #f1f1f1;
+  vertical-align: middle;
+  height: 32px;
+}
+
+button {
+  font-family: segoe-ui;
+
+  &:hover {
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 0, 0, 0.1)),
+      to(rgba(0, 0, 0, 0.1))
+    );
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
+  }
+
+  &:active {
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 0, 0, 0.2)),
+      to(rgba(0, 0, 0, 0.2))
+    );
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+  }
+}
