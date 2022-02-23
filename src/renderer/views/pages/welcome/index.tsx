@@ -1,6 +1,6 @@
 import { windowShow } from '@/renderer/common/window';
-import { metaUrl } from '@/utils';
 import style from './style';
+import logo from '@/assets/logo.png'
 
 export default class Welcome implements View {
   onReady() {
@@ -12,7 +12,7 @@ export default class Welcome implements View {
       <div class={style}>
         <div class="main">
           <div class="content">
-            <img src={metaUrl('logo.png')} alt="logo" />
+            <img src={logo} alt="logo" />
             <div class="title">
               欢迎来到
               <span style="margin-left: 10px">Ting</span>

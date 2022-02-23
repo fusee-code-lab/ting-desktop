@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { getCustomize } from '@/renderer/store';
-import { metaUrl } from '@/utils';
+import rocket from '@/assets/rocket.png'
 
 const args = getCustomize();
 
@@ -10,7 +10,7 @@ export default css`
   ${args.headNative ? 'padding: 10px;' : 'padding: 32px 10px 10px;'}
   padding: 32px 10px 10px;
   position: relative;
-  background-image: url(${metaUrl('rocket.png')});
+  background-image: url(${rocket});
 
   > .main {
     ${window.environment.platform === 'darwin' ? 'left: 0;' : 'right: 0;'}
