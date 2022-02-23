@@ -43,8 +43,8 @@ export function browserWindowInit(
     customize.parentId !== undefined &&
     typeof customize.parentId === 'number';
   let parenWin: BrowserWindow | null = null;
-  if (isParentId) parenWin = Window.getInstance().get(customize.parentId as number);
-  if (isParentId && parenWin) {
+  isParentId && (parenWin = Window.getInstance().get(customize.parentId as number));
+  if (parenWin) {
     opt.parent = parenWin;
     const currentWH = opt.parent.getBounds();
     customize.currentWidth = currentWH.width;
@@ -166,7 +166,7 @@ export class Window {
       }
       return;
     }
-    if (!win.customize.url) win.customize.url = join(__dirname, '../index.html');
+    if (!win.customize.url) win.customize.url = join(__dirname, '../renderer/index.html');
     load(win);
   }
 

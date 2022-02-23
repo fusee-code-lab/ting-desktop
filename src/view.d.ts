@@ -9,21 +9,20 @@ interface Route {
 
 interface VSource {
   $path?: string;
-  $el?: HTMLElement;
-  styles?: any[];
+  $el?: JSX.Element;
   onLoad?: (params?: any) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
   onActivated?: (params?: any) => void;
   onDeactivated?: () => void;
-  render?: () => HTMLElement | HTMLElement[];
+  render?: () => JSX.Element | JSX.Element[];
 }
 
 interface Component extends VSource {
   $currentPath?: string;
   onLoad?: () => void;
   onActivated?: () => void;
-  render?: () => HTMLElement;
+  render?: () => JSX.Element;
 }
 
 interface View extends VSource {
@@ -31,15 +30,6 @@ interface View extends VSource {
   components?: { [key: string]: Component };
 }
 
-declare module '*.lazy.scss' {
-  // 加载
-  function use(): void;
-
-  // 移除
-  function unuse(): void;
-}
-declare module '*.css';
-declare module '*.scss';
 declare module '*.svg';
 declare module '*.png';
 declare module '*.ico';

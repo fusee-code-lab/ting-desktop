@@ -1,6 +1,5 @@
 import type { MenuItem, MenuItemConstructorOptions } from 'electron';
 import { BrowserWindow, ipcMain, Menu, nativeImage } from 'electron';
-import { join } from 'path';
 
 export default class Menus {
   constructor() {}

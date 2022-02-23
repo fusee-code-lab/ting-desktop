@@ -1,9 +1,8 @@
-import { reactive, ref, watch } from 'vue';
 import { debounce, isNull } from '@/utils';
 import { Vendors } from './musicapi';
 import { writeFile } from '@/renderer/common/file';
 import { sep } from '@/renderer/common/path';
-import { getAppPath, getGlobal, logError } from '@/renderer/common';
+import { getAppPath, getGlobal, logError } from '@/renderer/common/app';
 import { windowSetSize } from '@/renderer/common/window';
 
 export enum PlayTypeOpt { //播放类型

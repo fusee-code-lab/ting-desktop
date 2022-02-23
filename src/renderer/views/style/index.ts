@@ -1,32 +1,65 @@
+import { injectGlobal } from '@emotion/css';
+import { metaUrl } from '@/utils';
+
+injectGlobal`
+:root {
+  --theme-blue: #3b78d6;
+  --theme-pink: #dd4e7c;
+  --lable: #000000;
+  --secondary-label: #3c3c43;
+  --tertiary-label: #3c3c43;
+
+  --red: #e54d42;
+  --orange: #f37b1d;
+  --yellow: #fbbd08;
+  --olive: #8dc63f;
+  --green: #39b54a;
+  --cyan: #1cbbb4;
+  --blue: #0081ff;
+  --purple: #6739b6;
+  --mauve: #9c26b0;
+  --pink: #e03997;
+  --brown: #a5673f;
+  --grey: #8799a3;
+  --black: #333333;
+  --darkGray: #666666;
+  --gray: #aaaaaa;
+  --ghostWhite: #f1f1f1;
+  --white: #ffffff;
+}
+@font-face {
+  font-family: ping-fang;
+  src: url(${metaUrl('fonts/PingFang-SC-Regular.ttf')});
+}
+
+@font-face {
+  font-family: segoe-ui;
+  src: url(${metaUrl('fonts/segoeui.ttf')});
+}
+
+@font-face {
+  font-family: 'ting-font';
+  src: url(${metaUrl('fonts/ting-font.ttf')});
+}
+
+.ting-font {
+  font-family: 'ting-font' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000000;
+}
+
 *,
 *:after,
 *:before {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-
-*::-webkit-scrollbar {
-  /*滚动条整体样式*/
-  width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
-  height: 1px;
-}
-
-*::-webkit-scrollbar-thumb {
-  /*滚动条里面小方块*/
-  /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
-  backdrop-filter: blur(10px);
-  background: rgba(0, 0, 0, 0.3);
-}
-
-*::-webkit-scrollbar-track {
-  /*滚动条里面轨道*/
-  /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);*/
-  background: transparent;
-}
-
 html,
-body {
+body,
+#root,
+.container {
   width: 100%;
   height: 100%;
   padding: 0;
@@ -35,53 +68,33 @@ body {
   position: relative;
   user-select: none;
 }
-
-.bg-img {
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-}
-
 .drag {
   -webkit-app-region: drag;
 }
-
 .no-drag {
   -webkit-app-region: no-drag;
 }
-
 .user-select-text {
   user-select: text;
 }
-
-.container {
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-}
-
 ul,
 li {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-
 a:link {
   color: #ffffff;
 }
-
 a:visited {
   color: #ffffff;
 }
-
 a,
 button,
 select,
 input {
   -webkit-app-region: no-drag;
 }
-
 input,
 button,
 select {
@@ -94,7 +107,6 @@ select {
   vertical-align: middle;
   height: 32px;
 }
-
 button {
   font-family: segoe-ui;
 
@@ -120,3 +132,4 @@ button {
     background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
   }
 }
+`;

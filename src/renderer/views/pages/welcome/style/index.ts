@@ -1,48 +1,19 @@
-[headnative='true'] {
-  .info {
-    padding: 10px;
-  }
-}
+import { css } from '@emotion/css';
+import { getCustomize } from '@/renderer/store';
+import { metaUrl } from '@/utils';
 
-[platform='win32'],
-[platform='linux'] {
-  .info > .main {
-    right: 0;
+const args = getCustomize();
 
-    > .content {
-      align-items: flex-end;
-      padding-right: 60px;
-
-      > .title {
-        text-align: right;
-      }
-    }
-  }
-}
-
-[platform='darwin'] {
-  .info > .main {
-    left: 0;
-
-    > .content {
-      align-items: flex-start;
-      padding-left: 60px;
-
-      > .title {
-        text-align: left;
-      }
-    }
-  }
-}
-
-.info {
+export default css`
   width: 100%;
   height: 100%;
+  ${args.headNative ? 'padding: 10px;' : 'padding: 32px 10px 10px;'}
   padding: 32px 10px 10px;
   position: relative;
-  background-image: url('~@/assets/rocket.png');
+  background-image: url(${metaUrl('rocket.png')});
 
   > .main {
+    ${window.environment.platform === 'darwin' ? 'left: 0;' : 'right: 0;'}
     position: absolute;
     top: 0;
     bottom: 0;
@@ -57,6 +28,9 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      ${window.environment.platform === 'darwin'
+        ? 'align-items: flex-start;padding-left: 60px;'
+        : 'align-items: flex-end;padding-right: 60px;'}
 
       > img {
         width: 20%;
@@ -68,6 +42,7 @@
         font: bold 40px/40px ping-fang;
         letter-spacing: 1px;
         color: var(--theme-blue);
+        text-align: ${window.environment.platform === 'darwin' ? 'left' : 'right'};
       }
 
       > .but {
@@ -81,4 +56,4 @@
       }
     }
   }
-}
+`;

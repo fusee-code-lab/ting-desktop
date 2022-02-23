@@ -3,6 +3,8 @@ import { renderView, unView } from '@/renderer/common/h';
 export default class Router {
   private instances: { [key: string]: View } = {};
 
+  // 当前路由挂载dom
+  public element: HTMLElement | null;
   public routes: Route[] = [];
   // 当前路由
   public current: View | undefined;
@@ -12,7 +14,9 @@ export default class Router {
   public onBeforeRoute: (route: Route, params?: any) => Promise<boolean> | boolean = () => true;
   public onAfterRoute: (route: Route, params?: any) => Promise<void> | void = () => {};
 
-  constructor(routes: Route[]) {
+  constructor(routes: Route[], elementId: string = 'root') {
+    this.element = document.getElementById(elementId);
+    if (!this.element) throw new Error(`element ${elementId} null`);
     this.routes.push(...routes);
   }
 
@@ -43,7 +47,7 @@ export default class Router {
       console.warn(`beyond the history of ${path}`);
       return;
     }
-    if (instance) route.instance = instance;
+    instance && (route.instance = instance);
     await this.rIng(route, params, false);
   }
 
@@ -56,7 +60,7 @@ export default class Router {
       console.warn(`beyond the history of ${path}`);
       return;
     }
-    if (instance) route.instance = instance;
+    instance && (route.instance = instance);
     await this.rIng(route, params, true);
   }
 
@@ -87,16 +91,16 @@ export default class Router {
       : (await route.component()).default;
     let view: View | undefined;
     let isLoad: boolean = false;
-    if (route.instance) view = this.instances[route.path];
-    if (view) isLoad = true;
+    route.instance && (view = this.instances[route.path]);
+    view && (isLoad = true);
     if (!isLoad) {
       view = new component() as View;
       view.$instance = route.instance || false;
-      if (!view.$path) view.$path = route.path;
+      !view.$path && (view.$path = route.path);
     }
-    if (this.current) this.unCurrent();
-    renderView(isLoad, view as View, params);
-    if (route.title) document.title = route.title;
+    this.current && this.unCurrent();
+    renderView(isLoad, this.element as HTMLElement, view as View, params);
+    route.title && (document.title = route.title);
     this.current = view;
     isHistory && this.setHistory(route.path, params);
     await this.onAfterRoute(route, params);

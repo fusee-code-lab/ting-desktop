@@ -4,6 +4,4 @@
 /dist/
 /logs/
 /.idea/
-/data/
-/src/lib/extern/audio.json
-/src/lib/extern/path.json
+/.swc/

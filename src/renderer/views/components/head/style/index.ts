@@ -1,17 +1,6 @@
-[platform='darwin'] {
-  .components > .head-info > .content {
-    padding-right: 10px;
-  }
-}
+import { css } from '@emotion/css';
 
-[platform='win32'],
-[platform='linux'] {
-  .components > .head-info > .content {
-    padding-left: 10px;
-  }
-}
-
-.components > .head-info {
+export default css`
   position: absolute;
   top: 0;
   left: 0;
@@ -28,6 +17,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    ${window.environment.platform === 'darwin' ? 'padding-right: 10px;' : 'padding-left: 10px;'}
 
     > .title {
       font: normal 13px /13px ping-fang;
@@ -58,17 +49,17 @@
         }
 
         > .ting-font-minimize:before {
-          content: '\e60f';
+          content: '\\e60f';
         }
 
         > .ting-font-maximize:before {
-          content: '\e60b';
+          content: '\\e60b';
         }
 
         > .ting-font-close:before {
-          content: '\e613';
+          content: '\\e613';
         }
       }
     }
   }
-}
+`;

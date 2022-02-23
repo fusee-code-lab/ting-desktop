@@ -6,6 +6,6 @@
   },
   "customize": {
     "title": "Ting",
-    "route": "/home"
+    "route": "/welcome"
   }
 }
