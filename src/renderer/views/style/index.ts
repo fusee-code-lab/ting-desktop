@@ -1,5 +1,7 @@
 import { injectGlobal } from '@emotion/css';
-import { metaUrl } from '@/utils';
+import pingFang from '@/assets/fonts/PingFang-SC-Regular.ttf';
+import segoeUi from '@/assets/fonts/segoeui.ttf';
+import tingFont from '@/assets/fonts/ting-font.ttf';
 
 injectGlobal`
 :root {
@@ -29,17 +31,17 @@ injectGlobal`
 }
 @font-face {
   font-family: ping-fang;
-  src: url(${metaUrl('fonts/PingFang-SC-Regular.ttf')});
+  src: url(${pingFang});
 }
 
 @font-face {
   font-family: segoe-ui;
-  src: url(${metaUrl('fonts/segoeui.ttf')});
+  src: url(${segoeUi});
 }
 
 @font-face {
   font-family: 'ting-font';
-  src: url(${metaUrl('fonts/ting-font.ttf')});
+  src: url(${tingFont});
 }
 
 .ting-font {

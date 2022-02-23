@@ -30,6 +30,7 @@ interface View extends VSource {
   components?: { [key: string]: Component };
 }
 
+declare module '*.ttf';
 declare module '*.svg';
 declare module '*.png';
 declare module '*.ico';

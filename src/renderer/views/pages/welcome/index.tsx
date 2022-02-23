@@ -1,6 +1,6 @@
 import { windowShow } from '@/renderer/common/window';
 import style from './style';
-import logo from '@/assets/logo.png'
+import logo from '@/assets/logo.png';
 
 export default class Welcome implements View {
   onReady() {
