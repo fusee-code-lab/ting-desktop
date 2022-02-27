@@ -102,16 +102,12 @@ button,
 select {
   border: none;
   outline: none;
-  border-radius: 0;
-  margin: 2px 0;
-  padding: 0 12px;
+  margin: 0;
+  padding: 0;
   background-color: #f1f1f1;
   vertical-align: middle;
-  height: 32px;
 }
 button {
-  font-family: segoe-ui;
-
   &:hover {
     background-image: -webkit-gradient(
       linear,
@@ -122,7 +118,6 @@ button {
     );
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
   }
-
   &:active {
     background-image: -webkit-gradient(
       linear,

@@ -1,16 +1,18 @@
 import { css } from '@emotion/css';
-import { getCustomize } from '@/renderer/store';
-import rocket from '@/assets/rocket.png'
-
-const args = getCustomize();
 
 export default css`
   width: 100%;
   height: 100%;
-  ${args.headNative ? 'padding: 10px;' : 'padding: 32px 10px 10px;'}
-  padding: 32px 10px 10px;
   position: relative;
-  background-image: url(${rocket});
+
+  > .bg {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
   > .main {
     ${window.environment.platform === 'darwin' ? 'left: 0;' : 'right: 0;'}
