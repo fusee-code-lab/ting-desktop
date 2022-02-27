@@ -25,6 +25,7 @@ export default class Welcome implements View {
   start() {
     windowCreate(
       {
+        title: 'Ting',
         route: '/index',
         data: 'first'
       },

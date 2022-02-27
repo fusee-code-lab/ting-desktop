@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 
 export default css`
-  width: 220px;
+  width: 100%;
   height: 100%;
-  background-color: red;
+  background-color: #e2e2e2;
 `;

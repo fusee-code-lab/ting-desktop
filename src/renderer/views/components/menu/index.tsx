@@ -1,8 +1,7 @@
 import style from './style';
 
-export default class Head implements Component {
-
+export default class Menu {
   render() {
-    return <div class={style}>123</div>;
+    return <div class={style}></div>;
   }
 }
