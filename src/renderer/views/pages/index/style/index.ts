@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css } from '@emotion/css/macro';
 
 export const infoStyle = css`
   width: 100%;
