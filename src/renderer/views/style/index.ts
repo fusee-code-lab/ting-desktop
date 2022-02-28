@@ -1,4 +1,4 @@
-import { injectGlobal } from '@emotion/css';
+import { injectGlobal } from '@emotion/css/macro';
 import pingFang from '@/assets/fonts/PingFang-SC-Regular.ttf';
 import segoeUi from '@/assets/fonts/segoeui.ttf';
 import tingFont from '@/assets/fonts/ting-font.ttf';
