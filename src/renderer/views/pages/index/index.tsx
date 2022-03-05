@@ -1,9 +1,9 @@
+import { windowShow } from '@/renderer/common/window';
 import Menu from '@/renderer/views/components/menu';
 import Audio from '@/renderer/views/components/audio';
-import { windowShow } from '@/renderer/common/window';
 import { infoStyle } from './style';
 
-export default class Welcome implements View {
+export default class Welcome {
   menu = new Menu();
   audio = new Audio();
 

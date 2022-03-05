@@ -3,7 +3,7 @@ import style from './style';
 import logo from '@/assets/logo.png';
 import rocket from '@/assets/rocket.png';
 
-export default class Welcome implements View {
+export default class Welcome {
   bgImgLoad() {
     const el = (<img class="bg" src={rocket} alt="bg" />) as HTMLImageElement;
     el.onload = () => this.load();

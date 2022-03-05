@@ -3,7 +3,7 @@ import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import style from './style';
 
 const args = getCustomize();
-export default class Head implements Component {
+export default class Head {
   isHead: boolean;
 
   constructor(isHead: boolean = true) {
