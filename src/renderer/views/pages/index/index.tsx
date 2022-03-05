@@ -7,6 +7,14 @@ export default class Welcome {
   menu = new Menu();
   audio = new Audio();
 
+  onLoad() {
+    this.audio.init();
+  }
+
+  onUnmounted() {
+    this.audio.un();
+  }
+
   onReady() {
     windowShow();
   }

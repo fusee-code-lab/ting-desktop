@@ -1,19 +1,3 @@
-import { normalize } from '@/renderer/common/path';
-
-const platform = window.environment.platform;
-
-async function pathToSrc(path: string) {
-  try {
-    if (!path.startsWith('http://') && !path.startsWith('https://')) {
-      path = await normalize(path);
-      return `${platform === 'win32' ? 'file:///' : 'file://'}${path.split('\\').join('/')}`;
-    }
-    return path;
-  } catch (e) {
-    return '';
-  }
-}
-
 class Audios {
   public static instance: Audios;
   // 当前播放源
@@ -34,6 +18,8 @@ class Audios {
   public volumeGradualTime: number = 0.7;
   // 音频的数据(可视化)
   public analyser: AnalyserNode;
+  // 监听音频时间更新
+  private audioTimeUpdate = new Event('audioTimeUpdate');
   // 音频Context
   private AudioContext: AudioContext = new AudioContext();
   // 当前播放
@@ -96,6 +82,7 @@ class Audios {
     this.currentAudio.ontimeupdate = () => {
       //更新播放位置
       this.ingTime = this.currentAudio.currentTime;
+      dispatchEvent(this.audioTimeUpdate);
     };
 
     this.currentAudio.onpause = () => {
@@ -115,14 +102,13 @@ class Audios {
     this.allTime = 0;
   }
 
-  async play(path?: string) {
-    if (path) {
-      const src = await pathToSrc(path);
+  async play(src?: string) {
+    if (src) {
       this.currentAudio.src = src;
       this.src = src;
       return;
     }
-    if (!path && !this.currentAudio.src && this.src) {
+    if (!src && !this.currentAudio.src && this.src) {
       this.currentAudio.src = this.src;
       return;
     }
@@ -143,8 +129,8 @@ class Audios {
     });
   }
 
-  async setSrc(path: string) {
-    this.src = await pathToSrc(path);
+  async setSrc(src: string) {
+    this.src = src;
   }
 
   clearSrc() {
