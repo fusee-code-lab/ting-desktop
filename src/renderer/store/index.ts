@@ -1,4 +1,4 @@
-import Store from '@/renderer/common/store';
+import Store, { ref } from '@/renderer/common/store';
 import { windowUpdate } from '@/renderer/common/window';
 
 export function setCustomize(args: Customize) {

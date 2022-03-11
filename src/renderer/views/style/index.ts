@@ -40,12 +40,12 @@ injectGlobal`
 }
 
 @font-face {
-  font-family: 'ting-font';
+  font-family: ting-font;
   src: url(${tingFont});
 }
 
 .ting-font {
-  font-family: 'ting-font' !important;
+  font-family: ting-font !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
@@ -66,7 +66,6 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: transparent;
   position: relative;
   user-select: none;
 }
@@ -109,7 +108,7 @@ select {
 }
 button {
   &:hover {
-    background-image: -webkit-gradient(
+    background-image: gradient(
       linear,
       left top,
       left bottom,
@@ -119,7 +118,7 @@ button {
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
   }
   &:active {
-    background-image: -webkit-gradient(
+    background-image: gradient(
       linear,
       left top,
       left bottom,

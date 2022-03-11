@@ -3,41 +3,42 @@ import audio from '@/renderer/common/audio';
 import style from './style';
 
 export default class Audio {
-  onTimeUpdate() {
-    console.log(audio.ingTime);
-  }
+  playPauseBut = (
+    <button class="test" onClick={() => this.playPause()}>
+      播放
+    </button>
+  ) as HTMLButtonElement;
 
-  init() {
-    addEventListener('audioTimeUpdate', this.onTimeUpdate);
-    audio.setSrc(
-      'https://img-qn.51miz.com/preview/sound/00/23/00/51miz-S230038-F96C71EB-thumb.mp3'
-    );
-    audio.loop(true);
+  constructor() {
+    addEventListener('audio-update', this.onAudioUpdate.bind(this));
+    addEventListener('audio-time-update', this.onAudioTimeUpdate.bind(this));
   }
 
   un() {
-    removeEventListener('audioTimeUpdate', this.onTimeUpdate);
+    removeEventListener('audio-update', this.onAudioUpdate);
+    removeEventListener('audio-time-update', this.onAudioTimeUpdate);
   }
 
-  test() {
-    const pp = () => {
-      if (audio.type) {
-        el.textContent = '播放';
-        audio.pause();
-      } else {
-        el.textContent = '暂停';
-        audio.play();
-      }
-    };
-    const el = (
-      <button class="test" onClick={pp}>
-        播放
-      </button>
-    );
-    return el;
+  onAudioUpdate() {
+    console.log('onAudioUpdate', audio.type);
+    this.playPauseBut.textContent = audio.type === 1 ? '暂停' : '播放';
+  }
+
+  onAudioTimeUpdate() {
+    console.log(audio.ingTime);
+  }
+
+  playPause() {
+    if (audio.type) {
+      this.playPauseBut.textContent = '播放';
+      audio.pause();
+    } else {
+      this.playPauseBut.textContent = '暂停';
+      audio.play();
+    }
   }
 
   render() {
-    return <div class={style}>{this.test()}</div>;
+    return <div class={style}>{this.playPauseBut}</div>;
   }
 }

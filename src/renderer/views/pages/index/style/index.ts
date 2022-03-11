@@ -13,7 +13,12 @@ export const infoStyle = css`
   > .right {
     position: relative;
     width: calc(100% - 220px);
-
+    > .head {
+      height: 32px;
+    }
+    > .content {
+      height: calc(100% - 32px - 50px);
+    }
     > .audio {
       position: absolute;
       left: 0;

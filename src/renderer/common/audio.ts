@@ -18,8 +18,10 @@ class Audios {
   public volumeGradualTime: number = 0.7;
   // 音频的数据(可视化)
   public analyser: AnalyserNode;
+  // 监听音频状态更新
+  private audioUpdate = new Event('audio-update');
   // 监听音频时间更新
-  private audioTimeUpdate = new Event('audioTimeUpdate');
+  private audioTimeUpdate = new Event('audio-time-update');
   // 音频Context
   private AudioContext: AudioContext = new AudioContext();
   // 当前播放
@@ -77,6 +79,7 @@ class Audios {
         this.AudioContext.currentTime + this.volumeGradualTime
       ); //音量淡入
       this.type = 1;
+      dispatchEvent(this.audioUpdate);
     };
 
     this.currentAudio.ontimeupdate = () => {
@@ -88,11 +91,13 @@ class Audios {
     this.currentAudio.onpause = () => {
       //播放暂停
       this.type = 0;
+      dispatchEvent(this.audioUpdate);
     };
 
     this.currentAudio.onended = () => {
       //播放完毕
       this.clear();
+      dispatchEvent(this.audioUpdate);
     };
   }
 

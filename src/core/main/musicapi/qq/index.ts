@@ -93,7 +93,7 @@ export async function getBatchSongDetail(songids: number[]) {
 }
 
 export async function getMid(id: number | string) {
-  const detailInfo = await this.getSongDetail(id, true);
+  const detailInfo = (await getSongDetail(id, true)) as any;
   if (!detailInfo.status) {
     throw new Error(detailInfo.msg);
   }
@@ -101,7 +101,7 @@ export async function getMid(id: number | string) {
 }
 
 export async function getSongUrl(songid: string | number, br = 192) {
-  const mid = await this.getMid(songid);
+  const mid = await getMid(songid);
   const guid = `${Math.floor(Math.random() * 1000000000)}`;
   const uin = '0';
   let data;
@@ -158,13 +158,13 @@ export async function getSongUrl(songid: string | number, br = 192) {
           }
         };
       }
-    } catch (e) {
+    } catch (e: any) {
       data = {
         status: false,
         msg: e.message || '请求失败'
       };
     }
-  } catch (e) {
+  } catch (e: any) {
     data = {
       status: false,
       msg: e.message || '请求失败',
@@ -176,7 +176,7 @@ export async function getSongUrl(songid: string | number, br = 192) {
 
 export async function getLyric(songid: number | string) {
   try {
-    const mid = await this.getMid(songid);
+    const mid = await getMid(songid);
     let data = await base('/lyric/fcgi-bin/fcg_query_lyric_new.fcg', {
       pcachetime: Date.parse(new Date().toUTCString()),
       songmid: mid
@@ -313,7 +313,7 @@ export async function getMusicu(data: any) {
 export async function getArtists(offset = 0, param: any) {
   const { area = -100, sex = -100, genre = -100, index = -100 } = param || {};
   try {
-    const { singerList } = await this.getMusicu({
+    const { singerList } = await getMusicu({
       comm: {
         ct: 24,
         cv: 10000
@@ -442,7 +442,7 @@ export async function getUserInfo() {
 
 export async function getRecommendPlaylist() {
   try {
-    const { recomPlaylist } = await this.getMusicu({
+    const { recomPlaylist } = await getMusicu({
       comm: {
         ct: 24
       },
@@ -466,7 +466,7 @@ export async function getRecommendPlaylist() {
 
 export async function getRecommendSongs(page = 1, limit = 30) {
   try {
-    const { get_daily_track } = await this.getMusicu({
+    const { get_daily_track } = await getMusicu({
       comm: { ct: 6, cv: 50500 },
       get_daily_track: {
         module: 'music.ai_track_daily_svr',
