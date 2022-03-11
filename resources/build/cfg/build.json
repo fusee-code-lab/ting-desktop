@@ -4,6 +4,7 @@
   "appId": "org.ting",
   "copyright": "MIT",
   "asar": true,
+  "afterPack": "scripts/buildAfterPack.js",
   "directories": {
     "output": "out"
   },
@@ -65,7 +66,7 @@
       {
         "target": "nsis",
         "arch": [
-          "x64"
+          "ia32"
         ]
       }
     ]
