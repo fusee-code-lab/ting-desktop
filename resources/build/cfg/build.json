@@ -64,9 +64,9 @@
     "requestedExecutionLevel": "asInvoker",
     "target": [
       {
-        "target": "nsis",
+        "target": "portable",
         "arch": [
-          "ia32"
+          "x64"
         ]
       }
     ]

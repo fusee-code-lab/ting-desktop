@@ -1,5 +1,4 @@
 import audio from '@/renderer/common/audio';
-
 import style from './style';
 
 export default class Audio {

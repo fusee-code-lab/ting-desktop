@@ -65,13 +65,13 @@ export default class {
   }
 
   onSearch({ detail }: any) {
+    console.log(detail);
     const [songsData, sheetsData] = detail;
     this.onSongs(songsData);
     this.onSheets(sheetsData);
   }
 
   onSongs(songsData: any) {
-    console.log(songsData);
     if (songsData.status) {
       const titleEl = this.songsEl.getElementsByClassName('title')[0];
       titleEl.textContent = '歌曲';
@@ -91,7 +91,6 @@ export default class {
   }
 
   onSheets(sheetsData: any) {
-    console.log(sheetsData);
     if (sheetsData.status) {
       const titleEl = this.sheetsEl.getElementsByClassName('title')[0];
       titleEl.textContent = '歌单';
