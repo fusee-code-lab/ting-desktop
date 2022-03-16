@@ -1,11 +1,8 @@
 import { css } from '@emotion/css/macro';
-import { getCustomize } from '@/renderer/store';
-
-const args = getCustomize();
 
 export default css`
   position: relative;
-  padding: ${args.headNative ? '10px' : '32px'} 10px 10px;
+  padding: ${window.customize.headNative ? '10px' : '32px'} 10px 10px;
 
   > .text {
     word-break: break-all;
