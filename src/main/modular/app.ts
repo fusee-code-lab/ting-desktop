@@ -1,4 +1,4 @@
-import { app, ipcMain, shell } from 'electron';
+import { app, ipcMain, shell, nativeTheme } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
 import Shortcut from '@/main/modular/shortcut';
@@ -97,6 +97,13 @@ export class App {
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') app.quit();
     });
+    nativeTheme.addListener('updated', () => {
+      Window.send('socket-back', {
+        shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
+        shouldUseHighContrastColors: nativeTheme.shouldUseHighContrastColors,
+        shouldUseInvertedColorScheme: nativeTheme.shouldUseInvertedColorScheme
+      });
+    });
   }
 
   /**
@@ -130,11 +137,11 @@ export class App {
     });
     //app常用获取路径
     ipcMain.handle('app-path-get', (event, args) => {
-      return app.getPath(args.key);
+      return app.getPath(args);
     });
     //app打开外部url
     ipcMain.handle('app-open-url', async (event, args) => {
-      return await shell.openExternal(args.url);
+      return await shell.openExternal(args);
     });
     //app重启
     ipcMain.on('app-relaunch', (event, args) => {

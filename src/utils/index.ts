@@ -46,6 +46,23 @@ export function queryParams(data: any): string {
 }
 
 /**
+ * 参数转对象
+ * @param str
+ */
+export function toParams(str: string) {
+  if (!str) return null;
+  let obj: any = {},
+    index = str.indexOf('?') || 0,
+    params = str.substring(index + 1);
+  let parr = params.split('&');
+  for (let i of parr) {
+    let arr = i.split('=');
+    obj[arr[0]] = decodeURIComponent(arr[1]);
+  }
+  return obj;
+}
+
+/**
  * 深拷贝
  * @param obj
  */
@@ -118,4 +135,19 @@ export function random(start: number = 0, end: number = 1): number {
 // 静态资源路径
 export function metaUrl(url: string) {
   return new URL(`../assets/${url}`, import.meta.url).href;
+}
+
+const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB', 'BB', 'NB', 'DB'] as const;
+type unit = typeof units[number];
+
+export type treatedBytes = { bytes: number; unit: unit };
+
+export function bytesToSize(bytes: number): treatedBytes {
+  if (bytes === 0) return { bytes: 0, unit: units[0] };
+  let k: number = 1024,
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+  return {
+    bytes: Math.round((bytes / Math.pow(k, i)) * Math.pow(10, 1)) / Math.pow(10, 1),
+    unit: units[i]
+  };
 }

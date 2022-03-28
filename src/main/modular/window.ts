@@ -36,8 +36,6 @@ export function browserWindowInit(
       webSecurity: false
     }
   });
-  if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
-    opt.backgroundColor = windowCfg.opt.backgroundColor;
   const isParentId =
     customize.parentId !== null &&
     customize.parentId !== undefined &&
@@ -64,14 +62,17 @@ export function browserWindowInit(
   }
   const win = new BrowserWindow(opt);
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
-  if (isParentId && parenWin) {
-    win.once('closed', () => {
-      parenWin?.focus();
-    });
-  }
+  if (isParentId) win.once('close', () => parenWin?.focus())
+
   if (!customize.argv) customize.argv = process.argv;
   customize.id = win.id;
   win.customize = customize;
+
+  // 窗口内创建
+  // win.webContents.setWindowOpenHandler((_) => ({
+  //   action: 'allow',
+  //   overrideBrowserWindowOptions: opt
+  // }));
   return win;
 }
 
@@ -275,7 +276,7 @@ export class Window {
       console.error('Invalid id, the id can not be a empty');
       return;
     }
-    win.setBackgroundColor(args.color || windowCfg.opt.backgroundColor);
+    win.setBackgroundColor(args.color);
   }
 
   /**
