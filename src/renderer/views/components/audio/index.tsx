@@ -28,6 +28,7 @@ export default class Audio {
   }
 
   playPause() {
+    if (!audio.src) return;
     if (audio.type) {
       this.playPauseBut.textContent = '播放';
       audio.pause();
