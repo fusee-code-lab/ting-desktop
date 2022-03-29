@@ -7,13 +7,21 @@ const r: { [key: string]: any } = {
   searchDetail: new searchDetail()
 };
 
-export function render(path?: RT) {
-  if (!path) {
-    r[rI].un();
-    return r[rI].render();
-  }
+const el = <div class="content"></div>;
+
+function removeChild() {
+  el.firstChild && el.removeChild(el.firstChild);
+}
+
+export function contentLoad() {
+  el.childNodes.length === 0 && el.appendChild(r[rI].render());
+  return el;
+}
+
+export function contentRender(path: RT) {
   if (rI === path) return;
   r[rI].un();
   rI = path;
-  return r[rI].render();
+  removeChild();
+  el.appendChild(r[rI].render());
 }
