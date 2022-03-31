@@ -1,4 +1,5 @@
 import { windowShow } from '@/renderer/common/window';
+import router from '@/renderer/router';
 import Menu from '@/renderer/views/components/menu';
 import Audio from '@/renderer/views/components/audio';
 import contentR from '@/renderer/views/components/content';
@@ -7,6 +8,10 @@ import { infoStyle } from './style';
 export default class Welcome {
   menu = new Menu();
   audio = new Audio();
+
+  onLoad(parame: ViewParameters) {
+    router.routerState(contentR.load(parame));
+  }
 
   onUnmounted() {
     this.audio.un();
