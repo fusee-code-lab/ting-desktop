@@ -1,7 +1,7 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
-import Router from '@/renderer/common/router';
-import { windowUpdate } from '@/renderer/common/window';
+import { Router } from 'ym-web';
+import { windowUpdate } from 'ym-electron/renderer/window';
 
 const router = new Router('inner', [...pageRoute, ...dialogRoute]);
 

@@ -1,4 +1,4 @@
-import { windowShow } from '@/renderer/common/window';
+import { windowShow } from 'ym-electron/renderer/window';
 import router from '@/renderer/router';
 import Menu from '@/renderer/views/components/menu';
 import Audio from '@/renderer/views/components/audio';
@@ -18,6 +18,7 @@ export default class Welcome {
   }
 
   onReady() {
+    console.log(1)
     windowShow();
   }
 

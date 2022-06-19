@@ -1,4 +1,4 @@
-import { windowShow, windowCreate, windowClose } from '@/renderer/common/window';
+import { windowShow, windowCreate, windowClose } from 'ym-electron/renderer/window';
 import style from './style';
 import logo from '@/assets/logo.png';
 import rocket from '@/assets/rocket.png';
@@ -27,7 +27,8 @@ export default class Welcome {
       {
         title: 'Ting',
         route: '/index',
-        data: 'first'
+        data: 'first',
+        isMainWin: true
       },
       {
         width: 980,

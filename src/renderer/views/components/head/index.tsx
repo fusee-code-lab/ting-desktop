@@ -1,4 +1,4 @@
-import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
+import { windowClose, windowMaxMin, windowMin } from 'ym-electron/renderer/window';
 import style from './style';
 
 export default class Head {

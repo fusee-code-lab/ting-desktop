@@ -1,4 +1,4 @@
-import { windowShow } from '@/renderer/common/window';
+import { windowShow } from 'ym-electron/renderer/window';
 import style from './style';
 
 export default class Message {

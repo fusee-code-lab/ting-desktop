@@ -1,4 +1,4 @@
-import { ChildRoute } from '@/renderer/common/router';
+import { ChildRoute } from 'ym-web';
 import searchDetail from './searchDetail';
 
 export default new ChildRoute(

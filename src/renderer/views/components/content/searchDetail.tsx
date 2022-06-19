@@ -1,5 +1,5 @@
 import audio from '@/renderer/common/audio';
-import { getSongUrl } from '@/core/renderer/musicapi';
+import { getSongUrl } from '@/renderer/common/musicapi';
 import { infoStyle } from './style';
 
 export default class {

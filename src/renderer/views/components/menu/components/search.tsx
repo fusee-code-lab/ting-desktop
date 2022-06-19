@@ -1,4 +1,4 @@
-import { searchSheet, searchSong } from '@/core/renderer/musicapi';
+import { searchSheet, searchSong } from '@/renderer/common/musicapi';
 
 export default class {
   sel = (<input />) as HTMLInputElement;
