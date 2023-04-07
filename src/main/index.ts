@@ -7,6 +7,7 @@ import { logError } from '@youliso/electronic/main/log';
 import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
+import { dialogOn } from './modular/dialog';
 import { fileOn } from './modular/resources';
 import logo from '@/assets/logo.png';
 
@@ -19,6 +20,7 @@ appInstance.start().then(async () => {
   tray.on('click', () => windowInstance.func('show'));
 
   session.on();
+  dialogOn();
   fileOn();
   musicApiOn();
   await appStartCfg();
