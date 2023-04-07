@@ -1,4 +1,4 @@
-import net, { RequestInit } from '@/main/modular/net';
+import net, { RequestOpt } from '@/main/modular/net';
 import crypto from 'crypto';
 import { isNull } from '@/utils';
 import { completeCookie, randomUserAgent } from '../util';
@@ -56,7 +56,7 @@ export async function base(
   data?: any,
   opt?: { pureFly?: boolean; crypto?: string }
 ) {
-  let params: RequestInit = {
+  let params: RequestOpt = {
     type: 'TEXT',
     method,
     headers: {

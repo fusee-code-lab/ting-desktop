@@ -3,7 +3,7 @@
     <Head />
     <div class="main">
       <div class="content">
-        <img src="~@/assets/logo.png" alt="logo" />
+        <img src="@/assets/logo.png" alt="logo" />
         <div class="title">
           欢迎来到
           <span style="margin-left: 10px">Ting</span>
@@ -16,12 +16,19 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, toRaw } from 'vue';
-import { windowCreate, windowShow, windowClose } from '@/renderer/common/window';
+import {
+  windowCreate,
+  windowShow,
+  windowClose,
+  dirname,
+  writeFile,
+  access,
+  mkdir,
+  sendGlobal,
+  getAppPath
+} from '@youliso/electronic/ipc';
 import Head from '@/renderer/views/components/Head.vue';
 import { tingCfgData } from '@/renderer/core';
-import { dirname } from '@/renderer/common/path';
-import { writeFile, access, mkdir } from '@/renderer/common/file';
-import { sendGlobal, getAppPath } from '@/renderer/common';
 
 export default defineComponent({
   name: 'Welcome',
@@ -37,14 +44,18 @@ export default defineComponent({
       sendGlobal('setting.cfg', cfgData);
       if (!(await access(dirPath))) await mkdir(dirPath);
       writeFile(filePath, JSON.stringify(cfgData)).then(() => {
-        windowCreate({
-          backgroundColor: '#ffffff',
-          customize: {
+        windowCreate(
+          {
             isMainWin: true,
             route: '/main'
           },
-          resizable: true
-        });
+          {
+            backgroundColor: '#ffffff',
+            frame: false,
+            show: false,
+            resizable: true
+          }
+        );
         windowClose();
       });
     };
@@ -93,7 +104,7 @@ export default defineComponent({
 
 .container {
   position: relative;
-  background-image: url('~@/assets/rocket.png');
+  background-image: url('@/assets/rocket.png');
 
   > .main {
     position: absolute;

@@ -1,10 +1,14 @@
 import { reactive, ref, watch } from 'vue';
 import { debounce, isNull } from '@/utils';
 import { Vendors } from './musicapi';
-import { writeFile } from '@/renderer/common/file';
-import { sep } from '@/renderer/common/path';
-import { getAppPath, getGlobal, logError } from '@/renderer/common';
-import { windowSetSize } from '@/renderer/common/window';
+import {
+  getAppPath,
+  getGlobal,
+  logError,
+  writeFile,
+  sep,
+  windowSetSize
+} from '@youliso/electronic/ipc';
 
 export enum PlayTypeOpt { //播放类型
   list,
@@ -90,7 +94,7 @@ let audio: TingAudioOpt = {
   cachedTime: 0, //已缓存时长
   ingTime: 0, //当前播放时长
   allTime: 0, //当前歌曲总时长
-  songInfo: null //当前播放歌曲信息
+  songInfo: undefined //当前播放歌曲信息
 };
 
 let audioSheetList: TingSheetListOpt = {

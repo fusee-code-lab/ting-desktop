@@ -77,7 +77,7 @@ import { defineComponent, onMounted, reactive } from 'vue';
 import { getPlaylistDetail, getSongUrl, Vendors } from '@/renderer/core/musicapi';
 import { audio } from '@/renderer/core/audio';
 import { audioPlayListData, sheetData, TingPlayListOpt } from '@/renderer/core';
-import { openUrl } from '@/renderer/common';
+import { openUrl } from '@youliso/electronic/ipc';
 
 interface SheetDetailsOpt {
   info?: any;
@@ -108,7 +108,7 @@ export default defineComponent({
     function showHide() {
       data.isDesc = !data.isDesc;
     }
-    
+
     async function play(item: any) {
       let req = await getSongUrl(item.vendor, item.id);
       if (req)
@@ -145,7 +145,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 
 .sheet-info {
   padding: 40px 50px 10px;
@@ -258,11 +258,11 @@ export default defineComponent({
           }
 
           > .icon.netease {
-            @include device-pixel('~@/assets/icons/netease_music');
+            @include device-pixel('@/assets/icons/netease_music');
           }
 
           > .icon.qq {
-            @include device-pixel('~@/assets/icons/qq_music');
+            @include device-pixel('@/assets/icons/qq_music');
           }
 
           > .nickname {

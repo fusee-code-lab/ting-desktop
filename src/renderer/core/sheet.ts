@@ -7,8 +7,14 @@ import {
   SongOpt,
   SheetListOpt
 } from '@/renderer/core/index';
-import { readLine, writeFile, appendFile, fileBySuffix } from '@/renderer/common/file';
-import { logError, getGlobal } from '@/renderer/common';
+import {
+  readLine,
+  writeFile,
+  appendFile,
+  fileBySuffix,
+  logError,
+  getGlobal
+} from '@youliso/electronic/ipc';
 
 const EOL = getGlobal('system.EOL');
 
@@ -42,9 +48,8 @@ async function sheetDetails(name: string) {
   try {
     let data = (await readLine(getSheetPath(name))) as string[];
     data.shift();
-    audioSheetListData.list[
-      audioSheetListData.list.map((e) => e.detail.name).indexOf(name)
-      ].songs = data.map((e) => JSON.parse(e)) as SongOpt[];
+    audioSheetListData.list[audioSheetListData.list.map((e) => e.detail.name).indexOf(name)].songs =
+      data.map((e) => JSON.parse(e)) as SongOpt[];
   } catch (e) {
     logError(e);
   }
@@ -54,11 +59,7 @@ async function sheetDetails(name: string) {
  * 创建歌单
  */
 export async function sheetCreate(name: string, data: SheetOpt) {
-  return await writeFile(
-    getSheetPath(name),
-    JSON.stringify(data) + EOL,
-    { encoding: 'binary' }
-  );
+  return await writeFile(getSheetPath(name), JSON.stringify(data) + EOL, { encoding: 'binary' });
 }
 
 /**

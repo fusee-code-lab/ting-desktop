@@ -18,32 +18,32 @@ export const provider = {
 
 // 获取歌曲详情
 export async function getSongDetail(vendor: Vendors, id: number | string) {
-  return await provider[vendor]['getSongDetail'](id);
+  return (await provider[vendor]['getSongDetail'](id)) as any;
 }
 
 // 批量获取歌曲详情
 export async function getBatchSongDetail(vendor: Vendors, ids: number[]) {
-  return await provider[vendor]['getBatchSongDetail'](ids);
+  return (await provider[vendor]['getBatchSongDetail'](ids)) as any;
 }
 
 //获取歌曲url
 export async function getSongUrl(vendor: Vendors, id: number | string, br: number) {
-  return await provider[vendor]['getSongUrl'](id, br);
+  return (await provider[vendor]['getSongUrl'](id, br)) as any;
 }
 
 // 获取歌词
 export async function getLyric(vendor: Vendors, id: number | string) {
-  return await provider[vendor]['getLyric'](id);
+  return (await provider[vendor]['getLyric'](id)) as any;
 }
 
 // 获取歌曲评论
 export async function getComment(vendor: Vendors, id: number | string, page = 1, limit = 20) {
-  return await provider[vendor]['getComment'](id, page, limit);
+  return (await provider[vendor]['getComment'](id, page, limit)) as any;
 }
 
 // 获取歌手单曲
 export async function getArtistSongs(vendor: Vendors, id: number | string, offset = 0, limit = 50) {
-  return await provider[vendor]['getArtistSongs'](id, offset, limit);
+  return (await provider[vendor]['getArtistSongs'](id, offset, limit)) as any;
 }
 
 // 获取歌单歌曲
@@ -53,12 +53,12 @@ export async function getPlaylistDetail(
   offset = 0,
   limit = 65535
 ) {
-  return await provider[vendor]['getPlaylistDetail'](id, offset, limit);
+  return (await provider[vendor]['getPlaylistDetail'](id, offset, limit)) as any;
 }
 
 // 获取专辑详情
 export async function getAlbumDetail(vendor: Vendors, id: number | string) {
-  return await provider[vendor]['getAlbumDetail'](id);
+  return (await provider[vendor]['getAlbumDetail'](id)) as any;
 }
 
 // 批量获取任意vendor歌曲详情
@@ -83,7 +83,7 @@ export async function getAnyVendorSongDetail(arr: BSongArrayOpt[], timeout = 0) 
       // 达到限制 或 已是数组最后一个
       if (arr.length === limit || index + 1 === list.length) {
         // 获取详情
-        const data = await this.getBatchSongDetail(vendor, arr);
+        const data = await getBatchSongDetail(vendor as any, arr);
         if (data.status) {
           data.data.forEach((song: any) => {
             songsObject[`${vendor}_${song.id}`] = song;

@@ -1,16 +1,15 @@
 import { createApp } from 'vue';
-import customize from '@/renderer/store/customize';
-import { windowLoad } from '@/renderer/common/window';
-import { domPropertyLoad } from '@/renderer/common/dom';
+import { windowLoad } from '@youliso/electronic/ipc';
 import App from '@/renderer/views/App.vue';
 import router from '@/renderer/router';
 
 windowLoad((_, args) => {
+  console.log(args)
   router.addRoute({
     path: '/',
-    redirect: args.route
+    redirect: args.route!
   });
-  customize.set(args);
-  domPropertyLoad();
+  window.customize = args;
+  document.body.setAttribute('platform', window.environment.platform);
   createApp(App).use(router).mount('#app');
 });

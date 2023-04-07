@@ -58,7 +58,7 @@
 import { defineComponent, ref } from 'vue';
 import { tingCfgData } from '@/renderer/core/index';
 import { openDialog } from '@/renderer/common/dialog';
-import { getGlobal } from '@/renderer/common';
+import { getGlobal } from '@youliso/electronic/ipc';
 export default defineComponent({
   name: 'Setting',
   setup() {
@@ -91,7 +91,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 .setting-page {
   padding: 40px 20px 0;
   height: calc(100% - 50px);

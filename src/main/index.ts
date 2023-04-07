@@ -1,39 +1,63 @@
-import type { BrowserWindowConstructorOptions } from 'electron';
-import App from './modular/app';
-import Shortcut from './modular/shortcut';
-import Global from './modular/global';
-import Window from './modular/window';
-import Tray from './modular/tray';
-import { logOn } from './modular/log';
-import { pathOn } from './modular/path';
-import { fileOn } from './modular/file';
+import { appInstance } from '@youliso/electronic/main/app';
+import { windowInstance } from '@youliso/electronic/main/window';
+import { globalInstance } from '@youliso/electronic/main/global';
+import { Session } from '@youliso/electronic/main/session';
+import { createTray } from '@youliso/electronic/main/tray';
+import { logError } from '@youliso/electronic/main/log';
+import { app } from 'electron';
+import { customize, opt } from '@/cfg/window.json';
 import { musicApiOn, appStartCfg } from './modular/musicapi';
+import { fileOn } from './modular/resources';
+import logo from '@/assets/logo.png';
 
-await App.start();
-// 主要模块
-Shortcut.on();
-Global.on();
-Window.on();
-Tray.on();
-logOn();
-// 可选模块
-fileOn();
-pathOn();
-musicApiOn();
-await App.use([import('./modular/session'), import('./modular/dialog'), import('./modular/menu')]);
-await appStartCfg();
-// 窗口
-const tingCfg = Global.getGlobal<{ [key: string]: unknown } | 0>('setting.cfg');
-let opt: BrowserWindowConstructorOptions = {
-  customize: {
-    route: '/main'
+appInstance.start().then(async () => {
+  const tray = createTray({
+    name: customize.title,
+    iconPath: logo as string
+  });
+  const session = new Session();
+  tray.on('click', () => windowInstance.func('show'));
+
+  session.on();
+  fileOn();
+  musicApiOn();
+  await appStartCfg();
+
+  const tingCfg = globalInstance.getGlobal<{ [key: string]: unknown } | 0>('setting.cfg');
+  if (tingCfg === 0 || (tingCfg && tingCfg.first)) {
+    opt.width = 800;
+    opt.height = 600;
+    customize.route = '/welcome';
   }
-};
-if (tingCfg === 0 || tingCfg.first) {
-  opt.width = 800;
-  opt.height = 600;
-  opt.customize.route = '/welcome';
-}
-Window.create(opt);
-// 托盘
-Tray.create();
+
+  // 调试模式
+  if (!app.isPackaged) {
+    try {
+      import('fs').then(({ readFileSync }) => {
+        import('path').then(({ join }) => {
+          windowInstance.setDefaultCfg({
+            defaultLoadType: 'url',
+            defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`
+          });
+          const win = windowInstance.create(customize, {
+            ...opt,
+            webPreferences: {
+              devTools: true
+            }
+          });
+          win &&
+            windowInstance
+              .load(win, {
+                openDevTools: true
+              })
+              .catch(console.error);
+        });
+      });
+    } catch (e) {
+      throw 'not found .port';
+    }
+  } else {
+    const win = windowInstance.create(customize, opt);
+    win && windowInstance.load(win).catch(logError);
+  }
+});

@@ -1,8 +1,8 @@
 import * as Api from './api';
 import { ipcMain, app } from 'electron';
-import { readFile } from '@/main/modular/file';
-import { logError } from '@/main/modular/log';
-import Global from '@/main/modular/global';
+import { readFile } from '@youliso/electronic/main/file';
+import { logError } from '@youliso/electronic/main/log';
+import { globalInstance } from '@youliso/electronic/main/global';
 
 /**
  * 获取歌曲详情
@@ -254,12 +254,12 @@ export async function appStartCfg() {
     ])) as string[];
     let cfg = JSON.parse(req[0]);
     let audio = JSON.parse(req[1]);
-    Global.sharedObject['setting'] = {
+    globalInstance.sharedObject['setting'] = {
       cfg,
       audio
     };
   } catch (e) {
-    Global.sharedObject['setting'] = {};
+    globalInstance.sharedObject['setting'] = {};
     logError('[getSetting]', e);
   }
 }

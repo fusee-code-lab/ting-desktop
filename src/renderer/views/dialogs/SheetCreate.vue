@@ -18,7 +18,7 @@
 import { defineComponent, onMounted, reactive, toRaw } from 'vue';
 import { isNull } from '@/utils';
 import { SheetOpt } from '@/renderer/core';
-import { windowClose, windowShow, windowMessageSend } from '@/renderer/common/window';
+import { windowClose, windowShow, windowMessageSend } from '@youliso/electronic/ipc';
 
 export default defineComponent({
   name: 'SheetCreate',

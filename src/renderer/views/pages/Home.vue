@@ -19,7 +19,7 @@ export default defineComponent({
   font: 400 19px ping-fang;
   width: 100%;
   height: 100%;
-  background-image: url('~@/assets/rocket.png');
+  background-image: url('@/assets/rocket.png');
   background-size: 150px 150px;
   background-repeat: no-repeat;
   background-position: center center;

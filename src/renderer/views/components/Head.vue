@@ -31,15 +31,14 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getGlobal } from '@/renderer/common';
-import Customize from '@/renderer/store/customize';
 import {
+  getGlobal,
   windowClose,
   windowHide,
   windowMax,
   windowMaxMin,
   windowMin
-} from '@/renderer/common/window';
+} from '@youliso/electronic/ipc';
 import { audioData } from '@/renderer/core';
 import CloseIcon from '@/renderer/views/components/Icons/CloseIcon.vue';
 import MinimizeIcon from '@/renderer/views/components/Icons/MinimizeIcon.vue';
@@ -57,7 +56,7 @@ export default defineComponent({
     BackIcon
   },
   setup() {
-    const argsData = Customize.get();
+    const argsData = window.customize;
     const isMacintosh = ref(false);
     const title = ref(argsData.title);
     getGlobal<string>('system.platform').then(
@@ -111,7 +110,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 @import '../scss/constants.scss';
 
 .head-info {

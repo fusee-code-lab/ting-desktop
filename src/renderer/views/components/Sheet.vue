@@ -20,9 +20,12 @@ import { IpcRendererEvent } from 'electron';
 import { defineComponent, toRaw, onMounted, onUnmounted } from 'vue';
 import { audioSheetListData } from '@/renderer/core';
 import { sheetList, sheetCreate } from '@/renderer/core/sheet';
-import { windowCreate, windowMessageOn, windowMessageRemove } from '@/renderer/common/window';
-import { getGlobal } from '@/renderer/common';
-import Customize from '@/renderer/store/customize';
+import {
+  getGlobal,
+  windowCreate,
+  windowMessageOn,
+  windowMessageRemove
+} from '@youliso/electronic/ipc';
 
 export default defineComponent({
   name: 'Sheet',
@@ -48,16 +51,20 @@ export default defineComponent({
         isMacintosh && parseInt((await getGlobal<string>('system.version')).split('.')[0]) >= 11;
       const topTitleBarHeight = isBigSurOrLatter ? 28 : 22;
 
-      windowCreate({
-        customize: {
-          title: '歌单添加',
+      windowCreate(
+        {
           route: '/sheetCreate',
-          parentId: Customize.get().id
+          parentId: window.customize.winId!,
+          position: 'center'
         },
-        width: 400,
-        height: isMacintosh ? topTitleBarHeight + 180 : 180,
-        modal: true
-      });
+        {
+          frame: false,
+          show: false,
+          width: 400,
+          height: isMacintosh ? topTitleBarHeight + 180 : 180,
+          modal: true
+        }
+      );
     }
 
     onMounted(async () => {
@@ -76,7 +83,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 
 .sheet-info {
   > .items {
@@ -101,7 +108,7 @@ export default defineComponent({
           align-items: center;
 
           > .icon {
-            @include device-pixel('~@/assets/icons/play_list_icon');
+            @include device-pixel('@/assets/icons/play_list_icon');
             width: 16px;
             height: 16px;
             margin-right: 12px;

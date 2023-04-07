@@ -7,8 +7,7 @@ import {
 } from '@/renderer/core/index';
 import { getSongDetail, getSongUrl } from './musicapi';
 import { isNull, random } from '@/utils';
-import { getGlobal } from '@/renderer/common';
-import { normalize } from '@/renderer/common/path';
+import { getGlobal, normalize } from '@youliso/electronic/ipc';
 
 const platform: string = await getGlobal<string>('system.platform');
 
@@ -20,18 +19,18 @@ async function pathToSrc(path: string) {
     }
     return path;
   } catch (e) {
-    return null;
+    return '';
   }
 }
 
 class Audios {
   public static instance: Audios;
-  public LastOrNext: number = null; //上一曲为负 下一曲为正
-  public analyser: AnalyserNode = null; //音频的可视化
+  public LastOrNext: number = 0; //上一曲为负 下一曲为正
+  public analyser: AnalyserNode; //音频的可视化
   private AudioContext: AudioContext = new AudioContext(); //音频api
   private currentAudio: HTMLAudioElement = new Audio(); //当前播放音源
-  private sourceAudio: MediaElementAudioSourceNode = null; //音频的源
-  private gainNode: GainNode = null; //控制节点
+  private sourceAudio: MediaElementAudioSourceNode; //音频的源
+  private gainNode: GainNode; //控制节点
 
   static getInstance() {
     if (!Audios.instance) Audios.instance = new Audios();
@@ -135,7 +134,7 @@ class Audios {
       }
       this.clear();
       audioData.songInfo = song;
-      this.currentAudio.src = song.path;
+      if (song.path) this.currentAudio.src = song.path;
       this.currentAudio.load();
       if (
         isNull(audioPlayListData.value[`${song.vendor}|${song.id}`]) ||
@@ -148,6 +147,8 @@ class Audios {
       console.log(audioData.songInfo);
       this.clear();
       if (
+        audioData.songInfo &&
+        audioData.songInfo.path &&
         audioData.songInfo.path.indexOf('http://') > -1 &&
         audioData.songInfo.path.indexOf('https://') > -1
       ) {
@@ -158,11 +159,11 @@ class Audios {
         );
         if (req) {
           audioData.songInfo.path = req.url;
-          this.currentAudio.src = audioData.songInfo.path;
+          this.currentAudio.src = req.url;
           this.currentAudio.load();
         }
       } else {
-        let url = await pathToSrc(audioData.songInfo.path);
+        let url = await pathToSrc(audioData.songInfo.path!);
         if (url) {
           this.currentAudio.src = url;
           this.currentAudio.load();
@@ -199,7 +200,7 @@ class Audios {
   }
 
   async next(num: number) {
-    let SongIng = `${audioData.songInfo.vendor}|${audioData.songInfo.id}`;
+    let SongIng = `${audioData.songInfo!.vendor}|${audioData.songInfo!.id}`;
     let SongList = Object.keys(audioPlayListData.value);
     let Index = SongList.indexOf(SongIng);
     this.LastOrNext = num;

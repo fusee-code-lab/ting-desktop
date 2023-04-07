@@ -32,7 +32,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 @import '../scss/constants';
 
 .side-bar {
@@ -43,7 +43,7 @@ export default defineComponent({
   padding: 40px 10px 0;
 
   > .setting-but {
-    @include device-pixel('~@/assets/icons/setting_btn');
+    @include device-pixel('@/assets/icons/setting_btn');
     position: absolute;
     width: 16px;
     height: 16px;

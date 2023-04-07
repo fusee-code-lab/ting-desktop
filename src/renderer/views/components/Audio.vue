@@ -84,7 +84,7 @@
               }%, #F2F2F7 0%)`
             }"
             :value="parseInt((co.volume * 100).toString())"
-            @input="audio.setVolume($event.target.value)"
+            @input="audio.setVolume($event.target!.value)"
           />
         </div>
       </div>
@@ -120,14 +120,14 @@
       </div>
       <div class="audio-info-buts">
         <div class="rules no-drag">
-          <div class="random" @click="rules(PlayTypeOpt.random)"></div>
-          <div class="single" @click="rules(PlayTypeOpt.single)"></div>
+          <div class="random" :class="{ active: isShuffle }" @click="switchShuffle"></div>
+          <div class="single" :class="{ active: isRepeat }" @click="switchRepeat"></div>
         </div>
         <div class="buts no-drag">
-          <div class="pre" @click="audio.pre()"></div>
-          <div v-if="isPaused === 1" class="play" @click="play()"></div>
-          <div v-if="isPaused === 0" class="pause" @click="pause()"></div>
-          <div class="next" @click="audio.next()"></div>
+          <div class="pre" @click="audio.next(-1)"></div>
+          <div v-if="isPaused === 1" class="play" @click="audio.play()"></div>
+          <div v-if="isPaused === 0" class="pause" @click="audio.pause()"></div>
+          <div class="next" @click="audio.next(1)"></div>
         </div>
       </div>
     </div>
@@ -139,7 +139,7 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 import { audioData, PlayTypeOpt, switchAudioType } from '@/renderer/core';
 import { audio } from '@/renderer/core/audio';
-import { windowAlwaysOnTop } from '@/renderer/common/window';
+import { windowAlwaysOnTop } from '@youliso/electronic/ipc';
 import LyricsIcon from '@/renderer/views/components/Icons/LyricsIcon.vue';
 import PlayStatusIcon from '@/renderer/views/components/Icons/PlaystatusIcon.vue';
 import PauseStatusIcon from '@/renderer/views/components/Icons/PausestatusIcon.vue';

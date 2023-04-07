@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <transition :name="route.meta.transition || 'fade'" mode="out-in">
+    <transition :name="route.meta.transition as string || 'fade'" mode="out-in">
       <keep-alive
         :include="keepAliveData.include"
         :exclude="keepAliveData.exclude"
@@ -23,6 +23,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-@import '~@/renderer/views/scss/color';
-@import '~@/renderer/views/scss/main';
+@import '@/renderer/views/scss/color';
+@import '@/renderer/views/scss/main';
 </style>

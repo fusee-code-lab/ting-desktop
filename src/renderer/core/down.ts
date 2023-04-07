@@ -1,4 +1,4 @@
-import { writeFile } from '@/renderer/common/file';
+import { writeFile } from '@youliso/electronic/ipc';
 import { tingCfgData, SongType } from '@/renderer/core/index';
 import net from '@/renderer/common/net';
 

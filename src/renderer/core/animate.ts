@@ -2,8 +2,8 @@ import { audio } from '@/renderer/core/audio';
 
 class Animate {
   private static instance: Animate;
-  public waveform: Uint8Array = null;
-  public frequency: Uint8Array = null;
+  public waveform: Uint8Array | null = null;
+  public frequency: Uint8Array | null = null;
 
   static getInstance() {
     if (!Animate.instance) Animate.instance = new Animate();
@@ -18,8 +18,8 @@ class Animate {
   }
 
   refresh() {
-    audio.analyser.getByteTimeDomainData(this.waveform);
-    audio.analyser.getByteFrequencyData(this.frequency);
+    audio.analyser.getByteTimeDomainData(this.waveform!);
+    audio.analyser.getByteFrequencyData(this.frequency!);
     console.log(this.waveform, this.frequency);
   }
 }

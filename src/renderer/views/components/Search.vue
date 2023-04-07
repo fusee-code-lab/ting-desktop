@@ -52,7 +52,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 
 .search-info {
   position: relative;
@@ -91,7 +91,7 @@ export default defineComponent({
     }
 
     &:before {
-      @include device-pixel('~@/assets/icons/search_icon');
+      @include device-pixel('@/assets/icons/search_icon');
       content: '';
       width: 15px;
       height: 15px;

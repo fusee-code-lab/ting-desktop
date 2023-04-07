@@ -21,7 +21,7 @@
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import SideBar from '@/renderer/views/components/SideBar.vue';
 import { audioData, switchAudioType } from '@/renderer/core';
-import { windowShow } from '@/renderer/common/window';
+import { windowShow } from '@youliso/electronic/ipc';
 import Head from '../components/Head.vue';
 import Audio from '../components/Audio.vue';
 import SearchDetails from './SearchDetails.vue';
@@ -60,7 +60,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 .container {
   > .info {
     height: 100%;

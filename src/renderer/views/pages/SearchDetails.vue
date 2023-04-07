@@ -215,7 +215,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '~@/renderer/views/scss/mixin.scss';
+@import '@/renderer/views/scss/mixin.scss';
 
 .Search-details-info {
   height: calc(100% - 50px);

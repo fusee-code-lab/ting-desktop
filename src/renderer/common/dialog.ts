@@ -1,5 +1,4 @@
 import type { OpenDialogOptions } from 'electron';
-import Customize from '@/renderer/store/customize';
 
 /**
  * 打开dialog
@@ -8,7 +7,7 @@ import Customize from '@/renderer/store/customize';
  */
 export async function openDialog(
   params: OpenDialogOptions,
-  winId: number = Customize.get().id
+  winId: number = window.customize.winId!
 ) {
   return window.ipc.invoke('open-dialog', { winId, params });
 }

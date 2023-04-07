@@ -1,4 +1,4 @@
-import net, { RequestInit } from '@/main/modular/net';
+import net, { RequestOpt } from '@/main/modular/net';
 import { randomUserAgent } from '../util';
 
 const baseURL = 'https://c.y.qq.com';
@@ -6,7 +6,7 @@ const newURL = 'https://u.y.qq.com';
 
 export async function base(uri: string, data?: any, newApi: boolean = false) {
   const url = `${newApi ? newURL : baseURL}${uri}`;
-  let params: RequestInit = {
+  let params: RequestOpt = {
     type: 'TEXT',
     headers: {
       g_tk: '0',
