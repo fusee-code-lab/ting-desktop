@@ -5,6 +5,7 @@ const electron = require('electron');
 const { buildConfig } = require('./buildCfg.cjs');
 const rspackConfig = require('./rspack.config.cjs');
 
+
 let electronProcess = null;
 let manualRestart = false;
 
@@ -19,10 +20,7 @@ async function startRenderer(envConfig) {
 
 async function startMain(envConfig) {
   return new Promise((resolve, reject) => {
-    const watcher = rspack([
-      rspackConfig.mainConfig(true, envConfig),
-      rspackConfig.preloadConfig(true, envConfig)
-    ]);
+    const watcher = rspack([rspackConfig.mainConfig(true, envConfig), rspackConfig.preloadConfig(true, envConfig)]);
     watcher.watch(
       {
         aggregateTimeout: 300,
@@ -30,16 +28,13 @@ async function startMain(envConfig) {
       },
       (err, stats) => {
         if (err || stats.hasErrors()) {
+          console.error(err?.stack || err);
           if (err?.details) {
             console.error(err.details);
+          } else {
+            console.error(stats.toString());
           }
-          console.log(
-            stats.toString({
-              chunks: false, // 使构建过程更静默无输出
-              colors: true // 在控制台展示颜色
-            })
-          );
-          process.exit();
+          throw new Error('Error occured in main process');
         }
         if (electronProcess && electronProcess.kill) {
           manualRestart = true;
@@ -93,6 +88,6 @@ const start = async () => {
   await startMain(envConfig).catch(console.error);
   await startElectron().catch(console.error);
   console.timeEnd('dev');
-};
+}
 
 start();

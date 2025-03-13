@@ -1,13 +1,22 @@
 const fs = require('node:fs');
+const net = require('node:net');
 const path = require('node:path');
 const packageCfg = require('../package.json');
 const envConfig = require('./cfg/env.json');
 const config = require('./cfg/build.json');
-const updateConfig = require('./cfg/update.json');
 const signConfig = require('./cfg/sign.json');
 
-const buildConfig = async (resourcePaths, archTarget) => {
+function getFreePort() {
+  return new Promise((res) => {
+    const srv = net.createServer();
+    srv.listen(0, () => {
+      const port = srv.address().port;
+      srv.close(() => res(port));
+    });
+  });
+}
 
+const buildConfig = async (resourcePaths, archTarget, isRelease) => {
   /** 渲染进程不需要打包到file的包 */
   // config.files.push('!**/node_modules/包名');
   config.afterPack = 'scripts/buildAfterPack.js';
@@ -15,19 +24,18 @@ const buildConfig = async (resourcePaths, archTarget) => {
   config.afterSign = 'scripts/buildAfterSign.js';
 
   /** env配置 **/
-  envConfig['process.env.PORT'] = JSON.stringify(4891);
+  !isRelease && (envConfig['process.env.PORT'] = JSON.stringify(await getFreePort()));
 
   /**  config配置  **/
   config.appId = `org.fuseecodelab.music`;
   config.copyright = `Copyright © 2024 fuseecodelab`; //版权
   config.productName = packageCfg.productName; // 名称
   config.npmRebuild = true; //是否Rebuild编译
+  //asar开关
   config.asar = {
     smartUnpack: false
   };
-  //asar开关
   config.asarUnpack = [];
-
 
   /** win配置 **/
   config.nsis.language = '2052'; // 2052 cn 1033 en-US
@@ -71,7 +79,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
       to: './',
       filter: ['**/*']
     });
-  } catch (error) { }
+  } catch (error) {}
   resourcePaths.forEach((resource) => {
     try {
       fs.accessSync(path.resolve('./resources/' + resource));
@@ -80,37 +88,14 @@ const buildConfig = async (resourcePaths, archTarget) => {
         to: resource,
         filter: ['*.*']
       });
-    } catch (error) { }
-  })
-
-
-  //更新配置
-  updateConfig.dirname = `${packageCfg.name.toLowerCase()}-updater`;
-  config.publish = [
-    {
-      provider: updateConfig.provider,
-      url: updateConfig.url
-    }
-  ];
-  envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateConfig.dirname);
-  let update =
-    'provider: ' +
-    updateConfig.provider +
-    '\n' +
-    'url: ' +
-    updateConfig.url +
-    '\n' +
-    'updaterCacheDirName: ' +
-    updateConfig.dirname +
-    '';
-
-  fs.writeFileSync('scripts/.update.yml', update);
+    } catch (error) {}
+  });
 
   return {
     envConfig,
     buildConfig: config
-  }
-}
+  };
+};
 
 module.exports = {
   buildConfig
