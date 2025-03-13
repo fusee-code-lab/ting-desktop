@@ -133,7 +133,8 @@ export class AudioPlay {
   private gainNode: GainNode;
 
   constructor(deviceId?: string) {
-    deviceId && this.currentAudio.setSinkId(deviceId);
+    // @ts-ignore 切换输出设备
+    deviceId && this.AudioContext.setSinkId(deviceId);
     this.currentAudio.crossOrigin = 'anonymous'; //音源跨域
     this.gainNode = this.AudioContext.createGain(); //创建控制节点
     this.sourceAudio = this.AudioContext.createMediaElementSource(this.currentAudio); //挂载音乐源
@@ -147,8 +148,8 @@ export class AudioPlay {
 
   async switchOutputDevice(deviceId: string) {
     try {
-      // 切换输出设备
-      await this.currentAudio.setSinkId(deviceId);
+      // @ts-ignore 切换输出设备
+      await this.AudioContext.setSinkId(deviceId);
       console.log(`Output device switched to ${deviceId}`);
     } catch (error) {
       throw error;
