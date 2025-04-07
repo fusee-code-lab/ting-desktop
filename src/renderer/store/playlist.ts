@@ -54,12 +54,12 @@ export const playlist_local_insert = async (name: string) => {
   if (res.canceled) return false;
   const playlist_path = res.filePaths[0];
   try {
-    await playlistInsert({
+    await playlistInsert([{
       name,
       cover: '',
       playlist_path,
       songs: []
-    });
+    }]);
     return true;
   } catch (error) {
     alert(error);

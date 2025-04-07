@@ -85,6 +85,8 @@ const headStyle = css`
       > .more {
         display: flex;
         align-items: flex-end;
+        flex: 1;
+        white-space: nowrap;
         height: 50px;
         padding-bottom: 3px;
         color: var(--blue-color);
@@ -132,9 +134,7 @@ const NeteaseHead = (props: {
           <span>{props.data?.tags.join('/')}</span>
         </div>
         <div class="desc">
-          <div class={cx(scrollYStyle, 'text', props.desc_show ? 'show' : 'hide')}>
-            {props.data?.description || '-'}
-          </div>
+          <div class={cx(scrollYStyle, 'text', props.desc_show ? 'show' : 'hide')} innerHTML={props.data?.description || '-'}></div>
           <Show
             when={
               !props.desc_show && !!props.data?.description && props.data?.description?.length > 40
@@ -183,9 +183,7 @@ const QQHead = (props: {
           <span>{props.data?.tags?.map((e: any) => e.name).join('/')}</span>
         </div>
         <div class="desc">
-          <div class={cx('text', scrollYStyle, props.desc_show ? 'show' : 'hide')}>
-            {props.data?.desc || '-'}
-          </div>
+          <div class={cx('text', scrollYStyle, props.desc_show ? 'show' : 'hide')} innerHTML={props.data?.desc || '-'}></div>
           <Show when={!props.desc_show && !!props.data?.desc && props.data?.desc?.length > 40}>
             <div class="more" onClick={props.on_desc_show}>
               更多

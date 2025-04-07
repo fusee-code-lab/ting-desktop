@@ -26,8 +26,8 @@ export function init_playlist(datas: Playlist[]) {
       if (existingPlaylist && existingPlaylist.length > 0) {
         throw new Error('playlist_path must be unique');
       }
+      db?.create(playlist_name, playlist, Realm.UpdateMode.Modified);
     });
-    db?.create(playlist_name, datas, Realm.UpdateMode.Modified);
   });
 }
 
