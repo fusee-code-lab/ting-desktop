@@ -51,11 +51,15 @@ const buildConfig = async (resourcePaths, archTarget, isRelease) => {
   config.linux.executableName = packageCfg.productName;
 
   /** mac配置 **/
+  if (signConfig.mac.cscLink && signConfig.mac.cscKeyPassword) {
+    config.mac.cscLink = signConfig.mac.cscLink;
+    config.mac.cscKeyPassword = signConfig.mac.cscKeyPassword;
+  }
   if (!signConfig.mac.notarize) {
     delete config.dmg.sign;
     delete config.mac.gatekeeperAssess;
   }
-
+  
   // 动态配置
   if (archTarget) {
     config[archTarget.target].target = archTarget.value;

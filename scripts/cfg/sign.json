@@ -1,5 +1,7 @@
 {
   "mac": {
+    "cscLink": "",
+    "cscKeyPassword": "",
     "notarize": false,
     "appleId": "",
     "appleIdPassword": "",
