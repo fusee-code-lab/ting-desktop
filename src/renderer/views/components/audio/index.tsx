@@ -5,6 +5,7 @@ import { Control } from './control';
 import { SongInfo } from './song/info';
 import { SongList } from './song/list';
 import { Progress } from './progress';
+import { SongLyrics } from './song/lyrics';
 
 const style = css`
   position: relative;
@@ -48,6 +49,7 @@ export default () => {
           <Control />
         </div>
         <div class="right">
+          <SongLyrics data={audio_list_data[audio_index()]!} />
           <SongList />
         </div>
       </Show>

@@ -5,7 +5,7 @@ import { css } from '@emotion/css';
 
 import Head from '../components/head';
 import Menu from '../components/menu';
-import Content from '../components/content';
+import Content from './content';
 import { isProduction } from '@/renderer/store';
 
 const style = css`

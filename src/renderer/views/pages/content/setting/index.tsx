@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import Button from '../../basis/button';
+import Button from '../../../components/basis/button';
 import {
   audio_device,
   audio_device_set,
@@ -14,7 +14,7 @@ import { playlist_save_path, playlist_save_path_set } from '@/renderer/store/pla
 import { showOpenDialog } from '@/renderer/common/dialog';
 import { Index } from 'solid-js';
 import { getSpeakerList } from '@/renderer/common/audio';
-import { Select, SelectItem } from '../../basis/select';
+import { Select, SelectItem } from '../../../components/basis/select';
 
 const titleStyle = css`
   padding: 0 30px 30px;

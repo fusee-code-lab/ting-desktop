@@ -5,8 +5,8 @@ import { audioPlay, is_audio_play_ing_data } from '@/renderer/store/audio';
 import type { PlayListItem, SongItem } from '@/types/music';
 import { playlist_online_load } from '@/renderer/store/playlist';
 import { unwrap } from 'solid-js/store';
-import { SheetAddIcon } from '../../playlist/sheet_add';
-import { MusicIcon } from '../../basis/music_icon';
+import { SheetAddIcon } from '../../../components/playlist/sheet_add';
+import { MusicIcon } from '../../../components/basis/music_icon';
 
 const style = css`
   position: relative;

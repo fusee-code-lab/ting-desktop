@@ -46,6 +46,15 @@ const song_url = (type: MusicType, ids: (string | number)[], level: SongQualityT
   }
 };
 
+const song_lyric = (type: MusicType, id: string) => {
+  switch (type) {
+    case 'netease':
+      return netease.lyric(id);
+    case 'qq':
+      return qq.lyric(id);
+  }
+};
+
 const playlist_details = (type: MusicType, id: string) => {
   switch (type) {
     case 'netease':
@@ -74,6 +83,7 @@ export function musicOn() {
     search_song(args.keywords, args.limit, args.offset, args.type)
   );
   preload.handle('music-songurl', async (_, args) => song_url(args.type, args.ids, args.level));
+  preload.handle('music-songlyric', async (_, args) => song_lyric(args.type, args.id));
   preload.handle('music-playlist-details', async (_, args) => playlist_details(args.type, args.id));
   preload.handle('music-playlist-song-list', async (_, args) =>
     playlist_song_list(args.type, args.id, args.offset, args.limit)

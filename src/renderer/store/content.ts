@@ -4,13 +4,13 @@ import { createStore, produce } from 'solid-js/store';
 type ContentView = 'setting' | 'search_list' | 'playlist_details_online' | 'playlist_details';
 
 const content_routes: { [key in ContentView]: Component } = {
-  setting: lazy(() => import('@/renderer/views/components/content/setting')),
-  search_list: lazy(() => import('@/renderer/views/components/content/search')),
+  setting: lazy(() => import('@/renderer/views/pages/content/setting')),
+  search_list: lazy(() => import('@/renderer/views/pages/content/search')),
   playlist_details: lazy(
-    () => import('@/renderer/views/components/content/playlist/details')
+    () => import('@/renderer/views/pages/content/playlist/details')
   ),
   playlist_details_online: lazy(
-    () => import('@/renderer/views/components/content/playlist/details_online')
+    () => import('@/renderer/views/pages/content/playlist/details_online')
   )
 };
 

@@ -36,6 +36,16 @@ export const song_url = (
 };
 
 /**
+ * 获取歌曲歌词
+ */
+export const song_lyric = (
+  type: MusicType,
+  id: string | number
+) => {
+  return preload.invoke<any>('music-songlyric', { type, id });
+};
+
+/**
  * 获取歌单详情
  */
 export const playlist_detail = (type: MusicType, id: string | number) => {

@@ -1,7 +1,7 @@
 import { css, cx } from '@emotion/css';
 import { SongList } from './item';
 import { textEllipsis } from '@/renderer/views/styles';
-import Button from '../../basis/button';
+import Button from '../../../components/basis/button';
 import { audioPlayList } from '@/renderer/store/audio';
 import { playlist_local_data, playlist_local_index } from '@/renderer/store/playlist';
 

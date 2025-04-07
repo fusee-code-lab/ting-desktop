@@ -1,8 +1,8 @@
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import { Show } from 'solid-js';
 import { content_router, content_view } from '@/renderer/store/content';
 import { Dynamic } from 'solid-js/web';
-import Audio from '../audio';
+import Audio from '../../components/audio';
 
 import rocket_icon from '@/assets/rocket.png';
 

@@ -5,10 +5,10 @@ import { SongItem } from '@/types/music';
 import { VList } from 'virtua/solid';
 import { formatTime } from '@/renderer/common/utils';
 import { createSignal, Show } from 'solid-js';
-import { SheetAdd, SheetAddIcon } from '../../playlist/sheet_add';
+import { SheetAdd, SheetAddIcon } from '../../../components/playlist/sheet_add';
 import { unwrap } from 'solid-js/store';
 import { menuSong } from '@/renderer/common/menu/song';
-import { MusicIcon } from '../../basis/music_icon';
+import { MusicIcon } from '../../../components/basis/music_icon';
 
 const songListTableStyle = css`
   > div {

@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { createSignal, For, Show } from 'solid-js';
 import { Item, PlaylistItem } from './item';
 import type { MusicSearchType, SongItem } from '@/types/music';
-import { SheetAdd } from '../../playlist/sheet_add';
+import { SheetAdd } from '../../../components/playlist/sheet_add';
 
 const listTitleStyle = css`
   position: sticky;

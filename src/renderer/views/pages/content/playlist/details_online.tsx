@@ -6,9 +6,9 @@ import { playlist_details_online_data } from '@/renderer/store/playlist';
 import { createSignal, Match, Show, Switch } from 'solid-js';
 import { scrollYStyle, textEllipsis } from '../../../styles';
 import { SongList } from './item';
-import { SheetAdd } from '../../playlist/sheet_add';
-import { MusicIcon } from '../../basis/music_icon';
-import Button from '../../basis/button';
+import { SheetAdd } from '../../../components/playlist/sheet_add';
+import { MusicIcon } from '../../../components/basis/music_icon';
+import Button from '../../../components/basis/button';
 
 const headStyle = css`
   display: flex;
