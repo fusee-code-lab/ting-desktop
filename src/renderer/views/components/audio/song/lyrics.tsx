@@ -1,14 +1,16 @@
 import { css, cx } from '@emotion/css';
-import { createEffect, createMemo, createSignal, For, Match, Show, Switch } from 'solid-js';
+import { createEffect, createMemo, createSignal, For, Match, on, Show, Switch } from 'solid-js';
 import { LyricsIcon } from '../../basis/icons';
 import { song_lyric } from '@/renderer/common/music';
 import { MusicType, SongItem } from '@/types/music';
 import { createStore } from 'solid-js/store';
-import { audio_index, audio_list_data, audio_status } from '@/renderer/store/audio';
+import { audio, audio_index, audio_list_data, audio_status } from '@/renderer/store/audio';
 import { scrollYStyle } from '@/renderer/views/styles';
+import { debounce } from '@/renderer/common/utils';
 
 const list_style = css`
   position: fixed;
+  z-index: 2;
   left: var(--menu-width);
   right: 0;
   top: 0;
@@ -19,8 +21,12 @@ const list_style = css`
   > .content {
     width: 300px;
     height: 100%;
-    background-color: var(--menu-bg-color);
+    background-color: var(--basic-color);
     border-top-left-radius: var(--size-radius-xs);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     > .lyrics-list {
       padding: 33px 20px 250px;
@@ -31,28 +37,28 @@ const list_style = css`
         > .original {
           font-weight: bold;
           font-size: 22px;
-          color: var(--secondary-label);
+          color: var(--secondary-label-color);
           transition: color 0.3s ease-in-out;
         }
       }
 
       > .lyrics-item:hover {
         > .original {
-          color: var(--label);
+          color: var(--tertiary-label-color);
           transition: none;
         }
       }
 
       > .lyrics-item.current {
         > .original {
-          color: var(--label);
+          color: var(--blue-color);
         }
       }
     }
 
     .empty-lyrics-list-label {
       font-size: 25px;
-      color: var(--tertiary-label);
+      color: var(--tertiary-label-color);
     }
   }
 `;
@@ -113,17 +119,19 @@ export const SongLyrics = (props: { data: SongItem }) => {
   // 当前正在播放的索引
   const [cur_lyric_idx, set_cur_lyric_idx] = createSignal(0);
 
-  const show_menu = () => {
-    const is_show = show();
-    set_show(!is_show);
-    if (!is_show) {
-      getLyrics(props.data.source_type, props.data.song_id);
-    }
-  };
-
   let lyricsListDom: HTMLUListElement | null = null;
   const lyricsListDomHandler = (e?: HTMLUListElement) => {
     e && (lyricsListDom = e);
+  };
+
+  // 使用歌词索引跳转播放时间
+  const seekAudioTimeWithLyricIdx = (index: number) => {
+    const ms = lyrics_data.original[index].ms;
+    if (audio_status.type == 0) {
+      audio.currentIngTime(ms / 1000);
+    } else {
+      audio.currentTime(ms / 1000);
+    }
   };
 
   // 滚动/跳转到指定索引的歌词
@@ -136,7 +144,8 @@ export const SongLyrics = (props: { data: SongItem }) => {
       const arr = Array.from(lyricsListDom.children).map((i) => i as HTMLElement);
       const currentLyricElement = arr[index];
       if (!!currentLyricElement) {
-        const offset = index === 0 ? 0 : currentLyricElement.offsetTop - 53;
+        const offset =
+          index === 0 ? 0 : currentLyricElement.offsetTop - window.innerHeight / 2 + 53;
         lyricsListDom.scrollTo({
           top: offset,
           behavior: 'smooth'
@@ -145,13 +154,52 @@ export const SongLyrics = (props: { data: SongItem }) => {
     }
   };
 
-  createEffect(() => {
-    const ms = audio_status.ingTime * 1000;
+  // 滚动到当前播放歌词
+  const scrollToCurrentLyric = (time: number) => {
+    const ms = time * 1000;
     const lyricIdx = lyrics_data.original.findIndex(
       (item, idx) => item.ms <= ms && ms <= (lyrics_data.original[idx + 1]?.ms ?? Infinity)
     );
     seekToLyricWithIdx(lyricIdx);
-  });
+  };
+
+  // 当正在滚动时，锁定自动歌词滚动
+  const debouncedOnWheelFunc = debounce(() => {
+    set_lock_scroll(false);
+  }, 1500);
+
+  const onWheel = (_: WheelEvent) => {
+    set_lock_scroll(true);
+    debouncedOnWheelFunc();
+  };
+
+  createEffect(
+    on(
+      () => audio_status.ingTime,
+      (time) => scrollToCurrentLyric(time)
+    )
+  );
+
+  createEffect(
+    on(
+      () => props.data,
+      (data) => {
+        data &&
+          getLyrics(data.source_type, data.song_id).finally(() =>
+            scrollToCurrentLyric(audio_status.ingTime)
+          );
+      }
+    )
+  );
+
+  const show_menu = () => {
+    const is_show = show();
+    set_show(!is_show);
+  };
+
+  getLyrics(props.data.source_type, props.data.song_id).finally(() =>
+    scrollToCurrentLyric(audio_status.ingTime)
+  );
 
   return (
     <>
@@ -165,7 +213,11 @@ export const SongLyrics = (props: { data: SongItem }) => {
                     {(item, idx) => (
                       <li
                         class={cx('lyrics-item', cur_lyric_idx() === idx() && 'current')}
-                        onClick={() => seekToLyricWithIdx(idx())}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          seekAudioTimeWithLyricIdx(idx());
+                        }}
+                        onWheel={onWheel}
                       >
                         <p class="original">{item.content}</p>
                       </li>
