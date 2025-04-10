@@ -79,6 +79,7 @@ const icon_style = css`
 `;
 
 interface SongLyrics {
+  key: string;
   original: {
     content: string;
     time: string;
@@ -87,7 +88,7 @@ interface SongLyrics {
 }
 
 // 本地歌单
-export const [lyrics_data, set_lyrics] = createStore<SongLyrics>({ original: [] });
+export const [lyrics_data, set_lyrics] = createStore<SongLyrics>({ key: '', original: [] });
 
 // 是否有歌词
 const hasLyrics = createMemo(() => !!lyrics_data.original && lyrics_data.original.length > 0);
@@ -95,6 +96,7 @@ const hasLyrics = createMemo(() => !!lyrics_data.original && lyrics_data.origina
 const hasSong = createMemo(() => !!audio_list_data[audio_index()]);
 
 const getLyrics = async (type: MusicType, id: string | number) => {
+  if (hasLyrics() && lyrics_data.key === `${type}_${id}`) return;
   const lyricsData = await song_lyric(type, id);
   if (lyricsData && lyricsData.lyric) {
     const data = lyricsData.lyric.map((item: [string, string]) => ({
@@ -108,7 +110,7 @@ const getLyrics = async (type: MusicType, id: string | number) => {
         return minute * 60 * 1000 + second * 1000 + ms;
       })()
     }));
-    set_lyrics({ original: data });
+    set_lyrics({ key: `${type}_${id}`, original: data });
   }
 };
 
@@ -145,7 +147,7 @@ export const SongLyrics = (props: { data: SongItem }) => {
       const currentLyricElement = arr[index];
       if (!!currentLyricElement) {
         const offset =
-          index === 0 ? 0 : currentLyricElement.offsetTop - window.innerHeight / 2 + 53;
+          index === 0 ? 0 : currentLyricElement.offsetTop - window.innerHeight / 2 + 73;
         lyricsListDom.scrollTo({
           top: offset,
           behavior: 'smooth'
@@ -176,7 +178,9 @@ export const SongLyrics = (props: { data: SongItem }) => {
   createEffect(
     on(
       () => audio_status.ingTime,
-      (time) => scrollToCurrentLyric(time)
+      (time) => {
+        show() && scrollToCurrentLyric(time);
+      }
     )
   );
 
@@ -184,10 +188,13 @@ export const SongLyrics = (props: { data: SongItem }) => {
     on(
       () => props.data,
       (data) => {
-        data &&
+        if (data) {
           getLyrics(data.source_type, data.song_id).finally(() =>
             scrollToCurrentLyric(audio_status.ingTime)
           );
+        } else {
+          set_lyrics({ key: '', original: [] });
+        }
       }
     )
   );
@@ -195,17 +202,20 @@ export const SongLyrics = (props: { data: SongItem }) => {
   const show_menu = () => {
     const is_show = show();
     set_show(!is_show);
+    if (!is_show) {
+      getLyrics(props.data.source_type, props.data.song_id).finally(() => {
+        set_lock_scroll(false);
+        set_cur_lyric_idx(0);
+        scrollToCurrentLyric(audio_status.ingTime);
+      });
+    }
   };
-
-  getLyrics(props.data.source_type, props.data.song_id).finally(() =>
-    scrollToCurrentLyric(audio_status.ingTime)
-  );
 
   return (
     <>
       <Show when={show()}>
         <div class={list_style} onClick={() => set_show(false)}>
-          <div class="content">
+          <div class="content" onClick={(e) => e.stopPropagation()}>
             <Switch>
               <Match when={hasLyrics() && hasSong()}>
                 <ul class={cx('lyrics-list', scrollYStyle)} ref={lyricsListDomHandler}>

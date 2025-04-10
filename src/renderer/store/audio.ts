@@ -119,7 +119,11 @@ export const audio_list_update = (
 
 // 初始化加载
 export const audio_init = async () => {
-  const res = await Promise.all([settingKey('audio_quality'), settingKey('audio_device')]);
+  const res = await Promise.all([
+    settingKey('audio_quality'),
+    settingKey('audio_device'),
+    settingKey('audio_volume')
+  ]);
   res[0] && set_audio_quality(res[0] as SongQualityType);
   // 初始化播放设备
   if (res[1]) {
@@ -131,6 +135,11 @@ export const audio_init = async () => {
     } catch (error) {
       console.error(error);
     }
+  }
+  if (res[2]) {
+    const volume = Number(res[2]);
+    audio.setVolume(volume);
+    set_audio_status('volume', volume);
   }
 };
 
@@ -188,6 +197,7 @@ export const audioNext = async (num: number) => {
 export const audioSetVolume = (volume: number) => {
   audio.setVolume(volume);
   set_audio_status('volume', volume);
+  settingSet('audio_volume', volume.toString());
 };
 
 export const audioSetCurrentIngTime = (e: number) => {
