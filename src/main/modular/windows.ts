@@ -6,6 +6,7 @@ import { theme } from './theme';
 import { preload, type WindowDefaultCfg, windowInstance } from '@youliso/electronic/main';
 import { init_basic_setting, get_basic_setting } from './db/modular/basic';
 import { createTray } from './tray';
+import { skip } from 'node:test';
 
 // 初始窗口组参数
 let windowDefaultCfg: WindowDefaultCfg = {
@@ -65,7 +66,8 @@ export const createWelcome = () => {
 export const createHome = () => {
   let customize: Customize = {
     route: '/home',
-    isMainWin: true
+    isMainWin: true,
+    position: 'center'
   };
   let browserWindowOptions: BrowserWindowConstructorOptions = createOpts({
     minWidth: 1004,
@@ -76,21 +78,36 @@ export const createHome = () => {
   return windowInstance.new(customize, browserWindowOptions);
 };
 
-export const createDialog = (route: string, winId?: number) => {
-  let customize: Customize = {
-    route,
-    isOneWindow: true,
-    parentId: winId,
-    position: 'center'
-  };
-  let browserWindowOptions: BrowserWindowConstructorOptions = createOpts({
-    minWidth: 345,
-    minHeight: 200,
-    width: 345,
-    height: 200
-  });
-  browserWindowOptions.titleBarOverlay = false;
-  return windowInstance.new(customize, browserWindowOptions);
+export const createDialog = (
+  route: string,
+  winId?: number,
+  customize?: Customize,
+  bwopts?: BrowserWindowConstructorOptions
+) => {
+  customize = Object.assign(
+    {
+      route,
+      isOneWindow: true,
+      parentId: winId,
+      position: 'center'
+    },
+    customize
+  );
+  bwopts = createOpts(
+    Object.assign(
+      {
+        skipTaskbar: true,
+        resizable: false,
+        minWidth: 345,
+        minHeight: 200,
+        width: 345,
+        height: 200
+      },
+      bwopts
+    )
+  );
+  bwopts.titleBarOverlay = false;
+  return windowInstance.new(customize, bwopts);
 };
 
 export const windowInit = async () => {
@@ -112,7 +129,8 @@ export const windowOn = () => {
     win?.destroy();
   });
 
-  preload.on('window-dialog', (_, { route, winId }) => {
-    createDialog(route, winId);
+  preload.handle('window-dialog', async (_, { route, winId, customize, bwopts }) => {
+    const win = await createDialog(route, winId, customize, bwopts);
+    return win && win.id;
   });
 };

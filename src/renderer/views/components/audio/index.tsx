@@ -1,6 +1,6 @@
 import { audio_list_data, audio_index } from '@/renderer/store/audio';
 import { css } from '@emotion/css';
-import { Show } from 'solid-js';
+import { createMemo, Show } from 'solid-js';
 import { Control } from './control';
 import { SongInfo } from './song/info';
 import { SongList } from './song/list';
@@ -38,18 +38,21 @@ const style = css`
 `;
 
 export default () => {
+  const song = createMemo(
+    () => (audio_index() != -1 && audio_list_data[audio_index()]) || undefined
+  );
   return (
     <div class={style}>
-      <Show when={audio_index() != -1} fallback={<div>Ting ~</div>}>
+      <Show when={song()} fallback={<div>Ting ~</div>}>
         <Progress />
         <div class="left">
-          <SongInfo data={audio_list_data[audio_index()]!} />
+          <SongInfo data={song()!} />
         </div>
         <div class="center">
           <Control />
         </div>
         <div class="right">
-          <SongLyrics data={audio_list_data[audio_index()]!} />
+          <SongLyrics data={song()!} />
           <SongList />
         </div>
       </Show>

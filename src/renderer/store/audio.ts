@@ -1,10 +1,11 @@
 import type { SongItem, SongQualityType } from '@/types/music';
 import { AudioPlay, getSpeakerList } from '../common/audio';
 import { song_url } from '../common/music';
-import { createStore, produce } from 'solid-js/store';
+import { createStore, produce, unwrap } from 'solid-js/store';
 import { createSignal } from 'solid-js';
 import { randomInteger } from '../common/utils';
 import { settingKey, settingSet } from '../common/db/basic';
+import { windowMessageSend } from '@youliso/electronic/render';
 
 // 播放设备
 export const [audio_device, set_audio_device] =
@@ -147,6 +148,12 @@ export const audioPlay = async (data?: SongItem) => {
   let index = (data && audio_list_add(data)) ?? audio_index();
   index === -1 && (index = 0);
   const song = audio_list_data[index];
+  if (!song) {
+    audio.pause();
+    audio.clearSrc();
+    audio.clear();
+    return;
+  }
   if (song['play_url']) {
     audio.play(song['play_url']);
     set_audio_index(index);
@@ -158,6 +165,7 @@ export const audioPlay = async (data?: SongItem) => {
       set_audio_index(index);
     }
   }
+  windowMessageSend('audio_song', unwrap(song));
 };
 
 export const audioPlayList = async (songs: SongItem[]) => {
@@ -217,6 +225,7 @@ export const audioOn = () => {
   });
   window.addEventListener('audio-time-update', () => {
     set_audio_status('ingTime', (ingTime) => (ingTime = audio.ingTime));
+    window.localStorage.setItem('audio_time', audio.ingTime.toString());
   });
   window.addEventListener('audio-play', () => {
     set_audio_status('type', (type) => (type = 1));
@@ -226,6 +235,7 @@ export const audioOn = () => {
   });
   window.addEventListener('audio-end', () => {
     set_audio_status('type', (type) => (type = 0));
+    window.localStorage.setItem('audio_time', '0');
     audioNext(1);
   });
 };

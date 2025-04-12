@@ -27,7 +27,7 @@ const style = css`
     max-height: 50vh;
     background-color: var(--basic-color);
     border-radius: var(--size-radius-xs);
-    padding: 15px 0 5px; 
+    padding: 15px 0 5px;
     > .title {
       padding: 0 15px;
       height: 24px;
@@ -116,7 +116,15 @@ export const SheetAdd = (props: {
               class="add"
               onClick={(e) => {
                 e.stopPropagation();
-                createDialogWindow('/playlist_create');
+                createDialogWindow(
+                  '/playlist_create',
+                  {
+                    position: 'center',
+                    isParentPosition: true
+                  },
+                  undefined,
+                  window.customize.winId
+                );
               }}
             >
               <PlusIcon />

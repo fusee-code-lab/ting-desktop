@@ -1,5 +1,7 @@
 import { preload } from '@youliso/electronic/render';
+import type { Customize } from '@youliso/electronic/types';
 import type {
+  BrowserWindowConstructorOptions,
   OpenDialogOptions,
   OpenDialogReturnValue,
   SaveDialogOptions,
@@ -16,5 +18,9 @@ export const showSaveDialog = (
   winId: number = window.customize.winId
 ) => preload.invoke<SaveDialogReturnValue>('save-directory-dialog', { options, winId });
 
-export const createDialogWindow = (route: string, winId: number = window.customize.winId) =>
-  preload.invoke<void>('window-dialog', { route, winId });
+export const createDialogWindow = (
+  route: string,
+  customize?: Customize,
+  bwopts?: BrowserWindowConstructorOptions,
+  winId?: number
+) => preload.invoke<number | undefined>('window-dialog', { route, winId, customize, bwopts });

@@ -68,3 +68,12 @@ export interface PlayList {
   playlist_songs: SongItem[];
   [key: string]: any;
 }
+
+export interface SongLyrics {
+  key: string;
+  original: {
+    content: string;
+    time: string;
+    ms: number;
+  }[];
+}

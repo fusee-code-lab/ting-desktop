@@ -3,10 +3,12 @@ import { createEffect, createMemo, createSignal, For, Match, on, Show, Switch } 
 import { LyricsIcon } from '../../basis/icons';
 import { song_lyric } from '@/renderer/common/music';
 import { MusicType, SongItem } from '@/types/music';
-import { createStore } from 'solid-js/store';
+import { createStore, unwrap } from 'solid-js/store';
 import { audio, audio_index, audio_list_data, audio_status } from '@/renderer/store/audio';
 import { scrollYStyle } from '@/renderer/views/styles';
 import { debounce } from '@/renderer/common/utils';
+import { createDialogWindow } from '@/renderer/common/dialog';
+import { windowClose } from '@youliso/electronic/render';
 
 const list_style = css`
   position: fixed;
@@ -199,21 +201,41 @@ export const SongLyrics = (props: { data: SongItem }) => {
     )
   );
 
-  const show_menu = () => {
+  let song_lyrics_win_id: number | undefined;
+  const show_menu = async () => {
     const is_show = show();
     set_show(!is_show);
     if (!is_show) {
-      getLyrics(props.data.source_type, props.data.song_id).finally(() => {
-        set_lock_scroll(false);
-        set_cur_lyric_idx(0);
-        scrollToCurrentLyric(audio_status.ingTime);
-      });
+      song_lyrics_win_id = await createDialogWindow(
+        '/song_lyrics',
+        { data: unwrap(props.data), position: 'center-bottom', positionPadding: 30 },
+        {
+          minWidth: 400,
+          minHeight: 100,
+          width: 450,
+          height: 120,
+          resizable: true,
+          frame: false,
+          transparent: true,
+          alwaysOnTop: true
+        }
+      );
+      // getLyrics(props.data.source_type, props.data.song_id).finally(() => {
+      //   set_lock_scroll(false);
+      //   set_cur_lyric_idx(0);
+      //   scrollToCurrentLyric(audio_status.ingTime);
+      // });
+    } else {
+      console.log(song_lyrics_win_id);
+
+      song_lyrics_win_id && (await windowClose(song_lyrics_win_id));
+      song_lyrics_win_id = undefined;
     }
   };
 
   return (
     <>
-      <Show when={show()}>
+      {/* <Show when={show()}>
         <div class={list_style} onClick={() => set_show(false)}>
           <div class="content" onClick={(e) => e.stopPropagation()}>
             <Switch>
@@ -244,7 +266,7 @@ export const SongLyrics = (props: { data: SongItem }) => {
             </Switch>
           </div>
         </div>
-      </Show>
+      </Show> */}
       <div class={cx(icon_style, show() && 'show')} onClick={show_menu}>
         <LyricsIcon />
       </div>

@@ -31,30 +31,6 @@ export const responseData = async (type: DATA_TYPE, response: Response) => {
   return { data, headers: response.headers };
 }
 
-/**
- * 对象转参数
- * @param data
- */
-export const queryParams = (data: any): string => {
-  let _result = [];
-  for (let key in data) {
-    let value = data[key];
-    if (['', undefined, null].includes(value)) {
-      continue;
-    }
-    if (value.constructor === Array) {
-      value.forEach((_value) => {
-        // @ts-ignore
-        _result.push(encodeURIComponent(key) + '[]=' + encodeURIComponent(_value));
-      });
-    } else {
-      // @ts-ignore
-      _result.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-    }
-  }
-  return _result.length ? _result.join('&') : '';
-};
-
 export interface RequestOpt extends RequestInit {
   controller?: AbortController;
   data?: any;
@@ -88,7 +64,7 @@ export const net = <T = any>(
   params.timeout ??= 1000 * 60;
   params.type ??= 'JSON';
   params.headers ??= { 'content-type': 'application/json;charset=utf-8' };
-  if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+  if (params.data && params.method === 'GET') url += `?${new URLSearchParams(params.data).toString()}`;
   const controller = params.controller ?? new AbortController();
   const id = setTimeout(() => controller.abort(), params.timeout);
   return fetch(url, { ...params, signal: controller.signal })
@@ -115,7 +91,7 @@ export const download = async (
 }> => {
   params.method ??= 'GET';
   params.timeout ??= 1000 * 60;
-  if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+  if (params.data && params.method === 'GET') url += `?${new URLSearchParams(params.data).toString()}`;
   const controller = params.controller ?? new AbortController();
   const id = setTimeout(() => controller.abort(), params.timeout);
   try {
@@ -161,7 +137,7 @@ export const upload = async <T = any>(
   params.method ??= 'POST';
   params.type ??= 'JSON';
   params.timeout ??= 1000 * 60;
-  if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+  if (params.data && params.method === 'GET') url += `?${new URLSearchParams(params.data).toString()}`;
   const controller = params.controller ?? new AbortController();
   const id = setTimeout(() => controller.abort(), params.timeout);
   try {

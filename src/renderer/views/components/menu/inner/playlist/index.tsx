@@ -29,7 +29,20 @@ export const Playlist = () => {
           <Item onClick={() => playlist_local_load(index())} class="item" data={item} />
         )}
       </For>
-      <div class="add" onClick={() => createDialogWindow('/playlist_create')}>
+      <div
+        class="add"
+        onClick={() =>
+          createDialogWindow(
+            '/playlist_create',
+            {
+              position: 'center',
+              isParentPosition: true
+            },
+            undefined,
+            window.customize.winId
+          )
+        }
+      >
         <PlusIcon />
         添加新歌单
       </div>
