@@ -9,6 +9,7 @@ import { scrollYStyle } from '@/renderer/views/styles';
 import { debounce } from '@/renderer/common/utils';
 import { createDialogWindow } from '@/renderer/common/dialog';
 import { windowClose } from '@youliso/electronic/render';
+import { hasLyrics, lyrics_data, set_lyrics } from '@/renderer/store/lyrics';
 
 const list_style = css`
   position: fixed;
@@ -89,16 +90,17 @@ interface SongLyrics {
   }[];
 }
 
-// 本地歌单
-export const [lyrics_data, set_lyrics] = createStore<SongLyrics>({ key: '', original: [] });
-
-// 是否有歌词
-const hasLyrics = createMemo(() => !!lyrics_data.original && lyrics_data.original.length > 0);
 // 是否有歌曲播放
 const hasSong = createMemo(() => !!audio_list_data[audio_index()]);
 
 const getLyrics = async (type: MusicType, id: string | number) => {
-  if (hasLyrics() && lyrics_data.key === `${type}_${id}`) return;
+  const key = `${type}_${id}`;
+  if (hasLyrics() && lyrics_data.key === key) return;
+  const loaclData = localStorage.getItem(`${key}_lyric`);
+  if (loaclData) {
+    set_lyrics(JSON.parse(loaclData));
+    return;
+  }
   const lyricsData = await song_lyric(type, id);
   if (lyricsData && lyricsData.lyric) {
     const data = lyricsData.lyric.map((item: [string, string]) => ({
@@ -112,7 +114,9 @@ const getLyrics = async (type: MusicType, id: string | number) => {
         return minute * 60 * 1000 + second * 1000 + ms;
       })()
     }));
-    set_lyrics({ key: `${type}_${id}`, original: data });
+    const lyricData = { key: `${type}_${id}`, original: data };
+    localStorage.setItem(`${key}_lyric`, JSON.stringify(lyricData));
+    set_lyrics(lyricData);
   }
 };
 
